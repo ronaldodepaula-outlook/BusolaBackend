@@ -1,0 +1,135 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+use OpenApi\Attributes as OA;
+use Tymon\JWTAuth\Contracts\JWTSubject;
+
+#[OA\Schema(
+    schema: 'Usuario',
+    description: 'Dados de um usuário',
+    properties: [
+        new OA\Property(property: 'id', type: 'integer', example: 2),
+        new OA\Property(property: 'empresa_id', type: 'integer', nullable: true, example: 1),
+        new OA\Property(property: 'filial_id', type: 'integer', nullable: true, example: 1),
+        new OA\Property(property: 'nome', type: 'string', example: 'João Silva'),
+        new OA\Property(property: 'email', type: 'string', format: 'email', example: 'joao@empresa.com'),
+        new OA\Property(property: 'foto', type: 'string', nullable: true),
+        new OA\Property(property: 'telefone', type: 'string', nullable: true),
+        new OA\Property(property: 'tipo', type: 'string', enum: ['superadmin', 'admin', 'gerente', 'usuario'], example: 'usuario'),
+        new OA\Property(property: 'status', type: 'string', enum: ['ativo', 'inativo', 'bloqueado'], example: 'ativo'),
+        new OA\Property(property: 'ultimo_login', type: 'string', format: 'date-time', nullable: true),
+        new OA\Property(property: 'primeiro_acesso', type: 'boolean', example: false),
+        new OA\Property(property: 'created_at', type: 'string', format: 'date-time'),
+    ]
+)]
+class User extends Authenticatable implements JWTSubject
+{
+    use HasFactory, Notifiable, SoftDeletes;
+
+    protected $table = 'users';
+
+    protected $fillable = [
+        'empresa_id',
+        'filial_id',
+        'nome',
+        'email',
+        'senha',
+        'foto',
+        'telefone',
+        'tipo',
+        'status',
+        'ultimo_login',
+        'token_reset_senha',
+        'token_reset_expira_em',
+        'primeiro_acesso',
+    ];
+
+    protected $hidden = [
+        'senha',
+        'remember_token',
+        'token_reset_senha',
+    ];
+
+    protected $casts = [
+        'senha'                 => 'hashed',
+        'ultimo_login'          => 'datetime',
+        'token_reset_expira_em' => 'datetime',
+        'primeiro_acesso'       => 'boolean',
+    ];
+
+    // JWT Methods
+
+    public function getJWTIdentifier(): mixed
+    {
+        return $this->getKey();
+    }
+
+    public function getJWTCustomClaims(): array
+    {
+        return [
+            'empresa_id' => $this->empresa_id,
+            'filial_id'  => $this->filial_id,
+            'tipo'       => $this->tipo,
+        ];
+    }
+
+    // Auth override — use 'senha' as password field
+
+    public function getAuthPassword(): string
+    {
+        return $this->senha;
+    }
+
+    // Relationships
+
+    public function empresa(): BelongsTo
+    {
+        return $this->belongsTo(Empresa::class, 'empresa_id');
+    }
+
+    public function filial(): BelongsTo
+    {
+        return $this->belongsTo(Filial::class, 'filial_id');
+    }
+
+    public function roles(): BelongsToMany
+    {
+        return $this->belongsToMany(Role::class, 'user_role', 'user_id', 'role_id');
+    }
+
+    public function logs(): HasMany
+    {
+        return $this->hasMany(Log::class, 'user_id');
+    }
+
+    // Helper Methods
+
+    public function hasPermission(string $slug): bool
+    {
+        foreach ($this->roles as $role) {
+            if ($role->permissions()->where('slug', $slug)->exists()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public function hasRole(string $slug): bool
+    {
+        return $this->roles()->where('slug', $slug)->exists();
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->tipo === 'superadmin';
+    }
+}

@@ -1,0 +1,4244 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Sistema Pesquisas — API Multi-Tenant",
+        "description": "Backend REST API multiempresa com RBAC. Use POST /api/v1/auth/login para obter o JWT e clique em Authorize inserindo: Bearer {token}. Super Admins podem usar o header X-Empresa-Id para escopar requisições a uma empresa.",
+        "contact": {
+            "email": "admin@sistema.com"
+        },
+        "license": {
+            "name": "MIT"
+        },
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/v1/auth/login": {
+            "post": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Realizar login",
+                "description": "Autentica o usuário e retorna o token JWT.",
+                "operationId": "5db09a35f965c6ca7529ed3c3cae8e21",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "senha"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "superadmin@sistema.com"
+                                    },
+                                    "senha": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "Admin@2024"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Login realizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "mensagem": {
+                                            "type": "string"
+                                        },
+                                        "dados": {
+                                            "properties": {
+                                                "token": {
+                                                    "type": "string"
+                                                },
+                                                "tipo": {
+                                                    "type": "string",
+                                                    "example": "bearer"
+                                                },
+                                                "usuario": {
+                                                    "$ref": "#/components/schemas/Usuario"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Credenciais inválidas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RespostaErro"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Dados inválidos",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RespostaErro"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/logout": {
+            "post": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Realizar logout",
+                "description": "Invalida o token JWT adicionando-o à blacklist.",
+                "operationId": "8f1a443d39c3bf383f851fbb51253c64",
+                "responses": {
+                    "200": {
+                        "description": "Logout realizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "mensagem": {
+                                            "type": "string",
+                                            "example": "Logout realizado com sucesso."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autenticado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RespostaErro"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/auth/me": {
+            "get": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Dados do usuário autenticado",
+                "operationId": "1e5f382ba4fa0960d233875cab75a361",
+                "responses": {
+                    "200": {
+                        "description": "Dados do usuário",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "$ref": "#/components/schemas/Usuario"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autenticado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RespostaErro"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/auth/refresh": {
+            "post": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Renovar token JWT",
+                "operationId": "05bd0482845348cafa4da9e4fb7d0ffb",
+                "responses": {
+                    "200": {
+                        "description": "Token renovado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "properties": {
+                                                "token": {
+                                                    "type": "string"
+                                                },
+                                                "tipo": {
+                                                    "type": "string",
+                                                    "example": "bearer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Token inválido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RespostaErro"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/auth/trocar-senha": {
+            "post": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Trocar senha do usuário autenticado",
+                "operationId": "b829f582c5ddb0504a80e0291239a370",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "senha_atual",
+                                    "nova_senha",
+                                    "confirmacao"
+                                ],
+                                "properties": {
+                                    "senha_atual": {
+                                        "type": "string",
+                                        "format": "password"
+                                    },
+                                    "nova_senha": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "minLength": 8
+                                    },
+                                    "confirmacao": {
+                                        "type": "string",
+                                        "format": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Senha alterada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "mensagem": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validação falhou",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RespostaErro"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/auth/recuperar-senha": {
+            "post": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Solicitar recuperação de senha",
+                "operationId": "711b75c591b92e8bc51192cfbf73c782",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Token gerado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "mensagem": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "E-mail não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RespostaErro"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/resetar-senha": {
+            "post": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Redefinir senha com token",
+                "operationId": "da051a923b872f4d43e60d918323b028",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "token",
+                                    "nova_senha",
+                                    "confirmacao"
+                                ],
+                                "properties": {
+                                    "token": {
+                                        "type": "string"
+                                    },
+                                    "nova_senha": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "minLength": 8
+                                    },
+                                    "confirmacao": {
+                                        "type": "string",
+                                        "format": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Senha redefinida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "mensagem": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Token inválido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RespostaErro"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/configuracoes": {
+            "get": {
+                "tags": [
+                    "Configurações"
+                ],
+                "summary": "Listar configurações",
+                "operationId": "b99cde0857a23a856b6d22de08ae5c5f",
+                "parameters": [
+                    {
+                        "name": "grupo",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Configurações",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Configurações"
+                ],
+                "summary": "Salvar configuração (upsert)",
+                "operationId": "0126c60ac9bb0e6ef489a3b604bb4d1c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "chave",
+                                    "valor"
+                                ],
+                                "properties": {
+                                    "chave": {
+                                        "type": "string",
+                                        "example": "smtp.host"
+                                    },
+                                    "valor": {
+                                        "type": "string",
+                                        "example": "smtp.gmail.com"
+                                    },
+                                    "tipo": {
+                                        "type": "string",
+                                        "enum": [
+                                            "string",
+                                            "boolean",
+                                            "integer",
+                                            "json"
+                                        ]
+                                    },
+                                    "grupo": {
+                                        "type": "string",
+                                        "example": "email"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Salvo",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/configuracoes/{chave}": {
+            "get": {
+                "tags": [
+                    "Configurações"
+                ],
+                "summary": "Buscar configuração por chave",
+                "operationId": "f02bdfd2904c66636bf346c66c872413",
+                "parameters": [
+                    {
+                        "name": "chave",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "example": "smtp.host"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Configuração encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "$ref": "#/components/schemas/Configuracao"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Chave não encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RespostaErro"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Configurações"
+                ],
+                "summary": "Remover configuração",
+                "operationId": "6c0b2330c764230e53e634f261a3079c",
+                "parameters": [
+                    {
+                        "name": "chave",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Removida",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/configuracoes/lote": {
+            "post": {
+                "tags": [
+                    "Configurações"
+                ],
+                "summary": "Salvar múltiplas configurações",
+                "operationId": "fa810448a513822a4eff076255913ea8",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "configuracoes"
+                                ],
+                                "properties": {
+                                    "configuracoes": {
+                                        "type": "array",
+                                        "items": {
+                                            "properties": {
+                                                "chave": {
+                                                    "type": "string"
+                                                },
+                                                "valor": {
+                                                    "type": "string"
+                                                },
+                                                "grupo": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Salvas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "mensagem": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/dashboard/super-admin": {
+            "get": {
+                "tags": [
+                    "Dashboard"
+                ],
+                "summary": "Dashboard do Super Administrador",
+                "description": "Totais globais, últimos acessos, empresas bloqueadas e logs. Apenas Super Admin.",
+                "operationId": "f09cd8408bc96959333b59d2b00d750a",
+                "responses": {
+                    "200": {
+                        "description": "Dados do dashboard",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "properties": {
+                                                "total_empresas": {
+                                                    "type": "integer",
+                                                    "example": 5
+                                                },
+                                                "total_empresas_ativas": {
+                                                    "type": "integer",
+                                                    "example": 4
+                                                },
+                                                "total_usuarios": {
+                                                    "type": "integer",
+                                                    "example": 50
+                                                },
+                                                "total_filiais": {
+                                                    "type": "integer",
+                                                    "example": 12
+                                                },
+                                                "ultimos_acessos": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Usuario"
+                                                    }
+                                                },
+                                                "empresas_bloqueadas": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Empresa"
+                                                    }
+                                                },
+                                                "ultimos_logs": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Log"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Acesso negado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RespostaErro"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/dashboard/empresa": {
+            "get": {
+                "tags": [
+                    "Dashboard"
+                ],
+                "summary": "Dashboard da Empresa",
+                "description": "Métricas da empresa: usuários, filiais, acessos e logs recentes.",
+                "operationId": "c67c5754bffd954f494706414a346534",
+                "responses": {
+                    "200": {
+                        "description": "Dados do dashboard",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "properties": {
+                                                "total_usuarios": {
+                                                    "type": "integer",
+                                                    "example": 20
+                                                },
+                                                "total_filiais": {
+                                                    "type": "integer",
+                                                    "example": 3
+                                                },
+                                                "total_filiais_ativas": {
+                                                    "type": "integer",
+                                                    "example": 3
+                                                },
+                                                "ultimos_acessos": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Usuario"
+                                                    }
+                                                },
+                                                "logs_recentes": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Log"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autenticado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RespostaErro"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/empresas": {
+            "get": {
+                "tags": [
+                    "Empresas"
+                ],
+                "summary": "Listar empresas",
+                "description": "Super Admin vê todas; Admin vê apenas a própria.",
+                "operationId": "9febef490487924710d9b05784193305",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "ativo",
+                                "inativo",
+                                "bloqueado"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 1
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista paginada de empresas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Empresa"
+                                                    }
+                                                },
+                                                "total": {
+                                                    "type": "integer"
+                                                },
+                                                "current_page": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Acesso negado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RespostaErro"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Empresas"
+                ],
+                "summary": "Cadastrar empresa",
+                "operationId": "378067c002c006478aee4bce1926fd2b",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nome"
+                                ],
+                                "properties": {
+                                    "nome": {
+                                        "type": "string",
+                                        "example": "Nova Empresa LTDA"
+                                    },
+                                    "cnpj": {
+                                        "type": "string",
+                                        "example": "98.765.432/0001-10"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "telefone": {
+                                        "type": "string"
+                                    },
+                                    "plano": {
+                                        "type": "string",
+                                        "enum": [
+                                            "basic",
+                                            "professional",
+                                            "enterprise"
+                                        ]
+                                    },
+                                    "max_filiais": {
+                                        "type": "integer",
+                                        "example": 5
+                                    },
+                                    "max_usuarios": {
+                                        "type": "integer",
+                                        "example": 50
+                                    },
+                                    "responsavel": {
+                                        "type": "string"
+                                    },
+                                    "cidade": {
+                                        "type": "string"
+                                    },
+                                    "estado": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Empresa criada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "$ref": "#/components/schemas/Empresa"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validação falhou",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RespostaErro"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/empresas/{id}": {
+            "get": {
+                "tags": [
+                    "Empresas"
+                ],
+                "summary": "Visualizar empresa",
+                "operationId": "1f2aae1cfc6afbd2e92f6c7561f6e96f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dados da empresa",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "$ref": "#/components/schemas/Empresa"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Não encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RespostaErro"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Empresas"
+                ],
+                "summary": "Atualizar empresa",
+                "operationId": "8d6977d43f1f555f0ad95da3f735ad17",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nome": {
+                                        "type": "string"
+                                    },
+                                    "cnpj": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "ativo",
+                                            "inativo",
+                                            "bloqueado"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Empresa atualizada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "$ref": "#/components/schemas/Empresa"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Não encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RespostaErro"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Empresas"
+                ],
+                "summary": "Excluir empresa",
+                "description": "Soft delete. Não é possível excluir a própria empresa.",
+                "operationId": "2798dd59c3a81ee404a7947fb6020b47",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Empresa excluída",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "mensagem": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Não encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RespostaErro"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/empresas/{id}/ativar": {
+            "patch": {
+                "tags": [
+                    "Empresas"
+                ],
+                "summary": "Ativar empresa",
+                "operationId": "16030b3ae4a51c59bd9df2e43a625ed8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Empresa ativada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "mensagem": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/empresas/{id}/inativar": {
+            "patch": {
+                "tags": [
+                    "Empresas"
+                ],
+                "summary": "Inativar empresa",
+                "operationId": "f88232bb78f98a9bde849e7e8fbb385f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Empresa inativada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "mensagem": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/empresas/{id}/logo": {
+            "post": {
+                "tags": [
+                    "Empresas"
+                ],
+                "summary": "Upload do logotipo",
+                "operationId": "3e120b691454ce6a9875eac0a6caa79a",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "logo": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Logo atualizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/filiais": {
+            "get": {
+                "tags": [
+                    "Filiais"
+                ],
+                "summary": "Listar filiais",
+                "description": "Filiais da empresa. Super Admin pode usar X-Empresa-Id.",
+                "operationId": "e6fcb10ee04f09b63d27b229dac1fda2",
+                "parameters": [
+                    {
+                        "name": "X-Empresa-Id",
+                        "in": "header",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "ativo",
+                                "inativo"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de filiais",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Filial"
+                                                    }
+                                                },
+                                                "total": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Filiais"
+                ],
+                "summary": "Cadastrar filial",
+                "description": "Valida limite max_filiais da empresa.",
+                "operationId": "73432109a2732a9b8317debe8a8eb30e",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nome"
+                                ],
+                                "properties": {
+                                    "nome": {
+                                        "type": "string",
+                                        "example": "Filial Sul"
+                                    },
+                                    "codigo": {
+                                        "type": "string",
+                                        "example": "FIL002"
+                                    },
+                                    "cnpj": {
+                                        "type": "string"
+                                    },
+                                    "responsavel": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "telefone": {
+                                        "type": "string"
+                                    },
+                                    "horario_abertura": {
+                                        "type": "string",
+                                        "example": "08:00"
+                                    },
+                                    "horario_fechamento": {
+                                        "type": "string",
+                                        "example": "18:00"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Filial criada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "$ref": "#/components/schemas/Filial"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Limite atingido ou validação falhou",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RespostaErro"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/filiais/{id}": {
+            "get": {
+                "tags": [
+                    "Filiais"
+                ],
+                "summary": "Visualizar filial",
+                "operationId": "1c2c98b2faff2ff8298ff11f88516936",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dados da filial",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "$ref": "#/components/schemas/Filial"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Não encontrada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RespostaErro"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Filiais"
+                ],
+                "summary": "Atualizar filial",
+                "operationId": "59b0d623a8e443c89bdf08adffd9629f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nome": {
+                                        "type": "string"
+                                    },
+                                    "codigo": {
+                                        "type": "string"
+                                    },
+                                    "responsavel": {
+                                        "type": "string"
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "ativo",
+                                            "inativo"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Filial atualizada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "$ref": "#/components/schemas/Filial"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Filiais"
+                ],
+                "summary": "Excluir filial",
+                "operationId": "9d9ce54abfea18cc824524799cc6e3b9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Filial excluída",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "mensagem": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/filiais/{id}/ativar": {
+            "patch": {
+                "tags": [
+                    "Filiais"
+                ],
+                "summary": "Ativar filial",
+                "operationId": "60ed0b3db33e98a3f8c97b918a1c2a04",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ativada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/filiais/{id}/inativar": {
+            "patch": {
+                "tags": [
+                    "Filiais"
+                ],
+                "summary": "Inativar filial",
+                "operationId": "d12639bc0d6ac0bd0cab2a3ba3110a3f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Inativada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/logs": {
+            "get": {
+                "tags": [
+                    "Logs"
+                ],
+                "summary": "Listar logs de auditoria",
+                "description": "Super Admin vê todos; demais veem da própria empresa.",
+                "operationId": "b313909ed3e84226fdb69973d8949f4b",
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "acao",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "modulo",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "data_inicio",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2026-01-01"
+                        }
+                    },
+                    {
+                        "name": "data_fim",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2026-12-31"
+                        }
+                    },
+                    {
+                        "name": "ip",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Logs paginados",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Log"
+                                                    }
+                                                },
+                                                "total": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/logs/{id}": {
+            "get": {
+                "tags": [
+                    "Logs"
+                ],
+                "summary": "Visualizar log completo",
+                "description": "Retorna o log com payload enviado e payload anterior.",
+                "operationId": "4b76f301f44bdaed2d0d7e361b632b1b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Log detalhado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "$ref": "#/components/schemas/Log"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RespostaErro"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/logs/exportar": {
+            "get": {
+                "tags": [
+                    "Logs"
+                ],
+                "summary": "Exportar logs",
+                "description": "Exporta logs como JSON. Máximo 1000 registros.",
+                "operationId": "7e13e699dc33ea8d9525c2f10e5ecebb",
+                "parameters": [
+                    {
+                        "name": "data_inicio",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "data_fim",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date"
+                        }
+                    },
+                    {
+                        "name": "modulo",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Logs exportados",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Log"
+                                            }
+                                        },
+                                        "total": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/perfil": {
+            "get": {
+                "tags": [
+                    "Perfil"
+                ],
+                "summary": "Ver próprio perfil",
+                "operationId": "466a966b9931420cb710b3ac1b2ff036",
+                "responses": {
+                    "200": {
+                        "description": "Perfil do usuário",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "$ref": "#/components/schemas/Usuario"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Perfil"
+                ],
+                "summary": "Atualizar próprio perfil",
+                "operationId": "bfd265eb92abfe391d1f8c1c309e805d",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nome": {
+                                        "type": "string",
+                                        "example": "João Silva"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "telefone": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Perfil atualizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "$ref": "#/components/schemas/Usuario"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/perfil/trocar-senha": {
+            "post": {
+                "tags": [
+                    "Perfil"
+                ],
+                "summary": "Trocar própria senha",
+                "operationId": "5d3d4ce58e85242ca98989e921ab7145",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "senha_atual",
+                                    "nova_senha",
+                                    "confirmacao"
+                                ],
+                                "properties": {
+                                    "senha_atual": {
+                                        "type": "string",
+                                        "format": "password"
+                                    },
+                                    "nova_senha": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "minLength": 8
+                                    },
+                                    "confirmacao": {
+                                        "type": "string",
+                                        "format": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Senha alterada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "mensagem": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/perfil/foto": {
+            "post": {
+                "tags": [
+                    "Perfil"
+                ],
+                "summary": "Upload da foto de perfil",
+                "operationId": "61d86f5f3a9be9d573c93d98d9924ca1",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "foto": {
+                                        "description": "JPG/PNG/GIF máx 2MB",
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Foto atualizada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/perfil/permissoes": {
+            "get": {
+                "tags": [
+                    "Perfil"
+                ],
+                "summary": "Listar permissões do usuário",
+                "description": "Todas as permissões consolidadas dos roles do usuário.",
+                "operationId": "2d1cc8b5d0ffadbb09d1429e975a33d3",
+                "responses": {
+                    "200": {
+                        "description": "Lista de permissões",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Permission"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/permissoes": {
+            "get": {
+                "tags": [
+                    "Permissões"
+                ],
+                "summary": "Listar permissões",
+                "operationId": "13042cba8ecec7b4b01a30bf6fd3b973",
+                "responses": {
+                    "200": {
+                        "description": "Lista de permissões",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Permission"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Permissões"
+                ],
+                "summary": "Criar permissão",
+                "description": "Apenas Super Admin.",
+                "operationId": "a44618a24cee31e2d5b25fe0edb988f5",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nome",
+                                    "slug",
+                                    "modulo"
+                                ],
+                                "properties": {
+                                    "nome": {
+                                        "type": "string",
+                                        "example": "Aprovar Orçamentos"
+                                    },
+                                    "slug": {
+                                        "type": "string",
+                                        "example": "financeiro.aprovar"
+                                    },
+                                    "modulo": {
+                                        "type": "string",
+                                        "example": "financeiro"
+                                    },
+                                    "descricao": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Permissão criada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "$ref": "#/components/schemas/Permission"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Slug duplicado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RespostaErro"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/permissoes/por-modulo": {
+            "get": {
+                "tags": [
+                    "Permissões"
+                ],
+                "summary": "Permissões agrupadas por módulo",
+                "description": "Ideal para construir interfaces de configuração de roles.",
+                "operationId": "702090ae725ea5b456e231df3fb9368f",
+                "responses": {
+                    "200": {
+                        "description": "Agrupadas por módulo",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/permissoes/{id}": {
+            "get": {
+                "tags": [
+                    "Permissões"
+                ],
+                "summary": "Visualizar permissão",
+                "operationId": "cf787b135747bfe68eacf4b2f4e0b490",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dados",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "$ref": "#/components/schemas/Permission"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Permissões"
+                ],
+                "summary": "Atualizar permissão",
+                "operationId": "db406189c6dff02eee47bb1dccf2cb10",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nome": {
+                                        "type": "string"
+                                    },
+                                    "descricao": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Atualizada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "$ref": "#/components/schemas/Permission"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Permissões"
+                ],
+                "summary": "Excluir permissão",
+                "description": "Não pode excluir se vinculada a roles.",
+                "operationId": "082856fc5fefd9d7d94b8d0a6a5ddfdd",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Excluída",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "mensagem": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "Em uso por roles",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RespostaErro"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/roles": {
+            "get": {
+                "tags": [
+                    "Roles"
+                ],
+                "summary": "Listar roles",
+                "operationId": "2d9068f83b505c1b4188716fe190e18d",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "ativo",
+                                "inativo"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de roles",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Role"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Roles"
+                ],
+                "summary": "Criar role",
+                "operationId": "a376ecec06401327e26bb10ead7b2995",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nome"
+                                ],
+                                "properties": {
+                                    "nome": {
+                                        "type": "string",
+                                        "example": "Operador Financeiro"
+                                    },
+                                    "descricao": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Role criado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "$ref": "#/components/schemas/Role"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validação falhou",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RespostaErro"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/roles/{id}": {
+            "get": {
+                "tags": [
+                    "Roles"
+                ],
+                "summary": "Visualizar role",
+                "operationId": "392f07186321af9799b56a283e3a8690",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Role com permissões",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "$ref": "#/components/schemas/Role"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RespostaErro"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Roles"
+                ],
+                "summary": "Atualizar role",
+                "description": "Não pode modificar roles de sistema.",
+                "operationId": "1210c06dd589ab8e08a7fd3c8e284359",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nome": {
+                                        "type": "string"
+                                    },
+                                    "descricao": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Role atualizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "$ref": "#/components/schemas/Role"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Role de sistema protegido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RespostaErro"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Roles"
+                ],
+                "summary": "Excluir role",
+                "description": "Não pode excluir roles de sistema.",
+                "operationId": "ad4299a12bced2bcd210b2c0ea478c95",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Role excluído",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "mensagem": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Role de sistema protegido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RespostaErro"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/roles/{id}/duplicar": {
+            "post": {
+                "tags": [
+                    "Roles"
+                ],
+                "summary": "Duplicar role",
+                "description": "Clona o role com todas as permissões.",
+                "operationId": "32ee6c704e845e1bb106ff9309867aeb",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Role duplicado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "$ref": "#/components/schemas/Role"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/roles/{id}/ativar": {
+            "patch": {
+                "tags": [
+                    "Roles"
+                ],
+                "summary": "Ativar role",
+                "operationId": "0ba328607052a2462e30de1694f6f732",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Role ativado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/roles/{id}/inativar": {
+            "patch": {
+                "tags": [
+                    "Roles"
+                ],
+                "summary": "Inativar role",
+                "operationId": "afa5f99edb28a20534deadd602cb1a05",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Role inativado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/roles/{id}/permissoes": {
+            "post": {
+                "tags": [
+                    "Roles"
+                ],
+                "summary": "Atribuir permissões ao role",
+                "description": "Sincroniza as permissões do role.",
+                "operationId": "1e27b73ee42e24ed9899101e3fb55945",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "permissoes"
+                                ],
+                                "properties": {
+                                    "permissoes": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            2,
+                                            3
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Permissões sincronizadas",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "$ref": "#/components/schemas/Role"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/health": {
+            "get": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Health check",
+                "description": "Verifica se a API está online.",
+                "operationId": "a482940973ffad44e4963124db7fae83",
+                "responses": {
+                    "200": {
+                        "description": "API online",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "ok"
+                                        },
+                                        "timestamp": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "servers": [
+                    {
+                        "url": "http://localhost/SistemaPesquisas/public",
+                        "description": "Servidor Local XAMPP"
+                    }
+                ]
+            }
+        },
+        "/api/v1/usuarios": {
+            "get": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Listar usuários",
+                "operationId": "a25d2373e5467dc335ea0fcc231f571c",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "ativo",
+                                "inativo",
+                                "bloqueado"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "tipo",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "admin",
+                                "gerente",
+                                "usuario"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "filial_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista paginada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "properties": {
+                                                "data": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "$ref": "#/components/schemas/Usuario"
+                                                    }
+                                                },
+                                                "total": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Cadastrar usuário",
+                "description": "Valida limite max_usuarios.",
+                "operationId": "14fba63bb769fe8d1cc6de821b1fa089",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nome",
+                                    "email",
+                                    "senha",
+                                    "tipo"
+                                ],
+                                "properties": {
+                                    "nome": {
+                                        "type": "string",
+                                        "example": "Maria Santos"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "senha": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "minLength": 8
+                                    },
+                                    "tipo": {
+                                        "type": "string",
+                                        "enum": [
+                                            "admin",
+                                            "gerente",
+                                            "usuario"
+                                        ]
+                                    },
+                                    "filial_id": {
+                                        "type": "integer"
+                                    },
+                                    "telefone": {
+                                        "type": "string"
+                                    },
+                                    "roles": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usuário criado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "$ref": "#/components/schemas/Usuario"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validação falhou",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RespostaErro"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/usuarios/{id}": {
+            "get": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Visualizar usuário",
+                "operationId": "f78387c8739b2423bde11f71ff114d1d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dados do usuário com roles",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "$ref": "#/components/schemas/Usuario"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Não encontrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RespostaErro"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Atualizar usuário",
+                "operationId": "a8ab6bb7df25980d2728daeccaa4e645",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nome": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email"
+                                    },
+                                    "tipo": {
+                                        "type": "string",
+                                        "enum": [
+                                            "admin",
+                                            "gerente",
+                                            "usuario"
+                                        ]
+                                    },
+                                    "filial_id": {
+                                        "type": "integer"
+                                    },
+                                    "nova_senha": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "minLength": 8
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Atualizado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "$ref": "#/components/schemas/Usuario"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Excluir usuário",
+                "operationId": "25e4dca335cf2c1fec028235d8202147",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Excluído",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/usuarios/{id}/bloquear": {
+            "patch": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Bloquear usuário",
+                "operationId": "361429623d921a93e81a2d39f62ebab3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Bloqueado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/usuarios/{id}/ativar": {
+            "patch": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Ativar usuário",
+                "operationId": "4e15b5ac273ce0f19904d2c20d43e503",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ativado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/usuarios/{id}/resetar-senha": {
+            "post": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Resetar senha do usuário (admin)",
+                "description": "Gera nova senha aleatória.",
+                "operationId": "f7fa84281c40189af29389e437e591b8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Nova senha gerada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "properties": {
+                                                "nova_senha": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/usuarios/{id}/roles": {
+            "post": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Atribuir roles ao usuário",
+                "description": "Sincroniza os roles do usuário.",
+                "operationId": "95cdda4501edff9574cb3888df2dc3e3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "roles"
+                                ],
+                                "properties": {
+                                    "roles": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        },
+                                        "example": [
+                                            1,
+                                            3
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Roles sincronizados",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "$ref": "#/components/schemas/Usuario"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/usuarios/{id}/foto": {
+            "post": {
+                "tags": [
+                    "Usuários"
+                ],
+                "summary": "Upload da foto do usuário",
+                "operationId": "130bee58be64ebd9a8a27f5ec075ce28",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "properties": {
+                                    "foto": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Foto atualizada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "RespostaErro": {
+                "description": "Resposta de erro padrão da API",
+                "properties": {
+                    "sucesso": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "mensagem": {
+                        "type": "string",
+                        "example": "Mensagem descritiva do erro."
+                    }
+                },
+                "type": "object"
+            },
+            "Configuracao": {
+                "description": "Configuração chave-valor por empresa/filial",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "empresa_id": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "filial_id": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "chave": {
+                        "type": "string",
+                        "example": "smtp.host"
+                    },
+                    "valor": {
+                        "type": "string",
+                        "example": "smtp.gmail.com",
+                        "nullable": true
+                    },
+                    "tipo": {
+                        "type": "string",
+                        "example": "string",
+                        "enum": [
+                            "string",
+                            "boolean",
+                            "integer",
+                            "json"
+                        ]
+                    },
+                    "grupo": {
+                        "type": "string",
+                        "example": "email",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "Empresa": {
+                "description": "Dados de uma empresa (tenant)",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "nome": {
+                        "type": "string",
+                        "example": "Empresa ABC Ltda"
+                    },
+                    "cnpj": {
+                        "type": "string",
+                        "example": "12.345.678/0001-90"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "contato@empresa.com"
+                    },
+                    "telefone": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "logo": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "ativo",
+                        "enum": [
+                            "ativo",
+                            "inativo",
+                            "bloqueado"
+                        ]
+                    },
+                    "plano": {
+                        "type": "string",
+                        "example": "professional"
+                    },
+                    "max_filiais": {
+                        "type": "integer",
+                        "example": 10
+                    },
+                    "max_usuarios": {
+                        "type": "integer",
+                        "example": 100
+                    },
+                    "responsavel": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "cep": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "endereco": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "cidade": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "estado": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Filial": {
+                "description": "Dados de uma filial",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "empresa_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "nome": {
+                        "type": "string",
+                        "example": "Filial Centro"
+                    },
+                    "codigo": {
+                        "type": "string",
+                        "example": "FIL001",
+                        "nullable": true
+                    },
+                    "cnpj": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "email": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "telefone": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "responsavel": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "ativo",
+                        "enum": [
+                            "ativo",
+                            "inativo"
+                        ]
+                    },
+                    "endereco": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "cidade": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "estado": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "horario_abertura": {
+                        "type": "string",
+                        "example": "08:00",
+                        "nullable": true
+                    },
+                    "horario_fechamento": {
+                        "type": "string",
+                        "example": "18:00",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Log": {
+                "description": "Registro de auditoria",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "empresa_id": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "filial_id": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "user_id": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "usuario_nome": {
+                        "type": "string",
+                        "example": "João Silva",
+                        "nullable": true
+                    },
+                    "acao": {
+                        "type": "string",
+                        "example": "POST"
+                    },
+                    "modulo": {
+                        "type": "string",
+                        "example": "empresas",
+                        "nullable": true
+                    },
+                    "rota": {
+                        "type": "string",
+                        "example": "/api/v1/empresas",
+                        "nullable": true
+                    },
+                    "metodo": {
+                        "type": "string",
+                        "example": "POST",
+                        "nullable": true
+                    },
+                    "ip": {
+                        "type": "string",
+                        "example": "192.168.0.1",
+                        "nullable": true
+                    },
+                    "user_agent": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "status_code": {
+                        "type": "integer",
+                        "example": 201,
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Permission": {
+                "description": "Permissão do sistema",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "nome": {
+                        "type": "string",
+                        "example": "Listar Empresas"
+                    },
+                    "slug": {
+                        "type": "string",
+                        "example": "empresa.listar"
+                    },
+                    "modulo": {
+                        "type": "string",
+                        "example": "empresa"
+                    },
+                    "descricao": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Role": {
+                "description": "Perfil de acesso (Role)",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "empresa_id": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "nome": {
+                        "type": "string",
+                        "example": "Administrador Financeiro"
+                    },
+                    "slug": {
+                        "type": "string",
+                        "example": "administrador-financeiro"
+                    },
+                    "descricao": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "ativo",
+                        "enum": [
+                            "ativo",
+                            "inativo"
+                        ]
+                    },
+                    "sistema": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Usuario": {
+                "description": "Dados de um usuário",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 2
+                    },
+                    "empresa_id": {
+                        "type": "integer",
+                        "example": 1,
+                        "nullable": true
+                    },
+                    "filial_id": {
+                        "type": "integer",
+                        "example": 1,
+                        "nullable": true
+                    },
+                    "nome": {
+                        "type": "string",
+                        "example": "João Silva"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "joao@empresa.com"
+                    },
+                    "foto": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "telefone": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "tipo": {
+                        "type": "string",
+                        "example": "usuario",
+                        "enum": [
+                            "superadmin",
+                            "admin",
+                            "gerente",
+                            "usuario"
+                        ]
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "ativo",
+                        "enum": [
+                            "ativo",
+                            "inativo",
+                            "bloqueado"
+                        ]
+                    },
+                    "ultimo_login": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "primeiro_acesso": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "description": "Token JWT obtido via POST /api/v1/auth/login. Insira: Bearer {token}",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Autenticação",
+            "description": "Login, logout, refresh e gestão de senha"
+        },
+        {
+            "name": "Dashboard",
+            "description": "Painéis de controle Super Admin e Empresa"
+        },
+        {
+            "name": "Empresas",
+            "description": "Gestão de empresas (multi-tenant)"
+        },
+        {
+            "name": "Filiais",
+            "description": "Gestão de filiais por empresa"
+        },
+        {
+            "name": "Usuários",
+            "description": "Gestão de usuários por empresa"
+        },
+        {
+            "name": "Roles",
+            "description": "Perfis de acesso (RBAC)"
+        },
+        {
+            "name": "Permissões",
+            "description": "Permissões do sistema"
+        },
+        {
+            "name": "Configurações",
+            "description": "Configurações por empresa/filial"
+        },
+        {
+            "name": "Logs",
+            "description": "Auditoria e rastreabilidade"
+        },
+        {
+            "name": "Perfil",
+            "description": "Gestão do próprio perfil do usuário autenticado"
+        }
+    ]
+}
