@@ -3146,7 +3146,7 @@
                 },
                 "servers": [
                     {
-                        "url": "http://localhost/SistemaPesquisas/public",
+                        "url": "http://localhost",
                         "description": "Servidor Local XAMPP"
                     }
                 ]
