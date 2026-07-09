@@ -31,11 +31,25 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (\Throwable $e, \Illuminate\Http\Request $request) {
-            if ($request->is('api/*')) {
+            if (! $request->is('api/*')) {
+                return null;
+            }
+
+            if ($e instanceof \Illuminate\Validation\ValidationException) {
                 return response()->json([
                     'sucesso'  => false,
-                    'mensagem' => $e->getMessage() ?: 'Erro interno do servidor.',
-                ], method_exists($e, 'getStatusCode') ? $e->getStatusCode() : 500);
+                    'mensagem' => 'Dados inválidos.',
+                    'erros'    => $e->errors(),
+                ], $e->status);
             }
+
+            if ($e instanceof \Illuminate\Http\Exceptions\HttpResponseException) {
+                return $e->getResponse();
+            }
+
+            return response()->json([
+                'sucesso'  => false,
+                'mensagem' => $e->getMessage() ?: 'Erro interno do servidor.',
+            ], method_exists($e, 'getStatusCode') ? $e->getStatusCode() : 500);
         });
     })->create();

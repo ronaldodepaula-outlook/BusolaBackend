@@ -11,6 +11,11 @@
         },
         "version": "1.0.0"
     },
+    "servers": [
+        {
+            "url": "/SistemaPesquisas/public"
+        }
+    ],
     "paths": {
         "/api/v1/auth/login": {
             "post": {
@@ -3772,6 +3777,1625 @@
                     }
                 ]
             }
+        },
+        "/api/v1/pesquisa-psicossocial/formularios/{formulario}/categorias": {
+            "get": {
+                "tags": [
+                    "Pesquisa Psicossocial - Categorias"
+                ],
+                "summary": "Listar categorias de um formulário",
+                "operationId": "3e2f29658d82eeac02ccde5e07c61273",
+                "parameters": [
+                    {
+                        "name": "formulario",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de categorias"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Pesquisa Psicossocial - Categorias"
+                ],
+                "summary": "Criar categoria",
+                "description": "Se o formulário já estiver vinculado a uma pesquisa encerrada, uma nova versão é criada automaticamente.",
+                "operationId": "419ac0f1a0a946d3fb62db8b259463b9",
+                "parameters": [
+                    {
+                        "name": "formulario",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Categoria criada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/categorias/{id}": {
+            "get": {
+                "tags": [
+                    "Pesquisa Psicossocial - Categorias"
+                ],
+                "summary": "Visualizar categoria",
+                "operationId": "f8b0cd0fc1e940ad714002c4dd21b025",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dados da categoria"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Pesquisa Psicossocial - Categorias"
+                ],
+                "summary": "Atualizar categoria",
+                "operationId": "d4f5a8734934e073c9fbd88f218b96aa",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Categoria atualizada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Pesquisa Psicossocial - Categorias"
+                ],
+                "summary": "Excluir categoria",
+                "operationId": "75f9ed8b4e01b43b4938b9d5f4729c19",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Categoria excluída"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/formularios/{formulario}/categorias/reordenar": {
+            "patch": {
+                "tags": [
+                    "Pesquisa Psicossocial - Categorias"
+                ],
+                "summary": "Reordenar categorias de um formulário",
+                "operationId": "0ce3d8d3566eb0e3249a73176932593a",
+                "parameters": [
+                    {
+                        "name": "formulario",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "ids"
+                                ],
+                                "properties": {
+                                    "ids": {
+                                        "description": "IDs das categorias na ordem desejada",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Categorias reordenadas"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/conceitos": {
+            "get": {
+                "tags": [
+                    "Pesquisa Psicossocial - Conceitos"
+                ],
+                "summary": "Listar conceitos de avaliação",
+                "operationId": "9fb6a3998869016e39184eb3869128ee",
+                "parameters": [
+                    {
+                        "name": "tipo",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "escala_likert",
+                                "frequencia",
+                                "numerica",
+                                "personalizado"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista paginada de conceitos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Pesquisa Psicossocial - Conceitos"
+                ],
+                "summary": "Criar conceito de avaliação",
+                "operationId": "b7088643f9ff2597406f5d4177f0c53a",
+                "responses": {
+                    "201": {
+                        "description": "Conceito criado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/conceitos/{id}": {
+            "get": {
+                "tags": [
+                    "Pesquisa Psicossocial - Conceitos"
+                ],
+                "summary": "Visualizar conceito de avaliação",
+                "operationId": "e6c9362fef0989eed775e8240c4d850f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dados do conceito, incluindo seus itens"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Pesquisa Psicossocial - Conceitos"
+                ],
+                "summary": "Atualizar conceito de avaliação",
+                "operationId": "3cceafa9f051b9ad92e0ae71ec0b8561",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Conceito atualizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Pesquisa Psicossocial - Conceitos"
+                ],
+                "summary": "Excluir conceito de avaliação",
+                "operationId": "122ac6e6993774103f62d3bc8ad7d914",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Conceito excluído"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/conceitos/{conceito}/itens": {
+            "post": {
+                "tags": [
+                    "Pesquisa Psicossocial - Conceitos"
+                ],
+                "summary": "Adicionar item a um conceito de avaliação",
+                "operationId": "87d734fe0bf82030bd26d81c1fbfebc1",
+                "parameters": [
+                    {
+                        "name": "conceito",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Item criado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/conceitos/{conceito}/itens/{itemId}": {
+            "put": {
+                "tags": [
+                    "Pesquisa Psicossocial - Conceitos"
+                ],
+                "summary": "Atualizar item de um conceito de avaliação",
+                "operationId": "08441983caa267b04dbcfff4d5ad78e4",
+                "parameters": [
+                    {
+                        "name": "conceito",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "itemId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Item atualizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Pesquisa Psicossocial - Conceitos"
+                ],
+                "summary": "Remover item de um conceito de avaliação",
+                "operationId": "5fa5b690160f5793786edcf0b5a2e825",
+                "parameters": [
+                    {
+                        "name": "conceito",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "itemId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Item removido"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/conceitos/{conceito}/itens/reordenar": {
+            "patch": {
+                "tags": [
+                    "Pesquisa Psicossocial - Conceitos"
+                ],
+                "summary": "Reordenar itens de um conceito de avaliação",
+                "operationId": "5133f40885eb8187d53181af20c3b757",
+                "parameters": [
+                    {
+                        "name": "conceito",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "ids"
+                                ],
+                                "properties": {
+                                    "ids": {
+                                        "description": "IDs dos itens na ordem desejada",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Itens reordenados"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/pesquisas/{pesquisa}/convites": {
+            "get": {
+                "tags": [
+                    "Pesquisa Psicossocial - Campanhas"
+                ],
+                "summary": "Listar convites (links individuais) de uma campanha",
+                "operationId": "ceb24d78cce41eaad6504fa135a77d70",
+                "parameters": [
+                    {
+                        "name": "pesquisa",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de convites com status de resposta"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/formularios": {
+            "get": {
+                "tags": [
+                    "Pesquisa Psicossocial - Formulários"
+                ],
+                "summary": "Listar formulários",
+                "operationId": "cc4058ade97a0eea8413525ec54221ab",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "rascunho",
+                                "publicado",
+                                "arquivado"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "tipo",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "global",
+                                "empresa"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista paginada de formulários"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Pesquisa Psicossocial - Formulários"
+                ],
+                "summary": "Criar formulário",
+                "operationId": "bf758bed670b2a204f69c5bc371601fc",
+                "responses": {
+                    "201": {
+                        "description": "Formulário criado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "dados": {
+                                            "$ref": "#/components/schemas/PesquisaFormulario"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validação falhou"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/formularios/{id}": {
+            "get": {
+                "tags": [
+                    "Pesquisa Psicossocial - Formulários"
+                ],
+                "summary": "Visualizar formulário",
+                "operationId": "3cebdc824af22fb4d1ee8818dc12f2f6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dados do formulário"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Pesquisa Psicossocial - Formulários"
+                ],
+                "summary": "Atualizar formulário",
+                "description": "Se o formulário já estiver vinculado a uma pesquisa encerrada, uma nova versão é criada automaticamente.",
+                "operationId": "b2c6ebcc81ad8787a58b5e7f74cacfc1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Formulário atualizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Pesquisa Psicossocial - Formulários"
+                ],
+                "summary": "Excluir formulário",
+                "operationId": "8ae83dd8072de4a6279f1c57941ee599",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Formulário excluído"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/formularios/{id}/estrutura": {
+            "get": {
+                "tags": [
+                    "Pesquisa Psicossocial - Formulários"
+                ],
+                "summary": "Visualizar a árvore completa do formulário (categorias, subcategorias, perguntas e conceitos)",
+                "operationId": "04a7a753b75710b646f8f46e0ba7cf1d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Estrutura completa do formulário"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/formularios/{id}/publicar": {
+            "patch": {
+                "tags": [
+                    "Pesquisa Psicossocial - Formulários"
+                ],
+                "summary": "Publicar formulário",
+                "operationId": "40617bdb92c3655b763c7ff9b37aec7c",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Formulário publicado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/formularios/{id}/arquivar": {
+            "patch": {
+                "tags": [
+                    "Pesquisa Psicossocial - Formulários"
+                ],
+                "summary": "Arquivar formulário",
+                "operationId": "8620a433dbec5f76f908d58f26da8896",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Formulário arquivado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/formularios/{id}/nova-versao": {
+            "post": {
+                "tags": [
+                    "Pesquisa Psicossocial - Formulários"
+                ],
+                "summary": "Forçar criação de uma nova versão do formulário",
+                "operationId": "2d464ab4e346d361550a528631cb1991",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Nova versão criada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/formularios/{id}/versoes": {
+            "get": {
+                "tags": [
+                    "Pesquisa Psicossocial - Formulários"
+                ],
+                "summary": "Listar todas as versões do grupo de um formulário",
+                "operationId": "b5adefd8f5e93efffb22c0f54eb0d543",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de versões"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/subcategorias/{subcategoria}/perguntas": {
+            "get": {
+                "tags": [
+                    "Pesquisa Psicossocial - Perguntas"
+                ],
+                "summary": "Listar perguntas de uma subcategoria",
+                "operationId": "5275a18fc0ea0919bd89d6ee221b5936",
+                "parameters": [
+                    {
+                        "name": "subcategoria",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de perguntas"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Pesquisa Psicossocial - Perguntas"
+                ],
+                "summary": "Criar pergunta",
+                "operationId": "6e3e94308ef734226ed6abd406051d7a",
+                "parameters": [
+                    {
+                        "name": "subcategoria",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Pergunta criada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/perguntas/{id}": {
+            "get": {
+                "tags": [
+                    "Pesquisa Psicossocial - Perguntas"
+                ],
+                "summary": "Visualizar pergunta",
+                "operationId": "ef17e0a4b88de5f331a562d49fc48f2b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dados da pergunta"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Pesquisa Psicossocial - Perguntas"
+                ],
+                "summary": "Atualizar pergunta",
+                "operationId": "98d958881e17e41e22410f0b6fc003ed",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Pergunta atualizada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Pesquisa Psicossocial - Perguntas"
+                ],
+                "summary": "Excluir pergunta",
+                "operationId": "d975ad4001d1e4fd579cb285e6d8a890",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Pergunta excluída"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/subcategorias/{subcategoria}/perguntas/reordenar": {
+            "patch": {
+                "tags": [
+                    "Pesquisa Psicossocial - Perguntas"
+                ],
+                "summary": "Reordenar perguntas de uma subcategoria",
+                "operationId": "df41aff011edea46e323972aecc5e7d4",
+                "parameters": [
+                    {
+                        "name": "subcategoria",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "ids"
+                                ],
+                                "properties": {
+                                    "ids": {
+                                        "description": "IDs das perguntas na ordem desejada",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Perguntas reordenadas"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/pesquisas": {
+            "get": {
+                "tags": [
+                    "Pesquisa Psicossocial - Campanhas"
+                ],
+                "summary": "Listar campanhas de pesquisa",
+                "operationId": "3e0cb147d8a64ec36089276a057e94fa",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "rascunho",
+                                "ativa",
+                                "encerrada",
+                                "cancelada"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista paginada de campanhas"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Pesquisa Psicossocial - Campanhas"
+                ],
+                "summary": "Criar campanha (rascunho)",
+                "description": "O formulário deve estar publicado e vigente.",
+                "operationId": "81ebdad8e2ee6342660db1d581857472",
+                "responses": {
+                    "201": {
+                        "description": "Campanha criada em rascunho"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/pesquisas/{id}": {
+            "get": {
+                "tags": [
+                    "Pesquisa Psicossocial - Campanhas"
+                ],
+                "summary": "Visualizar campanha",
+                "operationId": "433a41e24eb193b2f181dfd90ecfcbc3",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dados da campanha"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Pesquisa Psicossocial - Campanhas"
+                ],
+                "summary": "Atualizar dados da campanha",
+                "description": "Só é permitido enquanto a campanha está em rascunho.",
+                "operationId": "076d75dc43f81c943049635ec3f530cd",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Campanha atualizada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Pesquisa Psicossocial - Campanhas"
+                ],
+                "summary": "Excluir campanha (somente rascunho)",
+                "operationId": "f08642e7978252ac04ef198d293f3b23",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Campanha excluída"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/pesquisas/{id}/publico": {
+            "post": {
+                "tags": [
+                    "Pesquisa Psicossocial - Campanhas"
+                ],
+                "summary": "Definir público-alvo da campanha",
+                "operationId": "1edc29e27c39acff6ac837ed4e3d1384",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "tipo"
+                                ],
+                                "properties": {
+                                    "tipo": {
+                                        "type": "string",
+                                        "enum": [
+                                            "toda_empresa",
+                                            "filiais",
+                                            "colaboradores"
+                                        ]
+                                    },
+                                    "ids": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Público-alvo definido"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/pesquisas/{id}/publicar": {
+            "patch": {
+                "tags": [
+                    "Pesquisa Psicossocial - Campanhas"
+                ],
+                "summary": "Publicar campanha (rascunho -> ativa)",
+                "operationId": "cac3f402dce846f7a420dd00155cd42d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Campanha publicada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/pesquisas/{id}/encerrar": {
+            "patch": {
+                "tags": [
+                    "Pesquisa Psicossocial - Campanhas"
+                ],
+                "summary": "Encerrar campanha (ativa -> encerrada)",
+                "operationId": "a76b145ef49bef9acbe114bd42419b99",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Campanha encerrada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/publico/{token}": {
+            "get": {
+                "tags": [
+                    "Pesquisa Psicossocial - Resposta Pública"
+                ],
+                "summary": "Validar link individual e obter a estrutura da pesquisa a responder",
+                "description": "Endpoint público, sem autenticação. Retorna erro se o link já foi usado, a campanha não está ativa ou está fora do período.",
+                "operationId": "fe86d95cc770e0c9e6a6da6bb50be09b",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Estrutura da pesquisa"
+                    },
+                    "404": {
+                        "description": "Link não encontrado"
+                    },
+                    "409": {
+                        "description": "Link já usado, campanha indisponível ou fora do período"
+                    }
+                }
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/publico/{token}/respostas": {
+            "post": {
+                "tags": [
+                    "Pesquisa Psicossocial - Resposta Pública"
+                ],
+                "summary": "Submeter respostas via link individual",
+                "description": "Endpoint público, sem autenticação. A resposta gravada não é vinculada a nenhum usuário — apenas o link é marcado como utilizado.",
+                "operationId": "4c33e1ee01673fa688a2fc1aa636c76b",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Respostas registradas"
+                    },
+                    "422": {
+                        "description": "Pergunta obrigatória não respondida"
+                    }
+                }
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/publico/global/{token}": {
+            "get": {
+                "tags": [
+                    "Pesquisa Psicossocial - Resposta Pública"
+                ],
+                "summary": "Validar link global (compartilhado) e obter a estrutura da pesquisa",
+                "description": "Endpoint público, sem autenticação. O token identifica a CAMPANHA (não uma pessoa) — a prevenção de duplicidade é feita por um token de sessão gerado no navegador do respondente.",
+                "operationId": "56a941527c2e971a7efa419954a2b9e0",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "sessao_token",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Estrutura da pesquisa"
+                    },
+                    "404": {
+                        "description": "Link não encontrado"
+                    },
+                    "409": {
+                        "description": "Já respondido neste dispositivo, campanha indisponível ou fora do período"
+                    }
+                }
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/publico/global/{token}/respostas": {
+            "post": {
+                "tags": [
+                    "Pesquisa Psicossocial - Resposta Pública"
+                ],
+                "summary": "Submeter respostas via link global (compartilhado)",
+                "description": "Endpoint público, sem autenticação. A resposta gravada não é vinculada a nenhum dispositivo/sessão — apenas a sessão é marcada como utilizada.",
+                "operationId": "4aa90e0874b5ed692a9f0370e9341539",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Respostas registradas"
+                    },
+                    "422": {
+                        "description": "Pergunta obrigatória não respondida"
+                    }
+                }
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/pesquisas/{pesquisa}/resultados": {
+            "get": {
+                "tags": [
+                    "Pesquisa Psicossocial - Resultados"
+                ],
+                "summary": "Tabulação agregada de resultados de uma campanha",
+                "description": "Dados sempre agregados (contagens/médias) — nunca expõe uma resposta individual junto de dados de quem respondeu.",
+                "operationId": "b358195ccab83e66544d356c87ba7273",
+                "parameters": [
+                    {
+                        "name": "pesquisa",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Taxa de resposta, distribuição por pergunta e média por categoria"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/categorias/{categoria}/subcategorias": {
+            "get": {
+                "tags": [
+                    "Pesquisa Psicossocial - Subcategorias"
+                ],
+                "summary": "Listar subcategorias de uma categoria",
+                "operationId": "058a68dbd174e2311935570f45e94ebb",
+                "parameters": [
+                    {
+                        "name": "categoria",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de subcategorias"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Pesquisa Psicossocial - Subcategorias"
+                ],
+                "summary": "Criar subcategoria",
+                "operationId": "f33271e7ec3e3a0e95b8192689663227",
+                "parameters": [
+                    {
+                        "name": "categoria",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Subcategoria criada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/subcategorias/{id}": {
+            "get": {
+                "tags": [
+                    "Pesquisa Psicossocial - Subcategorias"
+                ],
+                "summary": "Visualizar subcategoria",
+                "operationId": "e8026e625b5895209d43f61b2b102af9",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dados da subcategoria"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Pesquisa Psicossocial - Subcategorias"
+                ],
+                "summary": "Atualizar subcategoria",
+                "operationId": "3eddd2ec9189dcc1b8854e273fc45871",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Subcategoria atualizada"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Pesquisa Psicossocial - Subcategorias"
+                ],
+                "summary": "Excluir subcategoria",
+                "operationId": "86d2cce8ab585fbc4fca948e3bac3c1e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Subcategoria excluída"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/categorias/{categoria}/subcategorias/reordenar": {
+            "patch": {
+                "tags": [
+                    "Pesquisa Psicossocial - Subcategorias"
+                ],
+                "summary": "Reordenar subcategorias de uma categoria",
+                "operationId": "3d376ef420942c3fdf7c44e24ac29c65",
+                "parameters": [
+                    {
+                        "name": "categoria",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "ids"
+                                ],
+                                "properties": {
+                                    "ids": {
+                                        "description": "IDs das subcategorias na ordem desejada",
+                                        "type": "array",
+                                        "items": {
+                                            "type": "integer"
+                                        }
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Subcategorias reordenadas"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
         }
     },
     "components": {
@@ -4188,6 +5812,453 @@
                     }
                 },
                 "type": "object"
+            },
+            "PesquisaCategoria": {
+                "description": "Categoria de um formulário de pesquisa psicossocial",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "formulario_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "origem_id": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "nome": {
+                        "type": "string",
+                        "example": "Carga de Trabalho"
+                    },
+                    "descricao": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "categoria_referencia": {
+                        "description": "Fator de risco psicossocial oficial (COPSOQ II) associado a esta categoria",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "severidade": {
+                        "description": "Severidade fixa (1-5); preenchida automaticamente quando categoria_referencia é definida",
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "ordem": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "ativo": {
+                        "type": "boolean",
+                        "example": true
+                    }
+                },
+                "type": "object"
+            },
+            "PesquisaColaborador": {
+                "description": "Colaborador da empresa (alvo do convite individual da pesquisa)",
+                "properties": {
+                    "id": {
+                        "description": "Colaborador da empresa — a pessoa física alvo do convite individual da\npesquisa, independente de possuir uma conta de acesso ao sistema\n(`users`). CPF e data de nascimento são dados sensíveis sob a ótica da\nLGPD: ficam gravados no banco SEMPRE cifrados (nunca em texto plano) e só\npodem ser lidos em claro dentro da aplicação, por quem tiver a permissão\n`colaborador.visualizar_dados_sensiveis` — toda leitura em claro é\nautomaticamente registrada pelo LogMiddleware do sistema (rota + usuário +\nIP + timestamp), atendendo ao princípio de responsabilização da LGPD.\nFora isso, a exibição padrão (listagens, exports) usa sempre a versão\nmascarada (`cpf_mascarado` / `data_nascimento_mascarada`).",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "empresa_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "nome": {
+                        "type": "string",
+                        "example": "Maria da Silva"
+                    },
+                    "email": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "cargo": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "cpf_mascarado": {
+                        "type": "string",
+                        "example": "***.***.**9-09",
+                        "nullable": true
+                    },
+                    "ativo": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "origem": {
+                        "type": "string",
+                        "enum": [
+                            "manual",
+                            "importacao_csv"
+                        ]
+                    }
+                },
+                "type": "object"
+            },
+            "PesquisaConceito": {
+                "description": "Conceito de avaliação (escala) reutilizável entre perguntas e formulários",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "empresa_id": {
+                        "type": "integer",
+                        "example": null,
+                        "nullable": true
+                    },
+                    "nome": {
+                        "type": "string",
+                        "example": "Escala de Satisfação"
+                    },
+                    "descricao": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "tipo": {
+                        "type": "string",
+                        "example": "escala_likert",
+                        "enum": [
+                            "escala_likert",
+                            "frequencia",
+                            "numerica",
+                            "personalizado"
+                        ]
+                    },
+                    "ativo": {
+                        "type": "boolean",
+                        "example": true
+                    }
+                },
+                "type": "object"
+            },
+            "PesquisaConceitoItem": {
+                "description": "Item (opção) de um conceito de avaliação",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "conceito_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "descricao": {
+                        "type": "string",
+                        "example": "Muito satisfeito"
+                    },
+                    "valor": {
+                        "type": "number",
+                        "format": "float",
+                        "example": 5
+                    },
+                    "cor": {
+                        "type": "string",
+                        "example": "#22c55e",
+                        "nullable": true
+                    },
+                    "ordem": {
+                        "type": "integer",
+                        "example": 1
+                    }
+                },
+                "type": "object"
+            },
+            "PesquisaFormulario": {
+                "description": "Formulário de pesquisa psicossocial (global ou de uma empresa), com versionamento",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "formulario_raiz_id": {
+                        "type": "integer",
+                        "example": null,
+                        "nullable": true
+                    },
+                    "empresa_id": {
+                        "type": "integer",
+                        "example": null,
+                        "nullable": true
+                    },
+                    "nome": {
+                        "type": "string",
+                        "example": "Avaliação de Riscos Psicossociais NR-1"
+                    },
+                    "codigo": {
+                        "type": "string",
+                        "example": "nr1-padrao"
+                    },
+                    "descricao": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "publicado",
+                        "enum": [
+                            "rascunho",
+                            "publicado",
+                            "arquivado"
+                        ]
+                    },
+                    "tipo": {
+                        "type": "string",
+                        "example": "global",
+                        "enum": [
+                            "global",
+                            "empresa"
+                        ]
+                    },
+                    "versao": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "ativo": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "created_by": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "updated_by": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "PesquisaGhe": {
+                "description": "Grupo Homogêneo de Exposição (GHE) — agrupa um ou mais Setores para fins de análise de risco psicossocial",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "empresa_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "nome": {
+                        "type": "string",
+                        "example": "GHE 01 – Comercial e Relacionamento"
+                    },
+                    "descricao": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "ativo": {
+                        "type": "boolean",
+                        "example": true
+                    }
+                },
+                "type": "object"
+            },
+            "PesquisaPergunta": {
+                "description": "Pergunta de uma subcategoria de formulário de pesquisa psicossocial",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "subcategoria_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "formulario_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "conceito_id": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "origem_id": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "tipo_pergunta": {
+                        "type": "string",
+                        "example": "escala",
+                        "enum": [
+                            "escala",
+                            "texto",
+                            "numero",
+                            "data",
+                            "sim_nao",
+                            "multipla_escolha",
+                            "unica_escolha"
+                        ]
+                    },
+                    "texto": {
+                        "type": "string",
+                        "example": "Com que frequência você sente excesso de demandas no trabalho?"
+                    },
+                    "descricao": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "obrigatoria": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "permite_observacao": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "permite_anexo": {
+                        "type": "boolean",
+                        "example": false
+                    },
+                    "ordem": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "ativo": {
+                        "type": "boolean",
+                        "example": true
+                    }
+                },
+                "type": "object"
+            },
+            "PesquisaCampanha": {
+                "description": "Campanha de aplicação de um formulário de pesquisa psicossocial",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "empresa_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "formulario_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "nome": {
+                        "type": "string",
+                        "example": "Avaliação de Riscos Psicossociais 2026/1",
+                        "nullable": true
+                    },
+                    "descricao": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "data_inicio": {
+                        "type": "string",
+                        "format": "date",
+                        "nullable": true
+                    },
+                    "data_fim": {
+                        "type": "string",
+                        "format": "date",
+                        "nullable": true
+                    },
+                    "anonima": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "status": {
+                        "type": "string",
+                        "example": "rascunho",
+                        "enum": [
+                            "rascunho",
+                            "ativa",
+                            "encerrada",
+                            "cancelada"
+                        ]
+                    },
+                    "criado_por": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "link_publico_token": {
+                        "description": "Token do link global compartilhável da campanha",
+                        "type": "string",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "PesquisaSetor": {
+                "description": "Setor organizacional — pertence a no máximo um GHE",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "empresa_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "ghe_id": {
+                        "type": "integer",
+                        "example": 1,
+                        "nullable": true
+                    },
+                    "nome": {
+                        "type": "string",
+                        "example": "Comercial"
+                    },
+                    "ativo": {
+                        "type": "boolean",
+                        "example": true
+                    }
+                },
+                "type": "object"
+            },
+            "PesquisaSubcategoria": {
+                "description": "Subcategoria de uma categoria de formulário de pesquisa psicossocial",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "categoria_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "formulario_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "origem_id": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "nome": {
+                        "type": "string",
+                        "example": "Excesso de demandas"
+                    },
+                    "descricao": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "ordem": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "ativo": {
+                        "type": "boolean",
+                        "example": true
+                    }
+                },
+                "type": "object"
             }
         },
         "securitySchemes": {
@@ -4239,6 +6310,38 @@
         {
             "name": "Perfil",
             "description": "Gestão do próprio perfil do usuário autenticado"
+        },
+        {
+            "name": "Pesquisa Psicossocial - Categorias",
+            "description": "Pesquisa Psicossocial - Categorias"
+        },
+        {
+            "name": "Pesquisa Psicossocial - Conceitos",
+            "description": "Pesquisa Psicossocial - Conceitos"
+        },
+        {
+            "name": "Pesquisa Psicossocial - Campanhas",
+            "description": "Pesquisa Psicossocial - Campanhas"
+        },
+        {
+            "name": "Pesquisa Psicossocial - Formulários",
+            "description": "Pesquisa Psicossocial - Formulários"
+        },
+        {
+            "name": "Pesquisa Psicossocial - Perguntas",
+            "description": "Pesquisa Psicossocial - Perguntas"
+        },
+        {
+            "name": "Pesquisa Psicossocial - Resposta Pública",
+            "description": "Pesquisa Psicossocial - Resposta Pública"
+        },
+        {
+            "name": "Pesquisa Psicossocial - Resultados",
+            "description": "Pesquisa Psicossocial - Resultados"
+        },
+        {
+            "name": "Pesquisa Psicossocial - Subcategorias",
+            "description": "Pesquisa Psicossocial - Subcategorias"
         }
     ]
 }

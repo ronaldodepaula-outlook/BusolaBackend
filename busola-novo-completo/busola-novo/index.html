@@ -1,0 +1,1611 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>busola - Gestão Inteligente de Riscos</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Auth Container -->
+    <div id="auth-container" class="auth-container active">
+        <!-- Login Screen -->
+        <div id="login-screen" class="auth-screen active">
+            <div class="auth-wrapper">
+                <div class="auth-left">
+                    <div class="auth-branding">
+                        <div class="logo-auth">
+                            <svg viewBox="0 0 200 200" width="80" height="80">
+                                <circle cx="100" cy="100" r="90" fill="none" stroke="#1BB8C2" stroke-width="3"/>
+                                <circle cx="100" cy="100" r="70" fill="none" stroke="#73DDD0" stroke-width="2"/>
+                                <path d="M 100 40 L 130 100 L 100 160 L 70 100 Z" fill="#0D3B8C"/>
+                                <circle cx="100" cy="100" r="8" fill="#1BB8C2"/>
+                            </svg>
+                        </div>
+                        <h1>busola</h1>
+                        <p>Gestão Inteligente de Riscos</p>
+                        <div class="auth-features">
+                            <div class="feature">
+                                <span class="feature-icon">📊</span>
+                                <span>Análise Completa</span>
+                            </div>
+                            <div class="feature">
+                                <span class="feature-icon">🎯</span>
+                                <span>Riscos Psicossociais</span>
+                            </div>
+                            <div class="feature">
+                                <span class="feature-icon">📈</span>
+                                <span>Plano de Ação</span>
+                            </div>
+                            <div class="feature">
+                                <span class="feature-icon">📋</span>
+                                <span>Relatórios NR-1</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="auth-right">
+                    <div class="auth-form-wrapper">
+                        <h2>Bem-vindo de volta</h2>
+                        <p>Faça login para acessar sua conta</p>
+                        
+                        <form id="login-form" class="auth-form">
+                            <div class="form-group">
+                                <label for="login-email">Email</label>
+                                <input type="email" id="login-email" placeholder="seu@email.com" required>
+                                <span class="error-message"></span>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="login-password">Senha</label>
+                                <div class="password-input-wrapper">
+                                    <input type="password" id="login-password" placeholder="••••••••" required>
+                                    <button type="button" class="toggle-password" onclick="togglePassword('login-password')">👁️</button>
+                                </div>
+                                <span class="error-message"></span>
+                            </div>
+                            
+                            <div class="form-remember">
+                                <label>
+                                    <input type="checkbox" id="remember-me">
+                                    <span>Lembrar-me</span>
+                                </label>
+                                <a href="#" onclick="showScreen('forgot-password-screen')" class="forgot-link">Esqueceu a senha?</a>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-full">Entrar</button>
+                        </form>
+                        
+                        <div class="auth-divider">ou</div>
+                        
+                        <div class="social-login">
+                            <button class="btn-social" onclick="socialLogin('google')">
+                                <span>🔵</span> Google
+                            </button>
+                            <button class="btn-social" onclick="socialLogin('microsoft')">
+                                <span>🔷</span> Microsoft
+                            </button>
+                        </div>
+                        
+                        <div class="auth-footer">
+                            <p>Não tem conta? <a href="#" onclick="showScreen('register-screen')">Registre-se aqui</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Register Screen -->
+        <div id="register-screen" class="auth-screen">
+            <div class="auth-wrapper">
+                <div class="auth-left">
+                    <div class="auth-branding">
+                        <div class="logo-auth">
+                            <svg viewBox="0 0 200 200" width="80" height="80">
+                                <circle cx="100" cy="100" r="90" fill="none" stroke="#1BB8C2" stroke-width="3"/>
+                                <circle cx="100" cy="100" r="70" fill="none" stroke="#73DDD0" stroke-width="2"/>
+                                <path d="M 100 40 L 130 100 L 100 160 L 70 100 Z" fill="#0D3B8C"/>
+                                <circle cx="100" cy="100" r="8" fill="#1BB8C2"/>
+                            </svg>
+                        </div>
+                        <h1>busola</h1>
+                        <p>Gestão Inteligente de Riscos</p>
+                        <div class="auth-benefits">
+                            <h3>Benefícios da Plataforma</h3>
+                            <ul>
+                                <li>✓ Conformidade com NR-1 e PGR</li>
+                                <li>✓ Análise automática de riscos</li>
+                                <li>✓ Relatórios técnicos em PDF</li>
+                                <li>✓ Suporte especializado 24/7</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="auth-right">
+                    <div class="auth-form-wrapper">
+                        <h2>Criar nova conta</h2>
+                        <p>Preencha os dados abaixo para se registrar</p>
+                        
+                        <form id="register-form" class="auth-form">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="register-name">Nome Completo</label>
+                                    <input type="text" id="register-name" placeholder="Seu nome" required>
+                                    <span class="error-message"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="register-company">Empresa</label>
+                                    <input type="text" id="register-company" placeholder="Nome da empresa" required>
+                                    <span class="error-message"></span>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="register-email">Email</label>
+                                <input type="email" id="register-email" placeholder="seu@email.com" required>
+                                <span class="error-message"></span>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="register-password">Senha</label>
+                                    <div class="password-input-wrapper">
+                                        <input type="password" id="register-password" placeholder="••••••••" required>
+                                        <button type="button" class="toggle-password" onclick="togglePassword('register-password')">👁️</button>
+                                    </div>
+                                    <div class="password-strength">
+                                        <div class="strength-bar"><div class="strength-fill"></div></div>
+                                        <span class="strength-text">Força: Fraca</span>
+                                    </div>
+                                    <span class="error-message"></span>
+                                </div>
+                                <div class="form-group">
+                                    <label for="register-confirm">Confirmar Senha</label>
+                                    <div class="password-input-wrapper">
+                                        <input type="password" id="register-confirm" placeholder="••••••••" required>
+                                        <button type="button" class="toggle-password" onclick="togglePassword('register-confirm')">👁️</button>
+                                    </div>
+                                    <span class="error-message"></span>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>
+                                    <input type="checkbox" id="register-terms" required>
+                                    <span>Aceito os <a href="#">Termos de Serviço</a> e <a href="#">Política de Privacidade</a></span>
+                                </label>
+                                <span class="error-message"></span>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-full">Criar Conta</button>
+                        </form>
+                        
+                        <div class="auth-footer">
+                            <p>Já tem conta? <a href="#" onclick="showScreen('login-screen')">Faça login aqui</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Forgot Password Screen -->
+        <div id="forgot-password-screen" class="auth-screen">
+            <div class="auth-wrapper">
+                <div class="auth-left">
+                    <div class="auth-branding">
+                        <div class="logo-auth">
+                            <svg viewBox="0 0 200 200" width="80" height="80">
+                                <circle cx="100" cy="100" r="90" fill="none" stroke="#1BB8C2" stroke-width="3"/>
+                                <circle cx="100" cy="100" r="70" fill="none" stroke="#73DDD0" stroke-width="2"/>
+                                <path d="M 100 40 L 130 100 L 100 160 L 70 100 Z" fill="#0D3B8C"/>
+                                <circle cx="100" cy="100" r="8" fill="#1BB8C2"/>
+                            </svg>
+                        </div>
+                        <h1>busola</h1>
+                        <p>Gestão Inteligente de Riscos</p>
+                        <div class="auth-help">
+                            <h3>Recuperar Acesso</h3>
+                            <p>Enviaremos um link de recuperação para seu email. Clique no link para redefinir sua senha.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="auth-right">
+                    <div class="auth-form-wrapper">
+                        <h2>Esqueceu sua senha?</h2>
+                        <p>Digite seu email para receber um link de recuperação</p>
+                        
+                        <form id="forgot-form" class="auth-form">
+                            <div class="form-group">
+                                <label for="forgot-email">Email</label>
+                                <input type="email" id="forgot-email" placeholder="seu@email.com" required>
+                                <span class="error-message"></span>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-full">Enviar Link de Recuperação</button>
+                        </form>
+                        
+                        <div class="auth-footer">
+                            <p><a href="#" onclick="showScreen('login-screen')">← Voltar ao login</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reset Password Screen -->
+        <div id="reset-password-screen" class="auth-screen">
+            <div class="auth-wrapper">
+                <div class="auth-left">
+                    <div class="auth-branding">
+                        <div class="logo-auth">
+                            <svg viewBox="0 0 200 200" width="80" height="80">
+                                <circle cx="100" cy="100" r="90" fill="none" stroke="#1BB8C2" stroke-width="3"/>
+                                <circle cx="100" cy="100" r="70" fill="none" stroke="#73DDD0" stroke-width="2"/>
+                                <path d="M 100 40 L 130 100 L 100 160 L 70 100 Z" fill="#0D3B8C"/>
+                                <circle cx="100" cy="100" r="8" fill="#1BB8C2"/>
+                            </svg>
+                        </div>
+                        <h1>busola</h1>
+                        <p>Gestão Inteligente de Riscos</p>
+                        <div class="auth-help">
+                            <h3>Redefinir Senha</h3>
+                            <p>Crie uma nova senha segura para sua conta. Certifique-se de usar uma combinação de letras, números e símbolos.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="auth-right">
+                    <div class="auth-form-wrapper">
+                        <h2>Redefinir Senha</h2>
+                        <p>Digite sua nova senha abaixo</p>
+                        
+                        <form id="reset-form" class="auth-form">
+                            <div class="form-group">
+                                <label for="reset-password">Nova Senha</label>
+                                <div class="password-input-wrapper">
+                                    <input type="password" id="reset-password" placeholder="••••••••" required>
+                                    <button type="button" class="toggle-password" onclick="togglePassword('reset-password')">👁️</button>
+                                </div>
+                                <div class="password-strength">
+                                    <div class="strength-bar"><div class="strength-fill"></div></div>
+                                    <span class="strength-text">Força: Fraca</span>
+                                </div>
+                                <span class="error-message"></span>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="reset-confirm">Confirmar Senha</label>
+                                <div class="password-input-wrapper">
+                                    <input type="password" id="reset-confirm" placeholder="••••••••" required>
+                                    <button type="button" class="toggle-password" onclick="togglePassword('reset-confirm')">👁️</button>
+                                </div>
+                                <span class="error-message"></span>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary btn-full">Redefinir Senha</button>
+                        </form>
+                        
+                        <div class="auth-footer">
+                            <p><a href="#" onclick="showScreen('login-screen')">← Voltar ao login</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App Container -->
+    <div id="app-container" class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <svg viewBox="0 0 200 200" width="40" height="40">
+                        <circle cx="100" cy="100" r="90" fill="none" stroke="#73DDD0" stroke-width="3"/>
+                        <circle cx="100" cy="100" r="70" fill="none" stroke="#1BB8C2" stroke-width="2"/>
+                        <path d="M 100 40 L 130 100 L 100 160 L 70 100 Z" fill="#FFFFFF"/>
+                        <circle cx="100" cy="100" r="8" fill="#73DDD0"/>
+                    </svg>
+                    <span>busola</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-title">Principal</div>
+                    <a href="#" onclick="navigateTo('dashboard')" class="nav-link active">
+                        <span class="icon">📊</span>
+                        <span>Dashboard</span>
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-title">Gestão</div>
+                    <a href="#" onclick="navigateTo('empresas')" class="nav-link">
+                        <span class="icon">🏢</span>
+                        <span>Empresas</span>
+                    </a>
+                    <a href="#" onclick="navigateTo('ghe')" class="nav-link">
+                        <span class="icon">👥</span>
+                        <span>GHE/GES</span>
+                    </a>
+                    <a href="#" onclick="navigateTo('colaboradores')" class="nav-link">
+                        <span class="icon">👤</span>
+                        <span>Colaboradores</span>
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-title">Avaliação</div>
+                    <a href="#" onclick="navigateTo('questionarios')" class="nav-link">
+                        <span class="icon">📝</span>
+                        <span>Questionários</span>
+                    </a>
+                    <a href="#" onclick="navigateTo('aplicacoes')" class="nav-link">
+                        <span class="icon">📤</span>
+                        <span>Aplicações</span>
+                    </a>
+                    <a href="#" onclick="navigateTo('respostas')" class="nav-link">
+                        <span class="icon">📥</span>
+                        <span>Respostas</span>
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-title">Análise</div>
+                    <a href="#" onclick="navigateTo('matriz-risco')" class="nav-link">
+                        <span class="icon">🎯</span>
+                        <span>Matriz de Risco</span>
+                    </a>
+                    <a href="#" onclick="navigateTo('inventario')" class="nav-link">
+                        <span class="icon">📋</span>
+                        <span>Inventário</span>
+                    </a>
+                    <a href="#" onclick="navigateTo('qualitativa')" class="nav-link">
+                        <span class="icon">💬</span>
+                        <span>Análise Qualitativa</span>
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-title">Ação</div>
+                    <a href="#" onclick="navigateTo('plano-acao')" class="nav-link">
+                        <span class="icon">✅</span>
+                        <span>Plano de Ação</span>
+                    </a>
+                    <a href="#" onclick="navigateTo('relatorios')" class="nav-link">
+                        <span class="icon">📄</span>
+                        <span>Relatórios</span>
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-title">Sistema</div>
+                    <a href="#" onclick="navigateTo('auditoria')" class="nav-link">
+                        <span class="icon">🔍</span>
+                        <span>Auditoria</span>
+                    </a>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">JD</div>
+                    <div class="user-details">
+                        <div class="user-name">João Duarte</div>
+                        <div class="user-role">Administrador</div>
+                    </div>
+                </div>
+                <button class="btn-logout" onclick="logout()">🚪</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h1 id="page-title">Dashboard</h1>
+                </div>
+                <div class="header-right">
+                    <button class="btn-icon" onclick="toggleNotifications()">🔔</button>
+                    <button class="btn-icon" onclick="toggleSettings()">⚙️</button>
+                </div>
+            </header>
+
+            <!-- Pages Container -->
+            <div class="pages-container">
+                <!-- Dashboard Page -->
+                <div id="dashboard" class="page active">
+                    <div class="page-header">
+                        <h2>Dashboard Executivo</h2>
+                        <p>Visão geral dos riscos psicossociais da organização</p>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">Score Psicossocial</div>
+                            <div class="stat-value">7.8</div>
+                            <div class="stat-subtitle">de 10 pontos</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Colaboradores Avaliados</div>
+                            <div class="stat-value">190</div>
+                            <div class="stat-subtitle">Taxa de resposta: 87%</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Riscos Identificados</div>
+                            <div class="stat-value">18</div>
+                            <div class="stat-subtitle">3 críticos, 5 altos</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Ações em Progresso</div>
+                            <div class="stat-value">12</div>
+                            <div class="stat-subtitle">6 pendentes</div>
+                        </div>
+                    </div>
+
+                    <div class="charts-row">
+                        <div class="chart-container">
+                            <h3>Distribuição de Riscos</h3>
+                            <div class="risk-distribution">
+                                <div class="risk-item">
+                                    <span class="risk-label">Crítico</span>
+                                    <div class="risk-bar">
+                                        <div class="risk-fill" style="width: 17%; background-color: #E74C3C;"></div>
+                                    </div>
+                                    <span class="risk-percent">17%</span>
+                                </div>
+                                <div class="risk-item">
+                                    <span class="risk-label">Alto</span>
+                                    <div class="risk-bar">
+                                        <div class="risk-fill" style="width: 28%; background-color: #F39C12;"></div>
+                                    </div>
+                                    <span class="risk-percent">28%</span>
+                                </div>
+                                <div class="risk-item">
+                                    <span class="risk-label">Moderado</span>
+                                    <div class="risk-bar">
+                                        <div class="risk-fill" style="width: 44%; background-color: #F1C40F;"></div>
+                                    </div>
+                                    <span class="risk-percent">44%</span>
+                                </div>
+                                <div class="risk-item">
+                                    <span class="risk-label">Baixo</span>
+                                    <div class="risk-bar">
+                                        <div class="risk-fill" style="width: 11%; background-color: #2ECC71;"></div>
+                                    </div>
+                                    <span class="risk-percent">11%</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="chart-container">
+                            <h3>Indicadores por Dimensão</h3>
+                            <div class="dimension-list">
+                                <div class="dimension-item">
+                                    <span>Demanda</span>
+                                    <div class="dimension-bar">
+                                        <div class="dimension-fill" style="width: 75%;"></div>
+                                    </div>
+                                    <span>7.5</span>
+                                </div>
+                                <div class="dimension-item">
+                                    <span>Controle</span>
+                                    <div class="dimension-bar">
+                                        <div class="dimension-fill" style="width: 65%;"></div>
+                                    </div>
+                                    <span>6.5</span>
+                                </div>
+                                <div class="dimension-item">
+                                    <span>Apoio</span>
+                                    <div class="dimension-bar">
+                                        <div class="dimension-fill" style="width: 82%;"></div>
+                                    </div>
+                                    <span>8.2</span>
+                                </div>
+                                <div class="dimension-item">
+                                    <span>Relacionamento</span>
+                                    <div class="dimension-bar">
+                                        <div class="dimension-fill" style="width: 70%;"></div>
+                                    </div>
+                                    <span>7.0</span>
+                                </div>
+                                <div class="dimension-item">
+                                    <span>Compensação</span>
+                                    <div class="dimension-bar">
+                                        <div class="dimension-fill" style="width: 58%;"></div>
+                                    </div>
+                                    <span>5.8</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chart-container full-width">
+                        <h3>Heatmap Organizacional</h3>
+                        <div class="heatmap-legend">
+                            <span class="legend-item" style="background-color: #0D3B8C; color: white;">Crítico</span>
+                            <span class="legend-item" style="background-color: #F39C12; color: white;">Alto</span>
+                            <span class="legend-item" style="background-color: #F1C40F;">Moderado</span>
+                            <span class="legend-item" style="background-color: #2ECC71;">Baixo</span>
+                            <span class="legend-item" style="background-color: #1BB8C2; color: white;">Irrelevante</span>
+                        </div>
+                        <div class="heatmap">
+                            <div class="heatmap-row">
+                                <div class="heatmap-cell" style="background-color: #E74C3C;">TI</div>
+                                <div class="heatmap-cell" style="background-color: #F39C12;">RH</div>
+                                <div class="heatmap-cell" style="background-color: #F1C40F;">Vendas</div>
+                                <div class="heatmap-cell" style="background-color: #2ECC71;">Operações</div>
+                                <div class="heatmap-cell" style="background-color: #1BB8C2;">Financeiro</div>
+                            </div>
+                            <div class="heatmap-row">
+                                <div class="heatmap-cell" style="background-color: #F39C12;">Logística</div>
+                                <div class="heatmap-cell" style="background-color: #F1C40F;">Marketing</div>
+                                <div class="heatmap-cell" style="background-color: #2ECC71;">Suporte</div>
+                                <div class="heatmap-cell" style="background-color: #1BB8C2;">Legal</div>
+                                <div class="heatmap-cell" style="background-color: #E74C3C;">Produção</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Empresas Page -->
+                <div id="empresas" class="page">
+                    <div class="page-header">
+                        <h2>Gestão de Empresas</h2>
+                        <p>Cadastro e administração de empresas</p>
+                    </div>
+
+                    <div class="page-actions">
+                        <button class="btn btn-primary" onclick="openModal('empresa-modal')">+ Nova Empresa</button>
+                        <input type="text" class="filter-input" placeholder="Buscar empresa...">
+                    </div>
+
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Razão Social</th>
+                                    <th>CNPJ</th>
+                                    <th>Grau de Risco</th>
+                                    <th>Colaboradores</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Empresa ABC Ltda</td>
+                                    <td>12.345.678/0001-90</td>
+                                    <td>3</td>
+                                    <td>120</td>
+                                    <td><span class="badge badge-success">Ativo</span></td>
+                                    <td>
+                                        <button class="btn-action" onclick="openModal('empresa-modal')">✏️</button>
+                                        <button class="btn-action" onclick="deleteItem('Empresa')">🗑️</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Indústria XYZ S.A.</td>
+                                    <td>98.765.432/0001-12</td>
+                                    <td>4</td>
+                                    <td>250</td>
+                                    <td><span class="badge badge-success">Ativo</span></td>
+                                    <td>
+                                        <button class="btn-action" onclick="openModal('empresa-modal')">✏️</button>
+                                        <button class="btn-action" onclick="deleteItem('Empresa')">🗑️</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- GHE Page -->
+                <div id="ghe" class="page">
+                    <div class="page-header">
+                        <h2>Grupos Homogêneos de Exposição</h2>
+                        <p>Gestão de GHE/GES para avaliação de riscos</p>
+                    </div>
+
+                    <div class="page-actions">
+                        <button class="btn btn-primary" onclick="openModal('ghe-modal')">+ Novo GHE</button>
+                        <input type="text" class="filter-input" placeholder="Buscar GHE...">
+                    </div>
+
+                    <div class="cards-grid">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>TI - Desenvolvedores</h3>
+                                <span class="badge badge-info">GHE-001</span>
+                            </div>
+                            <div class="card-info">
+                                <p><strong>Empresa:</strong> Empresa ABC Ltda</p>
+                                <p><strong>Colaboradores:</strong> 45</p>
+                                <p><strong>Risco:</strong> Alto</p>
+                            </div>
+                            <div class="card-actions">
+                                <button class="btn btn-small" onclick="openModal('ghe-modal')">Editar</button>
+                                <button class="btn btn-small btn-outline" onclick="deleteItem('GHE')">Deletar</button>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>RH - Gestores</h3>
+                                <span class="badge badge-info">GHE-002</span>
+                            </div>
+                            <div class="card-info">
+                                <p><strong>Empresa:</strong> Empresa ABC Ltda</p>
+                                <p><strong>Colaboradores:</strong> 12</p>
+                                <p><strong>Risco:</strong> Crítico</p>
+                            </div>
+                            <div class="card-actions">
+                                <button class="btn btn-small" onclick="openModal('ghe-modal')">Editar</button>
+                                <button class="btn btn-small btn-outline" onclick="deleteItem('GHE')">Deletar</button>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Vendas - Consultores</h3>
+                                <span class="badge badge-info">GHE-003</span>
+                            </div>
+                            <div class="card-info">
+                                <p><strong>Empresa:</strong> Indústria XYZ S.A.</p>
+                                <p><strong>Colaboradores:</strong> 78</p>
+                                <p><strong>Risco:</strong> Moderado</p>
+                            </div>
+                            <div class="card-actions">
+                                <button class="btn btn-small" onclick="openModal('ghe-modal')">Editar</button>
+                                <button class="btn btn-small btn-outline" onclick="deleteItem('GHE')">Deletar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Colaboradores Page -->
+                <div id="colaboradores" class="page">
+                    <div class="page-header">
+                        <h2>Gestão de Colaboradores</h2>
+                        <p>Cadastro e administração de colaboradores</p>
+                    </div>
+
+                    <div class="page-actions">
+                        <button class="btn btn-primary" onclick="openModal('colaborador-modal')">+ Novo Colaborador</button>
+                        <input type="text" class="filter-input" placeholder="Buscar colaborador...">
+                    </div>
+
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Email</th>
+                                    <th>Cargo</th>
+                                    <th>GHE</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Maria Silva</td>
+                                    <td>maria@empresa.com</td>
+                                    <td>Desenvolvedora</td>
+                                    <td>TI - Desenvolvedores</td>
+                                    <td><span class="badge badge-success">Ativo</span></td>
+                                    <td>
+                                        <button class="btn-action" onclick="openModal('colaborador-modal')">✏️</button>
+                                        <button class="btn-action" onclick="deleteItem('Colaborador')">🗑️</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>João Santos</td>
+                                    <td>joao@empresa.com</td>
+                                    <td>Gerente de Projetos</td>
+                                    <td>TI - Desenvolvedores</td>
+                                    <td><span class="badge badge-success">Ativo</span></td>
+                                    <td>
+                                        <button class="btn-action" onclick="openModal('colaborador-modal')">✏️</button>
+                                        <button class="btn-action" onclick="deleteItem('Colaborador')">🗑️</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Ana Costa</td>
+                                    <td>ana@empresa.com</td>
+                                    <td>Analista de RH</td>
+                                    <td>RH - Gestores</td>
+                                    <td><span class="badge badge-warning">Afastado</span></td>
+                                    <td>
+                                        <button class="btn-action" onclick="openModal('colaborador-modal')">✏️</button>
+                                        <button class="btn-action" onclick="deleteItem('Colaborador')">🗑️</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Questionários Page -->
+                <div id="questionarios" class="page">
+                    <div class="page-header">
+                        <h2>Questionários</h2>
+                        <p>Gestão de instrumentos de avaliação</p>
+                    </div>
+
+                    <div class="page-actions">
+                        <button class="btn btn-primary" onclick="openModal('questionario-modal')">+ Novo Questionário</button>
+                    </div>
+
+                    <div class="tabs">
+                        <button class="tab-button active" onclick="switchTab('tab-todos')">Todos</button>
+                        <button class="tab-button" onclick="switchTab('tab-copsoq')">COPSOQ II</button>
+                        <button class="tab-button" onclick="switchTab('tab-hse')">HSE</button>
+                        <button class="tab-button" onclick="switchTab('tab-clima')">Clima</button>
+                    </div>
+
+                    <div class="cards-grid">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>COPSOQ II - Versão Média</h3>
+                                <span class="badge badge-success">Ativo</span>
+                            </div>
+                            <div class="card-info">
+                                <p><strong>Dimensões:</strong> 6</p>
+                                <p><strong>Questões:</strong> 44</p>
+                                <p><strong>Tempo médio:</strong> 15 min</p>
+                            </div>
+                            <div class="card-actions">
+                                <button class="btn btn-small" onclick="openModal('questionario-modal')">Editar</button>
+                                <button class="btn btn-small btn-outline" onclick="deleteItem('Questionário')">Deletar</button>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>HSE Indicator Tool</h3>
+                                <span class="badge badge-success">Ativo</span>
+                            </div>
+                            <div class="card-info">
+                                <p><strong>Dimensões:</strong> 5</p>
+                                <p><strong>Questões:</strong> 35</p>
+                                <p><strong>Tempo médio:</strong> 12 min</p>
+                            </div>
+                            <div class="card-actions">
+                                <button class="btn btn-small" onclick="openModal('questionario-modal')">Editar</button>
+                                <button class="btn btn-small btn-outline" onclick="deleteItem('Questionário')">Deletar</button>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Clima Organizacional</h3>
+                                <span class="badge badge-info">Inativo</span>
+                            </div>
+                            <div class="card-info">
+                                <p><strong>Dimensões:</strong> 4</p>
+                                <p><strong>Questões:</strong> 28</p>
+                                <p><strong>Tempo médio:</strong> 10 min</p>
+                            </div>
+                            <div class="card-actions">
+                                <button class="btn btn-small" onclick="openModal('questionario-modal')">Editar</button>
+                                <button class="btn btn-small btn-outline" onclick="deleteItem('Questionário')">Deletar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Aplicações Page -->
+                <div id="aplicacoes" class="page">
+                    <div class="page-header">
+                        <h2>Aplicações de Questionários</h2>
+                        <p>Distribuição e acompanhamento de aplicações</p>
+                    </div>
+
+                    <div class="page-actions">
+                        <button class="btn btn-primary" onclick="openModal('aplicacao-modal')">+ Nova Aplicação</button>
+                        <input type="text" class="filter-input" placeholder="Buscar aplicação...">
+                    </div>
+
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Questionário</th>
+                                    <th>GHE</th>
+                                    <th>Data Início</th>
+                                    <th>Respondentes</th>
+                                    <th>Taxa Resposta</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>COPSOQ II - Versão Média</td>
+                                    <td>TI - Desenvolvedores</td>
+                                    <td>15/01/2024</td>
+                                    <td>45</td>
+                                    <td><div class="progress-bar"><div class="progress-fill" style="width: 87%;"></div></div></td>
+                                    <td><span class="badge badge-success">Em Andamento</span></td>
+                                    <td>
+                                        <button class="btn-action" onclick="openModal('aplicacao-modal')">✏️</button>
+                                        <button class="btn-action" onclick="deleteItem('Aplicação')">🗑️</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>HSE Indicator Tool</td>
+                                    <td>RH - Gestores</td>
+                                    <td>10/01/2024</td>
+                                    <td>12</td>
+                                    <td><div class="progress-bar"><div class="progress-fill" style="width: 100%;"></div></div></td>
+                                    <td><span class="badge badge-info">Finalizado</span></td>
+                                    <td>
+                                        <button class="btn-action" onclick="openModal('aplicacao-modal')">✏️</button>
+                                        <button class="btn-action" onclick="deleteItem('Aplicação')">🗑️</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Respostas Page -->
+                <div id="respostas" class="page">
+                    <div class="page-header">
+                        <h2>Respostas de Questionários</h2>
+                        <p>Visualização de respostas anônimas</p>
+                    </div>
+
+                    <div class="page-actions">
+                        <select class="filter-select">
+                            <option>Filtrar por Questionário</option>
+                            <option>COPSOQ II</option>
+                            <option>HSE</option>
+                        </select>
+                        <select class="filter-select">
+                            <option>Filtrar por GHE</option>
+                            <option>TI - Desenvolvedores</option>
+                            <option>RH - Gestores</option>
+                        </select>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID Resposta</th>
+                                    <th>Questionário</th>
+                                    <th>GHE</th>
+                                    <th>Data</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#RES-001</td>
+                                    <td>COPSOQ II</td>
+                                    <td>TI - Desenvolvedores</td>
+                                    <td>15/01/2024</td>
+                                    <td><span class="badge badge-success">Completo</span></td>
+                                    <td>
+                                        <button class="btn-action" onclick="alert('Visualizar resposta anônima')">👁️</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#RES-002</td>
+                                    <td>COPSOQ II</td>
+                                    <td>TI - Desenvolvedores</td>
+                                    <td>15/01/2024</td>
+                                    <td><span class="badge badge-success">Completo</span></td>
+                                    <td>
+                                        <button class="btn-action" onclick="alert('Visualizar resposta anônima')">👁️</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Matriz de Risco Page -->
+                <div id="matriz-risco" class="page">
+                    <div class="page-header">
+                        <h2>Matriz de Risco 5×5</h2>
+                        <p>Classificação de riscos psicossociais</p>
+                    </div>
+
+                    <div class="page-actions">
+                        <select class="filter-select">
+                            <option>Filtrar por GHE</option>
+                            <option>TI - Desenvolvedores</option>
+                            <option>RH - Gestores</option>
+                        </select>
+                    </div>
+
+                    <div class="matrix-container">
+                        <div class="matrix-legend">
+                            <span class="legend-item" style="background-color: #0D3B8C; color: white;">Crítico (17-25)</span>
+                            <span class="legend-item" style="background-color: #F39C12; color: white;">Alto (10-16)</span>
+                            <span class="legend-item" style="background-color: #F1C40F;">Moderado (5-9)</span>
+                            <span class="legend-item" style="background-color: #2ECC71;">Baixo (3-4)</span>
+                            <span class="legend-item" style="background-color: #1BB8C2; color: white;">Irrelevante (1-2)</span>
+                        </div>
+
+                        <table class="matrix-table">
+                            <thead>
+                                <tr>
+                                    <th>Severidade \ Probabilidade</th>
+                                    <th>1 - Improvável</th>
+                                    <th>2 - Raro</th>
+                                    <th>3 - Possível</th>
+                                    <th>4 - Provável</th>
+                                    <th>5 - Muito Provável</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="matrix-label">5 - Muito Grave</td>
+                                    <td class="matrix-cell cell-5" style="background-color: #F39C12;">5</td>
+                                    <td class="matrix-cell cell-5" style="background-color: #F39C12;">10</td>
+                                    <td class="matrix-cell cell-5" style="background-color: #E74C3C;">15</td>
+                                    <td class="matrix-cell cell-5" style="background-color: #E74C3C;">20</td>
+                                    <td class="matrix-cell cell-5" style="background-color: #0D3B8C; color: white;">25</td>
+                                </tr>
+                                <tr>
+                                    <td class="matrix-label">4 - Grave</td>
+                                    <td class="matrix-cell cell-4" style="background-color: #1BB8C2; color: white;">4</td>
+                                    <td class="matrix-cell cell-4" style="background-color: #2ECC71;">8</td>
+                                    <td class="matrix-cell cell-4" style="background-color: #F39C12;">12</td>
+                                    <td class="matrix-cell cell-4" style="background-color: #E74C3C;">16</td>
+                                    <td class="matrix-cell cell-4" style="background-color: #E74C3C;">20</td>
+                                </tr>
+                                <tr>
+                                    <td class="matrix-label">3 - Moderada</td>
+                                    <td class="matrix-cell cell-3" style="background-color: #1BB8C2; color: white;">3</td>
+                                    <td class="matrix-cell cell-3" style="background-color: #1BB8C2; color: white;">6</td>
+                                    <td class="matrix-cell cell-3" style="background-color: #F1C40F;">9</td>
+                                    <td class="matrix-cell cell-3" style="background-color: #F39C12;">12</td>
+                                    <td class="matrix-cell cell-3" style="background-color: #F39C12;">15</td>
+                                </tr>
+                                <tr>
+                                    <td class="matrix-label">2 - Leve</td>
+                                    <td class="matrix-cell cell-2" style="background-color: #1BB8C2; color: white;">2</td>
+                                    <td class="matrix-cell cell-2" style="background-color: #1BB8C2; color: white;">4</td>
+                                    <td class="matrix-cell cell-2" style="background-color: #2ECC71;">6</td>
+                                    <td class="matrix-cell cell-2" style="background-color: #F1C40F;">8</td>
+                                    <td class="matrix-cell cell-2" style="background-color: #F39C12;">10</td>
+                                </tr>
+                                <tr>
+                                    <td class="matrix-label">1 - Insignificante</td>
+                                    <td class="matrix-cell cell-1" style="background-color: #1BB8C2; color: white;">1</td>
+                                    <td class="matrix-cell cell-1" style="background-color: #1BB8C2; color: white;">2</td>
+                                    <td class="matrix-cell cell-1" style="background-color: #2ECC71;">3</td>
+                                    <td class="matrix-cell cell-1" style="background-color: #2ECC71;">4</td>
+                                    <td class="matrix-cell cell-1" style="background-color: #F1C40F;">5</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Inventário Page -->
+                <div id="inventario" class="page">
+                    <div class="page-header">
+                        <h2>Inventário de Riscos Psicossociais</h2>
+                        <p>Registro de riscos identificados</p>
+                    </div>
+
+                    <div class="page-actions">
+                        <button class="btn btn-primary" onclick="openModal('risco-modal')">+ Novo Risco</button>
+                        <input type="text" class="filter-input" placeholder="Buscar risco...">
+                    </div>
+
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Fator de Risco</th>
+                                    <th>Dimensão</th>
+                                    <th>GHE</th>
+                                    <th>Nível</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Sobrecarga de trabalho</td>
+                                    <td>Demanda Psicológica</td>
+                                    <td>TI - Desenvolvedores</td>
+                                    <td><span class="badge badge-danger">Crítico</span></td>
+                                    <td>
+                                        <button class="btn-action" onclick="openModal('risco-modal')">✏️</button>
+                                        <button class="btn-action" onclick="deleteItem('Risco')">🗑️</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Falta de autonomia</td>
+                                    <td>Controle</td>
+                                    <td>RH - Gestores</td>
+                                    <td><span class="badge badge-warning">Alto</span></td>
+                                    <td>
+                                        <button class="btn-action" onclick="openModal('risco-modal')">✏️</button>
+                                        <button class="btn-action" onclick="deleteItem('Risco')">🗑️</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Análise Qualitativa Page -->
+                <div id="qualitativa" class="page">
+                    <div class="page-header">
+                        <h2>Análise Qualitativa</h2>
+                        <p>Entrevistas, observações e diários de campo</p>
+                    </div>
+
+                    <div class="page-actions">
+                        <button class="btn btn-primary" onclick="openModal('entrevista-modal')">+ Nova Entrevista</button>
+                        <input type="text" class="filter-input" placeholder="Buscar entrevista...">
+                    </div>
+
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Tipo</th>
+                                    <th>GHE</th>
+                                    <th>Entrevistador</th>
+                                    <th>Temas</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>15/01/2024</td>
+                                    <td>Entrevista Individual</td>
+                                    <td>TI - Desenvolvedores</td>
+                                    <td>Psicólogo ABC</td>
+                                    <td>Demanda, Controle</td>
+                                    <td>
+                                        <button class="btn-action" onclick="openModal('entrevista-modal')">✏️</button>
+                                        <button class="btn-action" onclick="deleteItem('Entrevista')">🗑️</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Plano de Ação Page -->
+                <div id="plano-acao" class="page">
+                    <div class="page-header">
+                        <h2>Plano de Ação (PDCA)</h2>
+                        <p>Gestão de ações corretivas e preventivas</p>
+                    </div>
+
+                    <div class="page-actions">
+                        <button class="btn btn-primary" onclick="openModal('acao-modal')">+ Nova Ação</button>
+                        <input type="text" class="filter-input" placeholder="Buscar ação...">
+                    </div>
+
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Descrição</th>
+                                    <th>Risco</th>
+                                    <th>Responsável</th>
+                                    <th>Prazo</th>
+                                    <th>Progresso</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Implementar sistema de gestão de demanda</td>
+                                    <td>Sobrecarga de trabalho</td>
+                                    <td>Gerente TI</td>
+                                    <td>28/02/2024</td>
+                                    <td><div class="progress-bar"><div class="progress-fill" style="width: 60%;"></div></div></td>
+                                    <td><span class="badge badge-info">Em Progresso</span></td>
+                                    <td>
+                                        <button class="btn-action" onclick="openModal('acao-modal')">✏️</button>
+                                        <button class="btn-action" onclick="deleteItem('Ação')">🗑️</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Capacitação em liderança</td>
+                                    <td>Falta de autonomia</td>
+                                    <td>Gerente RH</td>
+                                    <td>15/03/2024</td>
+                                    <td><div class="progress-bar"><div class="progress-fill" style="width: 30%;"></div></div></td>
+                                    <td><span class="badge badge-info">Planejado</span></td>
+                                    <td>
+                                        <button class="btn-action" onclick="openModal('acao-modal')">✏️</button>
+                                        <button class="btn-action" onclick="deleteItem('Ação')">🗑️</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Relatórios Page -->
+                <div id="relatorios" class="page">
+                    <div class="page-header">
+                        <h2>Relatórios</h2>
+                        <p>Geração e visualização de relatórios técnicos</p>
+                    </div>
+
+                    <div class="cards-grid">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Relatório Técnico NR-1</h3>
+                            </div>
+                            <div class="card-info">
+                                <p>Relatório completo conforme NR-1 e PGR com análise técnica, matriz de risco e plano de ação.</p>
+                            </div>
+                            <div class="card-actions">
+                                <button class="btn btn-small" onclick="generateReport('nr1')">Gerar PDF</button>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Relatório Executivo</h3>
+                            </div>
+                            <div class="card-info">
+                                <p>Resumo executivo com principais indicadores, riscos críticos e recomendações estratégicas.</p>
+                            </div>
+                            <div class="card-actions">
+                                <button class="btn btn-small" onclick="generateReport('executivo')">Gerar PDF</button>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Relatório RH</h3>
+                            </div>
+                            <div class="card-info">
+                                <p>Análise focada em recursos humanos com dados de absenteísmo, presenteísmo e turnover.</p>
+                            </div>
+                            <div class="card-actions">
+                                <button class="btn btn-small" onclick="generateReport('rh')">Gerar PDF</button>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Relatório SST</h3>
+                            </div>
+                            <div class="card-info">
+                                <p>Relatório de Saúde e Segurança do Trabalho com conformidade regulatória e indicadores.</p>
+                            </div>
+                            <div class="card-actions">
+                                <button class="btn btn-small" onclick="generateReport('sst')">Gerar PDF</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Auditoria Page -->
+                <div id="auditoria" class="page">
+                    <div class="page-header">
+                        <h2>Trilha de Auditoria</h2>
+                        <p>Registro completo de todas as operações do sistema</p>
+                    </div>
+
+                    <div class="page-actions">
+                        <input type="text" class="filter-input" placeholder="Buscar por usuário...">
+                        <select class="filter-select">
+                            <option>Filtrar por tipo</option>
+                            <option>Criação</option>
+                            <option>Edição</option>
+                            <option>Exclusão</option>
+                            <option>Login</option>
+                        </select>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Data/Hora</th>
+                                    <th>Usuário</th>
+                                    <th>Tipo</th>
+                                    <th>Recurso</th>
+                                    <th>Ação</th>
+                                    <th>IP</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>15/01/2024 14:32:15</td>
+                                    <td>João Duarte</td>
+                                    <td>Criação</td>
+                                    <td>Empresa ABC Ltda</td>
+                                    <td>Criou nova empresa</td>
+                                    <td>192.168.1.100</td>
+                                </tr>
+                                <tr>
+                                    <td>15/01/2024 14:28:42</td>
+                                    <td>Maria Silva</td>
+                                    <td>Edição</td>
+                                    <td>GHE-001</td>
+                                    <td>Atualizou GHE</td>
+                                    <td>192.168.1.101</td>
+                                </tr>
+                                <tr>
+                                    <td>15/01/2024 14:15:30</td>
+                                    <td>João Duarte</td>
+                                    <td>Login</td>
+                                    <td>Sistema</td>
+                                    <td>Fez login</td>
+                                    <td>192.168.1.100</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div class="modal-overlay" id="modal-overlay" onclick="closeAllModals()"></div>
+
+    <!-- Empresa Modal -->
+    <div class="modal" id="empresa-modal">
+        <div class="modal-header">
+            <h2>Empresa</h2>
+            <button class="modal-close" onclick="closeModal('empresa-modal')">✕</button>
+        </div>
+        <div class="modal-body">
+            <form id="empresa-form" class="form">
+                <div class="form-group">
+                    <label for="empresa-razao">Razão Social</label>
+                    <input type="text" id="empresa-razao" class="form-input" placeholder="Razão Social" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="empresa-cnpj">CNPJ</label>
+                        <input type="text" id="empresa-cnpj" class="form-input" placeholder="00.000.000/0000-00" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="empresa-risco">Grau de Risco</label>
+                        <select id="empresa-risco" class="form-input" required>
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="empresa-email">Email</label>
+                    <input type="email" id="empresa-email" class="form-input" placeholder="contato@empresa.com" required>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal('empresa-modal')">Cancelar</button>
+            <button class="btn btn-primary" onclick="saveForm('empresa-form')">Salvar</button>
+        </div>
+    </div>
+
+    <!-- GHE Modal -->
+    <div class="modal" id="ghe-modal">
+        <div class="modal-header">
+            <h2>Grupo Homogêneo de Exposição</h2>
+            <button class="modal-close" onclick="closeModal('ghe-modal')">✕</button>
+        </div>
+        <div class="modal-body">
+            <form id="ghe-form" class="form">
+                <div class="form-group">
+                    <label for="ghe-nome">Nome do GHE</label>
+                    <input type="text" id="ghe-nome" class="form-input" placeholder="Ex: TI - Desenvolvedores" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="ghe-empresa">Empresa</label>
+                        <select id="ghe-empresa" class="form-input" required>
+                            <option>Empresa ABC Ltda</option>
+                            <option>Indústria XYZ S.A.</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="ghe-colaboradores">Número de Colaboradores</label>
+                        <input type="number" id="ghe-colaboradores" class="form-input" placeholder="45" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="ghe-descricao">Descrição</label>
+                    <textarea id="ghe-descricao" class="form-input" placeholder="Descrição do GHE" rows="4"></textarea>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal('ghe-modal')">Cancelar</button>
+            <button class="btn btn-primary" onclick="saveForm('ghe-form')">Salvar</button>
+        </div>
+    </div>
+
+    <!-- Colaborador Modal -->
+    <div class="modal" id="colaborador-modal">
+        <div class="modal-header">
+            <h2>Colaborador</h2>
+            <button class="modal-close" onclick="closeModal('colaborador-modal')">✕</button>
+        </div>
+        <div class="modal-body">
+            <form id="colaborador-form" class="form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="colab-nome">Nome</label>
+                        <input type="text" id="colab-nome" class="form-input" placeholder="Nome completo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="colab-email">Email</label>
+                        <input type="email" id="colab-email" class="form-input" placeholder="email@empresa.com" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="colab-cargo">Cargo</label>
+                        <input type="text" id="colab-cargo" class="form-input" placeholder="Cargo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="colab-ghe">GHE</label>
+                        <select id="colab-ghe" class="form-input" required>
+                            <option>TI - Desenvolvedores</option>
+                            <option>RH - Gestores</option>
+                            <option>Vendas - Consultores</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="colab-status">Status</label>
+                    <select id="colab-status" class="form-input" required>
+                        <option>Ativo</option>
+                        <option>Afastado</option>
+                        <option>Férias</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal('colaborador-modal')">Cancelar</button>
+            <button class="btn btn-primary" onclick="saveForm('colaborador-form')">Salvar</button>
+        </div>
+    </div>
+
+    <!-- Questionário Modal -->
+    <div class="modal" id="questionario-modal">
+        <div class="modal-header">
+            <h2>Questionário</h2>
+            <button class="modal-close" onclick="closeModal('questionario-modal')">✕</button>
+        </div>
+        <div class="modal-body">
+            <form id="questionario-form" class="form">
+                <div class="form-group">
+                    <label for="quest-nome">Nome do Questionário</label>
+                    <input type="text" id="quest-nome" class="form-input" placeholder="Ex: COPSOQ II" required>
+                </div>
+                <div class="form-group">
+                    <label for="quest-tipo">Tipo</label>
+                    <select id="quest-tipo" class="form-input" required>
+                        <option>COPSOQ II</option>
+                        <option>HSE Indicator Tool</option>
+                        <option>Clima Organizacional</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="quest-descricao">Descrição</label>
+                    <textarea id="quest-descricao" class="form-input" placeholder="Descrição do questionário" rows="4"></textarea>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal('questionario-modal')">Cancelar</button>
+            <button class="btn btn-primary" onclick="saveForm('questionario-form')">Salvar</button>
+        </div>
+    </div>
+
+    <!-- Aplicação Modal -->
+    <div class="modal" id="aplicacao-modal">
+        <div class="modal-header">
+            <h2>Aplicação de Questionário</h2>
+            <button class="modal-close" onclick="closeModal('aplicacao-modal')">✕</button>
+        </div>
+        <div class="modal-body">
+            <form id="aplicacao-form" class="form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="aplic-questionario">Questionário</label>
+                        <select id="aplic-questionario" class="form-input" required>
+                            <option>COPSOQ II</option>
+                            <option>HSE Indicator Tool</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="aplic-ghe">GHE</label>
+                        <select id="aplic-ghe" class="form-input" required>
+                            <option>TI - Desenvolvedores</option>
+                            <option>RH - Gestores</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="aplic-inicio">Data de Início</label>
+                        <input type="date" id="aplic-inicio" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="aplic-fim">Data de Término</label>
+                        <input type="date" id="aplic-fim" class="form-input" required>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal('aplicacao-modal')">Cancelar</button>
+            <button class="btn btn-primary" onclick="saveForm('aplicacao-form')">Salvar</button>
+        </div>
+    </div>
+
+    <!-- Risco Modal -->
+    <div class="modal" id="risco-modal">
+        <div class="modal-header">
+            <h2>Risco Psicossocial</h2>
+            <button class="modal-close" onclick="closeModal('risco-modal')">✕</button>
+        </div>
+        <div class="modal-body">
+            <form id="risco-form" class="form">
+                <div class="form-group">
+                    <label for="risco-fator">Fator de Risco</label>
+                    <input type="text" id="risco-fator" class="form-input" placeholder="Ex: Sobrecarga de trabalho" required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="risco-dimensao">Dimensão</label>
+                        <select id="risco-dimensao" class="form-input" required>
+                            <option>Demanda Psicológica</option>
+                            <option>Controle</option>
+                            <option>Apoio Social</option>
+                            <option>Relacionamento</option>
+                            <option>Compensação</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="risco-nivel">Nível</label>
+                        <select id="risco-nivel" class="form-input" required>
+                            <option>Crítico</option>
+                            <option>Alto</option>
+                            <option>Moderado</option>
+                            <option>Baixo</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="risco-descricao">Descrição</label>
+                    <textarea id="risco-descricao" class="form-input" placeholder="Descrição do risco" rows="4"></textarea>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal('risco-modal')">Cancelar</button>
+            <button class="btn btn-primary" onclick="saveForm('risco-form')">Salvar</button>
+        </div>
+    </div>
+
+    <!-- Entrevista Modal -->
+    <div class="modal" id="entrevista-modal">
+        <div class="modal-header">
+            <h2>Entrevista Qualitativa</h2>
+            <button class="modal-close" onclick="closeModal('entrevista-modal')">✕</button>
+        </div>
+        <div class="modal-body">
+            <form id="entrevista-form" class="form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="ent-data">Data</label>
+                        <input type="date" id="ent-data" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="ent-tipo">Tipo</label>
+                        <select id="ent-tipo" class="form-input" required>
+                            <option>Entrevista Individual</option>
+                            <option>Entrevista Coletiva</option>
+                            <option>Observação</option>
+                            <option>Diário de Campo</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="ent-ghe">GHE</label>
+                    <select id="ent-ghe" class="form-input" required>
+                        <option>TI - Desenvolvedores</option>
+                        <option>RH - Gestores</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="ent-conteudo">Conteúdo</label>
+                    <textarea id="ent-conteudo" class="form-input" placeholder="Registre os pontos-chave da entrevista" rows="6"></textarea>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal('entrevista-modal')">Cancelar</button>
+            <button class="btn btn-primary" onclick="saveForm('entrevista-form')">Salvar</button>
+        </div>
+    </div>
+
+    <!-- Ação Modal -->
+    <div class="modal" id="acao-modal">
+        <div class="modal-header">
+            <h2>Ação do Plano de Ação</h2>
+            <button class="modal-close" onclick="closeModal('acao-modal')">✕</button>
+        </div>
+        <div class="modal-body">
+            <form id="acao-form" class="form">
+                <div class="form-group">
+                    <label for="acao-descricao">Descrição da Ação</label>
+                    <textarea id="acao-descricao" class="form-input" placeholder="Descrição da ação" rows="4" required></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="acao-risco">Risco Relacionado</label>
+                        <select id="acao-risco" class="form-input" required>
+                            <option>Sobrecarga de trabalho</option>
+                            <option>Falta de autonomia</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="acao-responsavel">Responsável</label>
+                        <input type="text" id="acao-responsavel" class="form-input" placeholder="Nome do responsável" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="acao-prazo">Prazo</label>
+                        <input type="date" id="acao-prazo" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="acao-status">Status</label>
+                        <select id="acao-status" class="form-input" required>
+                            <option>Planejado</option>
+                            <option>Em Progresso</option>
+                            <option>Concluído</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal('acao-modal')">Cancelar</button>
+            <button class="btn btn-primary" onclick="saveForm('acao-form')">Salvar</button>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal" id="delete-modal">
+        <div class="modal-header">
+            <h2>Confirmar Exclusão</h2>
+            <button class="modal-close" onclick="closeModal('delete-modal')">✕</button>
+        </div>
+        <div class="modal-body">
+            <p id="delete-message">Tem certeza que deseja deletar este item? Esta ação não pode ser desfeita.</p>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal('delete-modal')">Cancelar</button>
+            <button class="btn btn-danger" onclick="confirmDelete()">Deletar</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

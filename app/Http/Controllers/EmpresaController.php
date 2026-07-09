@@ -118,7 +118,7 @@ class EmpresaController extends Controller
             'cnpj' => 'nullable|string|max:18|unique:empresas,cnpj',
             'email' => 'nullable|email|max:255',
             'telefone' => 'nullable|string|max:20',
-            'plano' => 'nullable|string|in:basico,intermediario,avancado,enterprise',
+            'plano' => 'nullable|string|in:basic,professional,enterprise',
             'max_filiais' => 'nullable|integer|min:1',
             'max_usuarios' => 'nullable|integer|min:1',
             'responsavel' => 'nullable|string|max:255',
@@ -134,6 +134,7 @@ class EmpresaController extends Controller
             'nome.required' => 'O nome da empresa é obrigatório.',
             'cnpj.unique' => 'Este CNPJ já está cadastrado.',
             'email.email' => 'Informe um e-mail válido.',
+            'plano.in' => 'Plano inválido. Use: basic, professional ou enterprise.',
         ]);
 
         if ($validator->fails()) {
@@ -229,7 +230,7 @@ class EmpresaController extends Controller
             'cnpj' => "nullable|string|max:18|unique:empresas,cnpj,{$id}",
             'email' => 'nullable|email|max:255',
             'telefone' => 'nullable|string|max:20',
-            'plano' => 'nullable|string|in:basico,intermediario,avancado,enterprise',
+            'plano' => 'nullable|string|in:basic,professional,enterprise',
             'max_filiais' => 'nullable|integer|min:1',
             'max_usuarios' => 'nullable|integer|min:1',
             'responsavel' => 'nullable|string|max:255',

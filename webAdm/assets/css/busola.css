@@ -1,0 +1,292 @@
+/* ═══════════════════════════════════════════════════════════
+   busola — Gestão Inteligente de Riscos
+   Identidade visual — override do NiceAdmin Bootstrap 5
+   Paleta: #f3f4f8 · #73ddb3 · #11bbce · #0946b0
+═══════════════════════════════════════════════════════════ */
+
+/* ── Variáveis da marca ──────────────────────────────────── */
+:root {
+  --busola-primary:   #0946b0;
+  --busola-dark:      #063080;
+  --busola-cyan:      #11bbce;
+  --busola-green:     #73ddb3;
+  --busola-bg:        #f3f4f8;
+  --busola-gradient:  linear-gradient(135deg, #0946b0 0%, #11bbce 100%);
+  --busola-sidebar:   linear-gradient(180deg, #0946b0 0%, #063080 100%);
+
+  /* Bootstrap overrides */
+  --bs-primary:       #0946b0;
+  --bs-primary-rgb:   9, 70, 176;
+}
+
+/* ── Corpo e tipografia ──────────────────────────────────── */
+body {
+  background-color: var(--busola-bg) !important;
+  font-family: 'Nunito', sans-serif !important;
+}
+
+a { color: var(--busola-primary); }
+a:hover { color: var(--busola-cyan); }
+
+/* ── Header ─────────────────────────────────────────────── */
+.header {
+  background: #fff !important;
+  border-bottom: 3px solid var(--busola-primary) !important;
+  box-shadow: 0 2px 12px rgba(9,70,176,.07) !important;
+}
+
+.header .logo {
+  width: auto;
+  padding: 0 1rem 0 0.5rem;
+  border-right: 1px solid #e5ecf9;
+}
+
+.header .logo .logo-icon {
+  width: 36px;
+  height: 36px;
+  margin-right: 8px;
+}
+
+.header .logo .logo-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1;
+}
+
+.header .logo .logo-text .brand-name {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--busola-primary);
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.header .logo .logo-text .brand-tagline {
+  font-size: 0.5rem;
+  font-weight: 700;
+  color: var(--busola-cyan);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* ── Sidebar ─────────────────────────────────────────────── */
+#sidebar,
+.sidebar {
+  background: #fff !important;
+  border-right: 1px solid #e5ecf9 !important;
+}
+
+.sidebar-nav .nav-heading {
+  color: var(--busola-cyan) !important;
+  font-size: 0.6rem !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.18em !important;
+  padding: 1rem 1rem 0.4rem 1rem !important;
+  text-transform: uppercase;
+}
+
+.sidebar-nav .nav-link {
+  color: #444 !important;
+  border-radius: 6px;
+  margin: 1px 8px;
+  padding: 0.62rem 0.8rem !important;
+  transition: all .18s ease;
+}
+
+.sidebar-nav .nav-link i {
+  color: var(--busola-primary) !important;
+  font-size: 1rem;
+  transition: color .18s;
+}
+
+.sidebar-nav .nav-link:hover {
+  color: var(--busola-primary) !important;
+  background: #f0f5ff !important;
+}
+
+.sidebar-nav .nav-link:hover i {
+  color: var(--busola-cyan) !important;
+}
+
+.sidebar-nav .nav-link.active {
+  color: var(--busola-primary) !important;
+  background: #e8f0fd !important;
+  border-left: 3px solid var(--busola-cyan) !important;
+  font-weight: 700;
+}
+
+.sidebar-nav .nav-link.active i {
+  color: var(--busola-cyan) !important;
+}
+
+.sidebar-nav .nav-content {
+  background: #f8faff !important;
+  border-left: 2px solid #e0eaf8 !important;
+  border-radius: 0 0 6px 6px;
+  margin: 0 8px 4px 24px;
+}
+
+.sidebar-nav .nav-content a {
+  color: #555 !important;
+  padding: 0.42rem 1rem !important;
+  font-size: 0.88rem;
+}
+
+.sidebar-nav .nav-content a:hover,
+.sidebar-nav .nav-content a.active {
+  color: var(--busola-primary) !important;
+}
+
+.sidebar-nav .nav-content a i {
+  color: var(--busola-cyan) !important;
+  font-size: 0.55rem !important;
+}
+
+/* Chevron dropdown icon */
+.sidebar-nav .nav-link .bi-chevron-down {
+  color: #aaa !important;
+  font-size: 0.75rem !important;
+}
+
+/* Toggle button */
+.toggle-sidebar-btn {
+  color: var(--busola-primary) !important;
+  font-size: 1.3rem !important;
+}
+
+/* ── Botões ─────────────────────────────────────────────── */
+.btn-primary {
+  background: var(--busola-primary) !important;
+  border-color: var(--busola-primary) !important;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background: var(--busola-dark) !important;
+  border-color: var(--busola-dark) !important;
+}
+
+/* ── Inputs ─────────────────────────────────────────────── */
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--busola-cyan) !important;
+  box-shadow: 0 0 0 0.2rem rgba(17,187,206,.2) !important;
+}
+
+.input-group-text {
+  background-color: #f0f5ff;
+  border-color: #d0dcf0;
+  color: var(--busola-primary);
+}
+
+/* ── Cards ─────────────────────────────────────────────── */
+.card {
+  border: none !important;
+  border-radius: 10px !important;
+  box-shadow: 0 2px 16px rgba(9,70,176,.07) !important;
+}
+
+.card-header {
+  background: #f0f5ff !important;
+  border-bottom: 2px solid var(--busola-primary) !important;
+  border-radius: 10px 10px 0 0 !important;
+  font-weight: 700;
+  color: var(--busola-primary);
+}
+
+/* ── Page title ─────────────────────────────────────────── */
+.pagetitle h1 {
+  color: var(--busola-primary) !important;
+  font-weight: 700;
+}
+
+.breadcrumb-item.active {
+  color: var(--busola-cyan) !important;
+}
+
+.breadcrumb-item a {
+  color: var(--busola-primary) !important;
+}
+
+/* ── Badges ─────────────────────────────────────────────── */
+.badge.bg-primary,
+.badge-number.bg-primary {
+  background-color: var(--busola-primary) !important;
+}
+
+.badge.bg-success {
+  background-color: #13a37a !important;
+}
+
+/* ── Footer ─────────────────────────────────────────────── */
+.footer {
+  background: #fff !important;
+  border-top: 1px solid #e2e8f5 !important;
+}
+
+.footer .copyright a,
+.footer .credits a {
+  color: var(--busola-primary) !important;
+  font-weight: 600;
+}
+
+/* ── Profile dropdown ────────────────────────────────────── */
+.nav-profile img {
+  border: 2px solid var(--busola-cyan);
+}
+
+.dropdown-menu.profile .dropdown-header h6 {
+  color: var(--busola-primary);
+  font-weight: 700;
+}
+
+.dropdown-menu.profile .dropdown-header span {
+  color: var(--busola-cyan);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.dropdown-item:hover {
+  color: var(--busola-primary) !important;
+  background-color: #f0f5ff !important;
+}
+
+.dropdown-item i {
+  color: var(--busola-primary);
+  margin-right: 8px;
+}
+
+/* ── Tabelas ─────────────────────────────────────────────── */
+.table thead th {
+  background: #f0f5ff;
+  color: var(--busola-primary);
+  font-weight: 700;
+  border-bottom: 2px solid var(--busola-primary) !important;
+}
+
+.table-hover tbody tr:hover {
+  background-color: rgba(9,70,176,.04) !important;
+}
+
+/* ── Scrollbar personalizada ─────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--busola-bg); }
+::-webkit-scrollbar-thumb { background: #b8caee; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--busola-primary); }
+
+/* ── Dashboard stats (padrão NiceAdmin) ─────────────────── */
+.dashboard .info-card .card-icon {
+  background: linear-gradient(135deg, var(--busola-cyan), var(--busola-primary)) !important;
+}
+
+/* ── Animação de entrada ─────────────────────────────────── */
+@keyframes busola-fadein {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.card, .pagetitle {
+  animation: busola-fadein 0.25s ease both;
+}

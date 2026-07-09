@@ -1,0 +1,1108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>busola - Sistema de Gestão de Riscos Psicossociais NR-1</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">🧭 busola</div>
+                <div class="logo-subtitle">Gestão de Riscos</div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-title">Menu Principal</div>
+                    <a href="#" class="nav-link active" onclick="navigateTo('dashboard')">
+                        <span class="icon">📊</span> Dashboard
+                    </a>
+                    <a href="#" class="nav-link" onclick="navigateTo('empresas')">
+                        <span class="icon">🏢</span> Empresas
+                    </a>
+                    <a href="#" class="nav-link" onclick="navigateTo('ghe')">
+                        <span class="icon">👥</span> GHE/GES
+                    </a>
+                    <a href="#" class="nav-link" onclick="navigateTo('colaboradores')">
+                        <span class="icon">👤</span> Colaboradores
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-title">Avaliações</div>
+                    <a href="#" class="nav-link" onclick="navigateTo('questionarios')">
+                        <span class="icon">📋</span> Questionários
+                    </a>
+                    <a href="#" class="nav-link" onclick="navigateTo('aplicacoes')">
+                        <span class="icon">📤</span> Aplicações
+                    </a>
+                    <a href="#" class="nav-link" onclick="navigateTo('respostas')">
+                        <span class="icon">✅</span> Respostas
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-title">Análise</div>
+                    <a href="#" class="nav-link" onclick="navigateTo('matriz-risco')">
+                        <span class="icon">🔴</span> Matriz de Risco
+                    </a>
+                    <a href="#" class="nav-link" onclick="navigateTo('inventario')">
+                        <span class="icon">📑</span> Inventário
+                    </a>
+                    <a href="#" class="nav-link" onclick="navigateTo('qualitativa')">
+                        <span class="icon">🔍</span> Análise Qualitativa
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-title">Ação</div>
+                    <a href="#" class="nav-link" onclick="navigateTo('plano-acao')">
+                        <span class="icon">✅</span> Plano de Ação
+                    </a>
+                    <a href="#" class="nav-link" onclick="navigateTo('relatorios')">
+                        <span class="icon">📄</span> Relatórios
+                    </a>
+                    <a href="#" class="nav-link" onclick="navigateTo('auditoria')">
+                        <span class="icon">🔐</span> Auditoria
+                    </a>
+                </div>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">RP</div>
+                    <div class="user-details">
+                        <div class="user-name">Ronaldo Paula</div>
+                        <div class="user-role">Admin</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <h1 id="page-title">Dashboard</h1>
+                </div>
+                <div class="header-right">
+                    <button class="btn-icon" onclick="alert('Notificações')">🔔</button>
+                    <button class="btn-icon" onclick="alert('Configurações')">⚙️</button>
+                </div>
+            </header>
+
+            <!-- Pages Container -->
+            <div class="pages-container">
+                <!-- Dashboard Page -->
+                <div id="dashboard" class="page active">
+                    <div class="page-header">
+                        <h2>Dashboard Executivo</h2>
+                        <p>Visão geral dos riscos psicossociais da organização</p>
+                    </div>
+
+                    <!-- Stats Grid -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-label">Score Psicossocial</div>
+                            <div class="stat-value">7.2</div>
+                            <div class="stat-subtitle">de 10</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Riscos Críticos</div>
+                            <div class="stat-value">3</div>
+                            <div class="stat-subtitle">Requerem ação</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Taxa Resposta</div>
+                            <div class="stat-value">87%</div>
+                            <div class="stat-subtitle">Colaboradores</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-label">Ações Concluídas</div>
+                            <div class="stat-value">12</div>
+                            <div class="stat-subtitle">de 18</div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Row -->
+                    <div class="charts-row">
+                        <div class="chart-container">
+                            <h3>Distribuição de Riscos</h3>
+                            <div class="risk-distribution">
+                                <div class="risk-item">
+                                    <div class="risk-label">🔵 Irrelevante</div>
+                                    <div class="risk-bar">
+                                        <div class="risk-fill" style="width: 15%; background: #0066cc;"></div>
+                                    </div>
+                                    <div class="risk-percent">15%</div>
+                                </div>
+                                <div class="risk-item">
+                                    <div class="risk-label">🟢 Baixo</div>
+                                    <div class="risk-bar">
+                                        <div class="risk-fill" style="width: 35%; background: #22c55e;"></div>
+                                    </div>
+                                    <div class="risk-percent">35%</div>
+                                </div>
+                                <div class="risk-item">
+                                    <div class="risk-label">🟡 Moderado</div>
+                                    <div class="risk-bar">
+                                        <div class="risk-fill" style="width: 30%; background: #eab308;"></div>
+                                    </div>
+                                    <div class="risk-percent">30%</div>
+                                </div>
+                                <div class="risk-item">
+                                    <div class="risk-label">🟠 Alto</div>
+                                    <div class="risk-bar">
+                                        <div class="risk-fill" style="width: 15%; background: #f97316;"></div>
+                                    </div>
+                                    <div class="risk-percent">15%</div>
+                                </div>
+                                <div class="risk-item">
+                                    <div class="risk-label">🔴 Crítico</div>
+                                    <div class="risk-bar">
+                                        <div class="risk-fill" style="width: 5%; background: #ef4444;"></div>
+                                    </div>
+                                    <div class="risk-percent">5%</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="chart-container">
+                            <h3>Risco por Dimensão</h3>
+                            <div class="dimension-list">
+                                <div class="dimension-item">
+                                    <span>Demandas</span>
+                                    <div class="dimension-bar">
+                                        <div class="dimension-fill" style="width: 75%;"></div>
+                                    </div>
+                                    <span class="dimension-score">7.5</span>
+                                </div>
+                                <div class="dimension-item">
+                                    <span>Controle</span>
+                                    <div class="dimension-bar">
+                                        <div class="dimension-fill" style="width: 65%;"></div>
+                                    </div>
+                                    <span class="dimension-score">6.5</span>
+                                </div>
+                                <div class="dimension-item">
+                                    <span>Apoio Chefia</span>
+                                    <div class="dimension-bar">
+                                        <div class="dimension-fill" style="width: 45%;"></div>
+                                    </div>
+                                    <span class="dimension-score">4.5</span>
+                                </div>
+                                <div class="dimension-item">
+                                    <span>Relacionamentos</span>
+                                    <div class="dimension-bar">
+                                        <div class="dimension-fill" style="width: 55%;"></div>
+                                    </div>
+                                    <span class="dimension-score">5.5</span>
+                                </div>
+                                <div class="dimension-item">
+                                    <span>Compensação</span>
+                                    <div class="dimension-bar">
+                                        <div class="dimension-fill" style="width: 50%;"></div>
+                                    </div>
+                                    <span class="dimension-score">5.0</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Heatmap -->
+                    <div class="chart-container full-width">
+                        <h3>Heatmap Organizacional - Risco por Área</h3>
+                        <div class="heatmap">
+                            <div class="heatmap-row">
+                                <div class="heatmap-cell" style="background: #ef4444;" title="TI - Crítico">TI</div>
+                                <div class="heatmap-cell" style="background: #f97316;" title="Financeiro - Alto">FIN</div>
+                                <div class="heatmap-cell" style="background: #eab308;" title="RH - Moderado">RH</div>
+                                <div class="heatmap-cell" style="background: #22c55e;" title="Operações - Baixo">OPS</div>
+                                <div class="heatmap-cell" style="background: #0066cc;" title="Vendas - Irrelevante">VDS</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Empresas Page -->
+                <div id="empresas" class="page">
+                    <div class="page-header">
+                        <h2>Gestão de Empresas</h2>
+                        <button class="btn btn-primary" onclick="openModal('modal-empresa')">+ Nova Empresa</button>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Empresa</th>
+                                    <th>CNPJ</th>
+                                    <th>CNAE</th>
+                                    <th>Grau Risco</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Acme Corporation</strong></td>
+                                    <td>12.345.678/0001-90</td>
+                                    <td>7210-100</td>
+                                    <td>Médio</td>
+                                    <td><span class="badge badge-success">Ativa</span></td>
+                                    <td>
+                                        <button class="btn-small" onclick="alert('Editar empresa')">Editar</button>
+                                        <button class="btn-small" onclick="alert('Detalhes')">Detalhes</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Tech Solutions</strong></td>
+                                    <td>98.765.432/0001-10</td>
+                                    <td>6201-300</td>
+                                    <td>Alto</td>
+                                    <td><span class="badge badge-success">Ativa</span></td>
+                                    <td>
+                                        <button class="btn-small" onclick="alert('Editar empresa')">Editar</button>
+                                        <button class="btn-small" onclick="alert('Detalhes')">Detalhes</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- GHE/GES Page -->
+                <div id="ghe" class="page">
+                    <div class="page-header">
+                        <h2>Grupos Homogêneos de Exposição (GHE/GES)</h2>
+                        <button class="btn btn-primary" onclick="openModal('modal-ghe')">+ Novo GHE</button>
+                    </div>
+
+                    <div class="cards-grid">
+                        <div class="card">
+                            <h3>GHE-001: Administrativo</h3>
+                            <p class="card-meta">Empresa: Acme Corp | Setor: Administrativo</p>
+                            <div class="card-stats">
+                                <div class="stat">
+                                    <span class="stat-label">Colaboradores</span>
+                                    <span class="stat-value">45</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-label">Risco Médio</span>
+                                    <span class="stat-value">6.2</span>
+                                </div>
+                            </div>
+                            <button class="btn btn-outline" onclick="alert('Detalhes do GHE')">Detalhes</button>
+                        </div>
+
+                        <div class="card">
+                            <h3>GHE-002: Operacional</h3>
+                            <p class="card-meta">Empresa: Acme Corp | Setor: Operações</p>
+                            <div class="card-stats">
+                                <div class="stat">
+                                    <span class="stat-label">Colaboradores</span>
+                                    <span class="stat-value">120</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-label">Risco Médio</span>
+                                    <span class="stat-value">5.8</span>
+                                </div>
+                            </div>
+                            <button class="btn btn-outline" onclick="alert('Detalhes do GHE')">Detalhes</button>
+                        </div>
+
+                        <div class="card">
+                            <h3>GHE-003: Gestão</h3>
+                            <p class="card-meta">Empresa: Tech Solutions | Setor: Gestão</p>
+                            <div class="card-stats">
+                                <div class="stat">
+                                    <span class="stat-label">Colaboradores</span>
+                                    <span class="stat-value">25</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-label">Risco Médio</span>
+                                    <span class="stat-value">7.5</span>
+                                </div>
+                            </div>
+                            <button class="btn btn-outline" onclick="alert('Detalhes do GHE')">Detalhes</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Colaboradores Page -->
+                <div id="colaboradores" class="page">
+                    <div class="page-header">
+                        <h2>Gestão de Colaboradores</h2>
+                        <button class="btn btn-primary" onclick="openModal('modal-colab')">+ Novo Colaborador</button>
+                    </div>
+
+                    <div class="filters">
+                        <input type="text" class="filter-input" placeholder="Buscar por nome...">
+                        <select class="filter-select">
+                            <option>Todos os Setores</option>
+                            <option>Administrativo</option>
+                            <option>Operacional</option>
+                            <option>Gestão</option>
+                        </select>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Matrícula</th>
+                                    <th>Cargo</th>
+                                    <th>Setor</th>
+                                    <th>GHE</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>João Silva</strong></td>
+                                    <td>001234</td>
+                                    <td>Analista</td>
+                                    <td>Administrativo</td>
+                                    <td>GHE-001</td>
+                                    <td><span class="badge badge-success">Ativo</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Maria Santos</strong></td>
+                                    <td>001235</td>
+                                    <td>Operador</td>
+                                    <td>Operacional</td>
+                                    <td>GHE-002</td>
+                                    <td><span class="badge badge-success">Ativo</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Pedro Costa</strong></td>
+                                    <td>001236</td>
+                                    <td>Gerente</td>
+                                    <td>Gestão</td>
+                                    <td>GHE-003</td>
+                                    <td><span class="badge badge-success">Ativo</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Questionários Page -->
+                <div id="questionarios" class="page">
+                    <div class="page-header">
+                        <h2>Questionários</h2>
+                        <button class="btn btn-primary" onclick="openModal('modal-quest')">+ Novo Questionário</button>
+                    </div>
+
+                    <div class="cards-grid">
+                        <div class="card">
+                            <h3>COPSOQ II - Versão Média</h3>
+                            <p class="card-meta">Questionário padrão de riscos psicossociais</p>
+                            <div class="card-info">
+                                <p>📋 45 questões | ⏱️ 15-20 min</p>
+                                <p>✓ Anônimo | 🔒 Confidencial</p>
+                            </div>
+                            <button class="btn btn-outline" onclick="alert('Usar COPSOQ II')">Usar</button>
+                        </div>
+
+                        <div class="card">
+                            <h3>HSE Indicator Tool</h3>
+                            <p class="card-meta">Avaliação de saúde e segurança</p>
+                            <div class="card-info">
+                                <p>📋 30 questões | ⏱️ 10-15 min</p>
+                                <p>✓ Anônimo | 🔒 Confidencial</p>
+                            </div>
+                            <button class="btn btn-outline" onclick="alert('Usar HSE')">Usar</button>
+                        </div>
+
+                        <div class="card">
+                            <h3>Clima Organizacional</h3>
+                            <p class="card-meta">Avaliação de clima e cultura</p>
+                            <div class="card-info">
+                                <p>📋 25 questões | ⏱️ 8-10 min</p>
+                                <p>✓ Anônimo | 🔒 Confidencial</p>
+                            </div>
+                            <button class="btn btn-outline" onclick="alert('Usar Clima')">Usar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Aplicações Page -->
+                <div id="aplicacoes" class="page">
+                    <div class="page-header">
+                        <h2>Aplicações de Questionários</h2>
+                        <button class="btn btn-primary" onclick="openModal('modal-aplicacao')">+ Nova Aplicação</button>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Questionário</th>
+                                    <th>GHE</th>
+                                    <th>Data Início</th>
+                                    <th>Data Fim</th>
+                                    <th>Taxa Resposta</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>COPSOQ II - Ciclo 2024.1</strong></td>
+                                    <td>GHE-001</td>
+                                    <td>01/01/2024</td>
+                                    <td>31/01/2024</td>
+                                    <td>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 87%;"></div>
+                                        </div>
+                                        87%
+                                    </td>
+                                    <td><span class="badge badge-warning">Em andamento</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>COPSOQ II - Ciclo 2024.1</strong></td>
+                                    <td>GHE-002</td>
+                                    <td>01/01/2024</td>
+                                    <td>31/01/2024</td>
+                                    <td>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 100%;"></div>
+                                        </div>
+                                        100%
+                                    </td>
+                                    <td><span class="badge badge-success">Concluído</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Respostas Page -->
+                <div id="respostas" class="page">
+                    <div class="page-header">
+                        <h2>Respostas de Questionários</h2>
+                    </div>
+
+                    <div class="info-box">
+                        <p>✓ <strong>Total de Respostas:</strong> 245 | <strong>Taxa de Resposta:</strong> 87% | <strong>Período:</strong> Jan 2024</p>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID Resposta</th>
+                                    <th>GHE</th>
+                                    <th>Questionário</th>
+                                    <th>Data</th>
+                                    <th>Status</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#RSP-2024-001</td>
+                                    <td>GHE-001</td>
+                                    <td>COPSOQ II</td>
+                                    <td>05/01/2024</td>
+                                    <td><span class="badge badge-success">Completa</span></td>
+                                    <td><button class="btn-small" onclick="alert('Visualizar resposta')">Ver</button></td>
+                                </tr>
+                                <tr>
+                                    <td>#RSP-2024-002</td>
+                                    <td>GHE-002</td>
+                                    <td>COPSOQ II</td>
+                                    <td>06/01/2024</td>
+                                    <td><span class="badge badge-success">Completa</span></td>
+                                    <td><button class="btn-small" onclick="alert('Visualizar resposta')">Ver</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Matriz de Risco Page -->
+                <div id="matriz-risco" class="page">
+                    <div class="page-header">
+                        <h2>Matriz de Risco 5x5</h2>
+                        <p>P (Probabilidade) × G (Gravidade) = Nível de Risco</p>
+                    </div>
+
+                    <div class="matrix-container">
+                        <div class="matrix-legend">
+                            <div class="legend-item">🔵 Irrelevante (1-2)</div>
+                            <div class="legend-item">🟢 Baixo (3-4)</div>
+                            <div class="legend-item">🟡 Moderado (5-9)</div>
+                            <div class="legend-item">🟠 Alto (10-16)</div>
+                            <div class="legend-item">🔴 Crítico (17-25)</div>
+                        </div>
+
+                        <table class="matrix-table">
+                            <thead>
+                                <tr>
+                                    <th>P\G</th>
+                                    <th>1</th>
+                                    <th>2</th>
+                                    <th>3</th>
+                                    <th>4</th>
+                                    <th>5</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="matrix-label">1</td>
+                                    <td class="matrix-cell cell-1">1</td>
+                                    <td class="matrix-cell cell-1">2</td>
+                                    <td class="matrix-cell cell-2">3</td>
+                                    <td class="matrix-cell cell-2">4</td>
+                                    <td class="matrix-cell cell-2">5</td>
+                                </tr>
+                                <tr>
+                                    <td class="matrix-label">2</td>
+                                    <td class="matrix-cell cell-1">2</td>
+                                    <td class="matrix-cell cell-2">4</td>
+                                    <td class="matrix-cell cell-3">6</td>
+                                    <td class="matrix-cell cell-3">8</td>
+                                    <td class="matrix-cell cell-3">10</td>
+                                </tr>
+                                <tr>
+                                    <td class="matrix-label">3</td>
+                                    <td class="matrix-cell cell-2">3</td>
+                                    <td class="matrix-cell cell-3">6</td>
+                                    <td class="matrix-cell cell-3">9</td>
+                                    <td class="matrix-cell cell-4">12</td>
+                                    <td class="matrix-cell cell-4">15</td>
+                                </tr>
+                                <tr>
+                                    <td class="matrix-label">4</td>
+                                    <td class="matrix-cell cell-2">4</td>
+                                    <td class="matrix-cell cell-3">8</td>
+                                    <td class="matrix-cell cell-4">12</td>
+                                    <td class="matrix-cell cell-4">16</td>
+                                    <td class="matrix-cell cell-5">20</td>
+                                </tr>
+                                <tr>
+                                    <td class="matrix-label">5</td>
+                                    <td class="matrix-cell cell-2">5</td>
+                                    <td class="matrix-cell cell-3">10</td>
+                                    <td class="matrix-cell cell-4">15</td>
+                                    <td class="matrix-cell cell-5">20</td>
+                                    <td class="matrix-cell cell-5">25</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Inventário Page -->
+                <div id="inventario" class="page">
+                    <div class="page-header">
+                        <h2>Inventário de Riscos Psicossociais</h2>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Fator Psicossocial</th>
+                                    <th>GHE</th>
+                                    <th>Probabilidade</th>
+                                    <th>Gravidade</th>
+                                    <th>Criticidade</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Demandas Quantitativas</strong></td>
+                                    <td>GHE-001</td>
+                                    <td>4</td>
+                                    <td>4</td>
+                                    <td><span class="badge badge-danger">16 - Alto</span></td>
+                                    <td><span class="badge badge-warning">Em ação</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Apoio da Chefia</strong></td>
+                                    <td>GHE-002</td>
+                                    <td>3</td>
+                                    <td>4</td>
+                                    <td><span class="badge badge-danger">12 - Alto</span></td>
+                                    <td><span class="badge badge-warning">Em ação</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Relacionamentos</strong></td>
+                                    <td>GHE-003</td>
+                                    <td>3</td>
+                                    <td>3</td>
+                                    <td><span class="badge badge-warning">9 - Moderado</span></td>
+                                    <td><span class="badge badge-info">Monitorado</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Análise Qualitativa Page -->
+                <div id="qualitativa" class="page">
+                    <div class="page-header">
+                        <h2>Análise Qualitativa</h2>
+                        <button class="btn btn-primary" onclick="openModal('modal-entrevista')">+ Nova Entrevista</button>
+                    </div>
+
+                    <div class="cards-grid">
+                        <div class="card">
+                            <h3>Entrevista - GHE-001</h3>
+                            <p class="card-meta">Data: 15/01/2024 | Psicólogo: Dr. Silva</p>
+                            <div class="card-info">
+                                <p><strong>Tema:</strong> Demandas Quantitativas</p>
+                                <p><strong>Parecer:</strong> Risco Alto - Necessária intervenção imediata</p>
+                            </div>
+                            <button class="btn btn-outline" onclick="alert('Ver detalhes da entrevista')">Detalhes</button>
+                        </div>
+
+                        <div class="card">
+                            <h3>Observação Técnica - GHE-002</h3>
+                            <p class="card-meta">Data: 18/01/2024 | Observador: Eng. Costa</p>
+                            <div class="card-info">
+                                <p><strong>Tema:</strong> Ambiente de Trabalho</p>
+                                <p><strong>Parecer:</strong> Condições adequadas, sem riscos críticos</p>
+                            </div>
+                            <button class="btn btn-outline" onclick="alert('Ver detalhes da observação')">Detalhes</button>
+                        </div>
+
+                        <div class="card">
+                            <h3>Diário de Campo - GHE-003</h3>
+                            <p class="card-meta">Data: 20/01/2024 | Pesquisador: Psic. Santos</p>
+                            <div class="card-info">
+                                <p><strong>Tema:</strong> Relacionamentos Interpessoais</p>
+                                <p><strong>Parecer:</strong> Risco Moderado - Acompanhamento recomendado</p>
+                            </div>
+                            <button class="btn btn-outline" onclick="alert('Ver detalhes do diário')">Detalhes</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Plano de Ação Page -->
+                <div id="plano-acao" class="page">
+                    <div class="page-header">
+                        <h2>Plano de Ação (PDCA)</h2>
+                        <button class="btn btn-primary" onclick="openModal('modal-acao')">+ Nova Ação</button>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Ação</th>
+                                    <th>Fator Risco</th>
+                                    <th>Responsável</th>
+                                    <th>Prazo</th>
+                                    <th>Status</th>
+                                    <th>Progresso</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Implementar programa de flexibilidade</strong></td>
+                                    <td>Demandas</td>
+                                    <td>RH</td>
+                                    <td>30/03/2024</td>
+                                    <td><span class="badge badge-warning">Em andamento</span></td>
+                                    <td>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 65%;"></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Capacitação de líderes</strong></td>
+                                    <td>Apoio Chefia</td>
+                                    <td>Desenvolvimento</td>
+                                    <td>15/02/2024</td>
+                                    <td><span class="badge badge-success">Concluído</span></td>
+                                    <td>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 100%;"></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Programa de integração social</strong></td>
+                                    <td>Relacionamentos</td>
+                                    <td>RH</td>
+                                    <td>30/04/2024</td>
+                                    <td><span class="badge badge-info">Planejado</span></td>
+                                    <td>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 0%;"></div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Relatórios Page -->
+                <div id="relatorios" class="page">
+                    <div class="page-header">
+                        <h2>Relatórios</h2>
+                    </div>
+
+                    <div class="cards-grid">
+                        <div class="card">
+                            <h3>📄 Relatório Técnico NR-1</h3>
+                            <p class="card-meta">Relatório completo conforme modelo do documento</p>
+                            <div class="card-info">
+                                <p>✓ Introdução e Metodologia</p>
+                                <p>✓ Análise Estatística</p>
+                                <p>✓ Matriz de Risco</p>
+                                <p>✓ Plano de Ação</p>
+                            </div>
+                            <button class="btn btn-primary" onclick="alert('Gerando Relatório Técnico...')">Gerar PDF</button>
+                        </div>
+
+                        <div class="card">
+                            <h3>📊 Relatório Executivo</h3>
+                            <p class="card-meta">Resumo para diretoria e gestores</p>
+                            <div class="card-info">
+                                <p>✓ Score Psicossocial</p>
+                                <p>✓ Riscos Críticos</p>
+                                <p>✓ Recomendações</p>
+                                <p>✓ Indicadores-chave</p>
+                            </div>
+                            <button class="btn btn-primary" onclick="alert('Gerando Relatório Executivo...')">Gerar PDF</button>
+                        </div>
+
+                        <div class="card">
+                            <h3>📋 Relatório RH</h3>
+                            <p class="card-meta">Análise para departamento de RH</p>
+                            <div class="card-info">
+                                <p>✓ Análise por Setor</p>
+                                <p>✓ Turnover e Absenteísmo</p>
+                                <p>✓ Ações Recomendadas</p>
+                                <p>✓ Métricas de Engajamento</p>
+                            </div>
+                            <button class="btn btn-primary" onclick="alert('Gerando Relatório RH...')">Gerar PDF</button>
+                        </div>
+
+                        <div class="card">
+                            <h3>🔐 Relatório SST</h3>
+                            <p class="card-meta">Análise para Segurança e Saúde</p>
+                            <div class="card-info">
+                                <p>✓ Conformidade NR-1</p>
+                                <p>✓ Riscos Ocupacionais</p>
+                                <p>✓ Medidas Preventivas</p>
+                                <p>✓ Monitoramento Contínuo</p>
+                            </div>
+                            <button class="btn btn-primary" onclick="alert('Gerando Relatório SST...')">Gerar PDF</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Auditoria Page -->
+                <div id="auditoria" class="page">
+                    <div class="page-header">
+                        <h2>Trilha de Auditoria</h2>
+                    </div>
+
+                    <div class="table-container">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Data/Hora</th>
+                                    <th>Usuário</th>
+                                    <th>Ação</th>
+                                    <th>Recurso</th>
+                                    <th>IP</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>20/01/2024 14:35:22</td>
+                                    <td>Ronaldo Paula</td>
+                                    <td>Criação</td>
+                                    <td>Aplicação COPSOQ II</td>
+                                    <td>192.168.1.100</td>
+                                    <td><span class="badge badge-success">Sucesso</span></td>
+                                </tr>
+                                <tr>
+                                    <td>20/01/2024 15:12:45</td>
+                                    <td>Maria Silva</td>
+                                    <td>Edição</td>
+                                    <td>Plano de Ação #PA-001</td>
+                                    <td>192.168.1.105</td>
+                                    <td><span class="badge badge-success">Sucesso</span></td>
+                                </tr>
+                                <tr>
+                                    <td>20/01/2024 16:00:10</td>
+                                    <td>Pedro Costa</td>
+                                    <td>Visualização</td>
+                                    <td>Relatório Técnico</td>
+                                    <td>192.168.1.110</td>
+                                    <td><span class="badge badge-success">Sucesso</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="modal-empresa" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Nova Empresa</h2>
+                <button class="modal-close" onclick="closeModal('modal-empresa')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Nome da Empresa</label>
+                    <input type="text" class="form-input" placeholder="Nome da empresa">
+                </div>
+                <div class="form-group">
+                    <label>CNPJ</label>
+                    <input type="text" class="form-input" placeholder="00.000.000/0000-00">
+                </div>
+                <div class="form-group">
+                    <label>CNAE</label>
+                    <input type="text" class="form-input" placeholder="Código CNAE">
+                </div>
+                <div class="form-group">
+                    <label>Grau de Risco</label>
+                    <select class="form-input">
+                        <option>Baixo</option>
+                        <option>Médio</option>
+                        <option>Alto</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('modal-empresa')">Cancelar</button>
+                <button class="btn btn-primary" onclick="alert('Empresa criada!'); closeModal('modal-empresa')">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-ghe" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Novo GHE/GES</h2>
+                <button class="modal-close" onclick="closeModal('modal-ghe')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Código GHE</label>
+                    <input type="text" class="form-input" placeholder="GHE-001">
+                </div>
+                <div class="form-group">
+                    <label>Descrição</label>
+                    <input type="text" class="form-input" placeholder="Descrição do grupo">
+                </div>
+                <div class="form-group">
+                    <label>Setor</label>
+                    <input type="text" class="form-input" placeholder="Setor">
+                </div>
+                <div class="form-group">
+                    <label>Número de Colaboradores</label>
+                    <input type="number" class="form-input" placeholder="0">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('modal-ghe')">Cancelar</button>
+                <button class="btn btn-primary" onclick="alert('GHE criado!'); closeModal('modal-ghe')">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-colab" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Novo Colaborador</h2>
+                <button class="modal-close" onclick="closeModal('modal-colab')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Nome</label>
+                    <input type="text" class="form-input" placeholder="Nome completo">
+                </div>
+                <div class="form-group">
+                    <label>Matrícula</label>
+                    <input type="text" class="form-input" placeholder="000000">
+                </div>
+                <div class="form-group">
+                    <label>Cargo</label>
+                    <input type="text" class="form-input" placeholder="Cargo">
+                </div>
+                <div class="form-group">
+                    <label>Setor</label>
+                    <select class="form-input">
+                        <option>Administrativo</option>
+                        <option>Operacional</option>
+                        <option>Gestão</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('modal-colab')">Cancelar</button>
+                <button class="btn btn-primary" onclick="alert('Colaborador criado!'); closeModal('modal-colab')">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-quest" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Novo Questionário</h2>
+                <button class="modal-close" onclick="closeModal('modal-quest')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Tipo de Questionário</label>
+                    <select class="form-input">
+                        <option>COPSOQ II</option>
+                        <option>HSE Indicator Tool</option>
+                        <option>Clima Organizacional</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Nome</label>
+                    <input type="text" class="form-input" placeholder="Nome do questionário">
+                </div>
+                <div class="form-group">
+                    <label>Descrição</label>
+                    <textarea class="form-input" placeholder="Descrição"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('modal-quest')">Cancelar</button>
+                <button class="btn btn-primary" onclick="alert('Questionário criado!'); closeModal('modal-quest')">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-aplicacao" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Nova Aplicação</h2>
+                <button class="modal-close" onclick="closeModal('modal-aplicacao')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Questionário</label>
+                    <select class="form-input">
+                        <option>COPSOQ II - Versão Média</option>
+                        <option>HSE Indicator Tool</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>GHE</label>
+                    <select class="form-input">
+                        <option>GHE-001</option>
+                        <option>GHE-002</option>
+                        <option>GHE-003</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Data Início</label>
+                    <input type="date" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label>Data Fim</label>
+                    <input type="date" class="form-input">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('modal-aplicacao')">Cancelar</button>
+                <button class="btn btn-primary" onclick="alert('Aplicação criada!'); closeModal('modal-aplicacao')">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-entrevista" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Nova Entrevista Qualitativa</h2>
+                <button class="modal-close" onclick="closeModal('modal-entrevista')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>GHE</label>
+                    <select class="form-input">
+                        <option>GHE-001</option>
+                        <option>GHE-002</option>
+                        <option>GHE-003</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Tipo</label>
+                    <select class="form-input">
+                        <option>Entrevista</option>
+                        <option>Observação Técnica</option>
+                        <option>Diário de Campo</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Parecer</label>
+                    <textarea class="form-input" placeholder="Parecer do psicólogo/consultor"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('modal-entrevista')">Cancelar</button>
+                <button class="btn btn-primary" onclick="alert('Entrevista registrada!'); closeModal('modal-entrevista')">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-acao" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Nova Ação (PDCA)</h2>
+                <button class="modal-close" onclick="closeModal('modal-acao')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Descrição da Ação</label>
+                    <input type="text" class="form-input" placeholder="Descrição">
+                </div>
+                <div class="form-group">
+                    <label>Fator de Risco</label>
+                    <select class="form-input">
+                        <option>Demandas</option>
+                        <option>Controle</option>
+                        <option>Apoio Chefia</option>
+                        <option>Relacionamentos</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Responsável</label>
+                    <input type="text" class="form-input" placeholder="Nome do responsável">
+                </div>
+                <div class="form-group">
+                    <label>Prazo</label>
+                    <input type="date" class="form-input">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-outline" onclick="closeModal('modal-acao')">Cancelar</button>
+                <button class="btn btn-primary" onclick="alert('Ação criada!'); closeModal('modal-acao')">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Overlay -->
+    <div id="modal-overlay" class="modal-overlay" onclick="closeAllModals()"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>

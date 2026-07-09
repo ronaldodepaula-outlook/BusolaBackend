@@ -1,0 +1,12 @@
+categoria,subcategoria,tipo_pergunta,texto,obrigatoria,permite_observacao,permite_anexo,conceito
+Carga de Trabalho,Excesso de demandas,escala,Com que frequência você sente que tem mais trabalho do que consegue dar conta?,sim,nao,nao,Escala de Frequência
+Carga de Trabalho,Excesso de demandas,escala,Com que frequência você precisa levar trabalho para casa?,sim,nao,nao,Escala de Frequência
+Carga de Trabalho,Prazos,escala,Com que frequência os prazos estabelecidos são difíceis de cumprir?,sim,nao,nao,Escala de Frequência
+Carga de Trabalho,Prazos,sim_nao,Você participa da definição dos prazos das suas atividades?,sim,nao,nao,
+Ambiente Organizacional,Comunicação,unica_escolha,Você recebe informações claras sobre mudanças na empresa?,sim,nao,nao,Escala de Concordância
+Ambiente Organizacional,Comunicação,sim_nao,Você sabe a quem recorrer em caso de dúvidas sobre seu trabalho?,sim,nao,nao,
+Ambiente Organizacional,Reconhecimento,unica_escolha,Meu trabalho é reconhecido pelos meus superiores.,sim,nao,nao,Escala de Concordância
+Relacionamento,Assédio,unica_escolha,Você já presenciou situações de assédio moral no ambiente de trabalho?,sim,sim,sim,Escala de Concordância
+Relacionamento,Liderança,unica_escolha,Minha liderança direta trata a equipe com respeito.,sim,nao,nao,Escala de Concordância
+Saúde Mental,Bem-estar,unica_escolha,De forma geral, qual seu nível de satisfação com seu trabalho atualmente?,sim,nao,nao,Escala de Satisfação
+Saúde Mental,Bem-estar,texto,Descreva como você tem se sentido no trabalho ultimamente.,nao,sim,nao,

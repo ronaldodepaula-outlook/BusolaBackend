@@ -1,0 +1,13 @@
+
+Credenciais de acesso
+Super Admin
+Campo	Valor
+E-mail	superadmin@sistema.com
+Senha	Admin@2024
+Tipo	superadmin — acesso total, sem restrição de empresa
+Admin de Empresa (Empresa Demo)
+Campo	Valor
+E-mail	admin@empresa.com
+Senha	Admin@2024
+Tipo	admin — restrito à Empresa Demo
+Importante: Para que esses usuários existam no banco, os seeders precisam ter sido 

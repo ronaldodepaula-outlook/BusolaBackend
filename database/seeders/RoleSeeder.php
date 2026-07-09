@@ -38,7 +38,7 @@ class RoleSeeder extends Seeder
         // ── 2. Administrador ──────────────────────────────────────────────────
         //    All permissions EXCEPT:
         //      empresa.excluir | permissao.criar/editar/excluir |
-        //      dashboard.superadmin | log.exportar
+        //      dashboard.superadmin | log.exportar | relatorio.listar_todas
         $adminExcluded = [
             'empresa.excluir',
             'permissao.criar',
@@ -46,6 +46,7 @@ class RoleSeeder extends Seeder
             'permissao.excluir',
             'dashboard.superadmin',
             'log.exportar',
+            'relatorio.listar_todas',
         ];
 
         $adminSlugs = array_values(
@@ -79,6 +80,23 @@ class RoleSeeder extends Seeder
             'dashboard.empresa',
             'log.listar',
             'log.visualizar',
+            'formulario.listar',
+            'formulario.visualizar',
+            'categoria.listar',
+            'categoria.visualizar',
+            'subcategoria.listar',
+            'subcategoria.visualizar',
+            'pergunta.listar',
+            'pergunta.visualizar',
+            'conceito.listar',
+            'conceito.visualizar',
+            'pesquisa.listar',
+            'pesquisa.visualizar',
+            'resultado.consultar',
+            'setor.listar',
+            'ghe.listar',
+            'colaborador.listar',
+            'relatorio.listar',
         ];
 
         $gerente = Role::updateOrCreate(
