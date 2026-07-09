@@ -150,4 +150,24 @@ class PesquisaController extends PesquisaBaseController
 
         return $this->respostaSucesso(null, 'Campanha removida com sucesso.');
     }
+
+    #[OA\Delete(
+        path: '/api/v1/pesquisa-psicossocial/pesquisas/{id}/definitivo',
+        summary: 'Excluir campanha definitivamente, em qualquer status (somente super administrador)',
+        tags: ['Pesquisa Psicossocial - Campanhas'],
+        security: [['bearerAuth' => []]],
+        parameters: [new OA\Parameter(name: 'id', in: 'path', required: true, schema: new OA\Schema(type: 'integer'))],
+        responses: [
+            new OA\Response(response: 200, description: 'Campanha excluída definitivamente'),
+            new OA\Response(response: 403, description: 'Apenas o super administrador pode executar esta ação'),
+        ]
+    )]
+    public function excluirDefinitivo(Request $request, int $id): JsonResponse
+    {
+        abort_unless($request->auth_user->isSuperAdmin(), 403, 'Apenas o super administrador pode excluir uma campanha definitivamente.');
+
+        $this->service->excluirDefinitivamente($id, $request->auth_user);
+
+        return $this->respostaSucesso(null, 'Campanha e todo o conteúdo coletado foram excluídos definitivamente.');
+    }
 }

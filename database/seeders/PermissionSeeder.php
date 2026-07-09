@@ -434,6 +434,12 @@ class PermissionSeeder extends Seeder
                 'modulo'   => 'pesquisa',
                 'descricao' => 'Permite encerrar uma campanha ativa.',
             ],
+            [
+                'nome'     => 'Excluir Campanha Definitivamente',
+                'slug'     => 'pesquisa.excluir_definitivo',
+                'modulo'   => 'pesquisa',
+                'descricao' => 'Permite excluir permanentemente uma campanha em qualquer status, incluindo convites, respostas coletadas, plano de ação e relatórios técnicos gerados. Reservado ao super administrador, para manutenção e limpeza do sistema.',
+            ],
 
             // ── Pesquisa Psicossocial: Resultados ────────────────────────────────
             [

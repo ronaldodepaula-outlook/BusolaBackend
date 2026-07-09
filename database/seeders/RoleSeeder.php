@@ -38,7 +38,8 @@ class RoleSeeder extends Seeder
         // ── 2. Administrador ──────────────────────────────────────────────────
         //    All permissions EXCEPT:
         //      empresa.excluir | permissao.criar/editar/excluir |
-        //      dashboard.superadmin | log.exportar | relatorio.listar_todas
+        //      dashboard.superadmin | log.exportar | relatorio.listar_todas |
+        //      pesquisa.excluir_definitivo
         $adminExcluded = [
             'empresa.excluir',
             'permissao.criar',
@@ -47,6 +48,7 @@ class RoleSeeder extends Seeder
             'dashboard.superadmin',
             'log.exportar',
             'relatorio.listar_todas',
+            'pesquisa.excluir_definitivo',
         ];
 
         $adminSlugs = array_values(

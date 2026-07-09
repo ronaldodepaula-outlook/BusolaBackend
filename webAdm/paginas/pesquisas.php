@@ -30,6 +30,7 @@ $currPage  = $resp['data']['dados']['current_page'] ?? 1;
 $podeCriar     = Auth::hasPermission('pesquisa.criar');
 $podeEditar    = Auth::hasPermission('pesquisa.editar');
 $podeExcluir   = Auth::hasPermission('pesquisa.excluir');
+$podeExcluirDefinitivo = Auth::hasPermission('pesquisa.excluir_definitivo');
 $podePublicar  = Auth::hasPermission('pesquisa.publicar');
 $podeEncerrar  = Auth::hasPermission('pesquisa.encerrar');
 
@@ -151,6 +152,9 @@ $statusLabels = [
                       <?php if ($p['status'] === 'rascunho' && $podeExcluir): ?>
                         <button class="btn btn-sm btn-outline-danger" title="Excluir" onclick="deletarPesquisa(<?php echo (int)$p['id']; ?>)"><i class="bi bi-trash"></i></button>
                       <?php endif; ?>
+                      <?php if ($podeExcluirDefinitivo): ?>
+                        <button class="btn btn-sm btn-danger" title="Excluir definitivamente (campanha, convites, respostas coletadas, plano de ação e relatórios)" onclick="excluirDefinitivamente(<?php echo (int)$p['id']; ?>)"><i class="bi bi-trash3-fill"></i></button>
+                      <?php endif; ?>
                     </div>
                   </td>
                 </tr>
@@ -211,6 +215,14 @@ async function deletarPesquisa(id) {
   const res = await apiFetch('DELETE', 'pesquisa-psicossocial/pesquisas/' + id);
   if (res.sucesso) { bslToast('Campanha excluída.', 'success'); setTimeout(() => location.reload(), 800); }
   else { bslToast(res.mensagem || 'Erro ao excluir campanha.', 'danger'); }
+}
+
+async function excluirDefinitivamente(id) {
+  const confirmacao = prompt('Esta ação é IRREVERSÍVEL: a campanha, seus convites, respostas coletadas, plano de ação e relatórios técnicos gerados serão apagados permanentemente.\n\nDigite EXCLUIR para confirmar.');
+  if (confirmacao !== 'EXCLUIR') return;
+  const res = await apiFetch('DELETE', 'pesquisa-psicossocial/pesquisas/' + id + '/definitivo');
+  if (res.sucesso) { bslToast('Campanha excluída definitivamente.', 'success'); setTimeout(() => location.reload(), 800); }
+  else { bslToast(res.mensagem || 'Erro ao excluir campanha definitivamente.', 'danger'); }
 }
 
 async function verPublico(id) {

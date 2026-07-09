@@ -153,6 +153,8 @@ Route::prefix('v1/pesquisa-psicossocial')->middleware(['auth.jwt', 'tenant', 'lo
             ->middleware('permission:pesquisa.editar');
         Route::delete('/{id}', [PesquisaController::class, 'destroy'])
             ->middleware('permission:pesquisa.excluir');
+        Route::delete('/{id}/definitivo', [PesquisaController::class, 'excluirDefinitivo'])
+            ->middleware('permission:pesquisa.excluir_definitivo');
         Route::post('/{id}/publico', [PesquisaController::class, 'definirPublico'])
             ->middleware('permission:pesquisa.editar');
         Route::patch('/{id}/publicar', [PesquisaController::class, 'publicar'])

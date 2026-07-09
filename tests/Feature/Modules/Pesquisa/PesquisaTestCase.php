@@ -55,7 +55,7 @@ abstract class PesquisaTestCase extends TestCase
             'subcategoria.listar', 'subcategoria.criar', 'subcategoria.visualizar', 'subcategoria.editar', 'subcategoria.excluir',
             'pergunta.listar', 'pergunta.criar', 'pergunta.visualizar', 'pergunta.editar', 'pergunta.excluir',
             'conceito.listar', 'conceito.criar', 'conceito.visualizar', 'conceito.editar', 'conceito.excluir',
-            'pesquisa.listar', 'pesquisa.criar', 'pesquisa.visualizar', 'pesquisa.editar', 'pesquisa.excluir', 'pesquisa.publicar', 'pesquisa.encerrar',
+            'pesquisa.listar', 'pesquisa.criar', 'pesquisa.visualizar', 'pesquisa.editar', 'pesquisa.excluir', 'pesquisa.excluir_definitivo', 'pesquisa.publicar', 'pesquisa.encerrar',
             'resultado.consultar',
             'setor.listar', 'setor.criar', 'setor.editar', 'setor.excluir',
             'ghe.listar', 'ghe.criar', 'ghe.editar', 'ghe.excluir',
