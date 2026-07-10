@@ -330,13 +330,140 @@
                 ]
             }
         },
+        "/api/v1/auth/ativacao/{token}": {
+            "get": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Verificar validade de um link de ativação de conta",
+                "description": "Usado pela tela pública antes de exibir o formulário de senha, para confirmar que o link ainda não expirou nem foi usado.",
+                "operationId": "3778a5ef95a24cc1f2d1623c6120fb82",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Token válido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "properties": {
+                                                "nome": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Token inválido, já usado ou expirado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RespostaErro"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/ativacao": {
+            "post": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Concluir a ativação de conta definindo a senha",
+                "description": "Consome o token de ativação: define a senha escolhida, ativa a conta (status=ativo, primeiro_acesso=false) e invalida o token. Uso único.",
+                "operationId": "fe26e8e35de30b7d0569bb35a8856d60",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "token",
+                                    "senha",
+                                    "confirmacao_senha"
+                                ],
+                                "properties": {
+                                    "token": {
+                                        "type": "string"
+                                    },
+                                    "senha": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "minLength": 8
+                                    },
+                                    "confirmacao_senha": {
+                                        "type": "string",
+                                        "format": "password"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Conta ativada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "mensagem": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Token inválido/expirado ou senha fora da política",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RespostaErro"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/auth/recuperar-senha": {
             "post": {
                 "tags": [
                     "Autenticação"
                 ],
                 "summary": "Solicitar recuperação de senha",
-                "operationId": "711b75c591b92e8bc51192cfbf73c782",
+                "description": "Sempre responde com a mesma mensagem genérica de sucesso, exista ou não o e-mail informado — evita enumeração de contas. Sujeito a rate limit.",
+                "operationId": "5fa15b31199c5b00fe6c134f250a9b54",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -358,7 +485,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Token gerado",
+                        "description": "Solicitação processada",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -376,8 +503,57 @@
                             }
                         }
                     },
-                    "404": {
-                        "description": "E-mail não encontrado",
+                    "429": {
+                        "description": "Muitas tentativas — aguarde antes de tentar novamente"
+                    }
+                }
+            }
+        },
+        "/api/v1/auth/resetar-senha/{token}": {
+            "get": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Verificar validade de um link de recuperação de senha",
+                "description": "Usado pela tela pública antes de exibir o formulário de nova senha, para confirmar que o link ainda não expirou nem foi usado.",
+                "operationId": "4c09042fedb1598165174b51273aef41",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Token válido",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "properties": {
+                                                "nome": {
+                                                    "type": "string"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Token inválido, já usado ou expirado",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -394,8 +570,9 @@
                 "tags": [
                     "Autenticação"
                 ],
-                "summary": "Redefinir senha com token",
-                "operationId": "da051a923b872f4d43e60d918323b028",
+                "summary": "Concluir a recuperação definindo a nova senha",
+                "description": "Consome o token de recuperação: define a nova senha e invalida o token. Uso único.",
+                "operationId": "29bbc555af61d55006634473d7891b3b",
                 "requestBody": {
                     "required": true,
                     "content": {
@@ -403,19 +580,19 @@
                             "schema": {
                                 "required": [
                                     "token",
-                                    "nova_senha",
-                                    "confirmacao"
+                                    "senha",
+                                    "confirmacao_senha"
                                 ],
                                 "properties": {
                                     "token": {
                                         "type": "string"
                                     },
-                                    "nova_senha": {
+                                    "senha": {
                                         "type": "string",
                                         "format": "password",
                                         "minLength": 8
                                     },
-                                    "confirmacao": {
+                                    "confirmacao_senha": {
                                         "type": "string",
                                         "format": "password"
                                     }
@@ -445,8 +622,8 @@
                             }
                         }
                     },
-                    "400": {
-                        "description": "Token inválido",
+                    "422": {
+                        "description": "Token inválido/expirado ou senha fora da política",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -3251,7 +3428,7 @@
                     "Usuários"
                 ],
                 "summary": "Cadastrar usuário",
-                "description": "Valida limite max_usuarios.",
+                "description": "Valida limite max_usuarios. Quando `senha` não é informada, o usuário é criado sem senha e inativo — recebe por e-mail um link para definir a própria senha e ativar a conta (válido por 24h, uso único).",
                 "operationId": "14fba63bb769fe8d1cc6de821b1fa089",
                 "requestBody": {
                     "required": true,
@@ -3261,7 +3438,6 @@
                                 "required": [
                                     "nome",
                                     "email",
-                                    "senha",
                                     "tipo"
                                 ],
                                 "properties": {
@@ -3274,8 +3450,10 @@
                                         "format": "email"
                                     },
                                     "senha": {
+                                        "description": "Opcional — se omitida, um convite de ativação é enviado por e-mail",
                                         "type": "string",
                                         "format": "password",
+                                        "nullable": true,
                                         "minLength": 8
                                     },
                                     "tipo": {

@@ -97,7 +97,14 @@ class User extends Authenticatable implements JWTSubject
 
     // Auth override — use 'senha' as password field
 
-    public function getAuthPassword(): string
+    /**
+     * Nulo enquanto o usuário não conclui a ativação da conta (Fluxo 1 —
+     * criado pelo administrador, sem senha, até definir a própria senha via
+     * link de ativação). Hash::check()/os hashers do Laravel já tratam um
+     * hash nulo/vazio como "nunca confere", então o login simplesmente falha
+     * com credenciais inválidas — não é preciso nenhuma checagem extra aqui.
+     */
+    public function getAuthPassword(): ?string
     {
         return $this->senha;
     }

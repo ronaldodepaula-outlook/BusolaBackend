@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Auth\AtivacaoContaController;
+use App\Http\Controllers\Auth\RecuperacaoSenhaController;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\FilialController;
 use App\Http\Controllers\UsuarioController;
@@ -37,9 +39,23 @@ Route::prefix('v1')->group(function () {
     Route::prefix('auth')->group(function () {
 
         // Public endpoints
-        Route::post('/login',           [AuthController::class, 'login']);
-        Route::post('/recuperar-senha', [AuthController::class, 'recuperarSenha']);
-        Route::post('/resetar-senha',   [AuthController::class, 'resetarSenha']);
+        Route::post('/login', [AuthController::class, 'login']);
+
+        // Ativação de conta (Fluxo 1 — usuário criado sem senha pelo administrador)
+        Route::middleware('log.api')->group(function () {
+            Route::get('/ativacao/{token}', [AtivacaoContaController::class, 'validar']);
+            Route::post('/ativacao', [AtivacaoContaController::class, 'ativar'])
+                ->middleware('throttle:10,1');
+        });
+
+        // Recuperação de senha (Fluxo 2 — autoatendida a partir do login)
+        Route::middleware('log.api')->group(function () {
+            Route::post('/recuperar-senha', [RecuperacaoSenhaController::class, 'solicitar'])
+                ->middleware('throttle:5,1');
+            Route::get('/resetar-senha/{token}', [RecuperacaoSenhaController::class, 'validar']);
+            Route::post('/resetar-senha', [RecuperacaoSenhaController::class, 'redefinir'])
+                ->middleware('throttle:10,1');
+        });
 
         // Authenticated endpoints
         Route::middleware('auth.jwt')->group(function () {

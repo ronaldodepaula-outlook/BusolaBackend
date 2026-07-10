@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Services\Auth\AtivacaoContaService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -12,6 +13,11 @@ use OpenApi\Attributes as OA;
 
 class UsuarioController extends Controller
 {
+    public function __construct(
+        private readonly AtivacaoContaService $ativacaoContaService,
+    ) {
+    }
+
     private function getEmpresaId(Request $request): int
     {
         return $request->empresa->id ?? $request->auth_user->empresa_id;
@@ -78,17 +84,17 @@ class UsuarioController extends Controller
     #[OA\Post(
         path: '/api/v1/usuarios',
         summary: 'Cadastrar usuário',
-        description: 'Valida limite max_usuarios.',
+        description: 'Valida limite max_usuarios. Quando `senha` não é informada, o usuário é criado sem senha e inativo — recebe por e-mail um link para definir a própria senha e ativar a conta (válido por 24h, uso único).',
         tags: ['Usuários'],
         security: [['bearerAuth' => []]],
         requestBody: new OA\RequestBody(
             required: true,
             content: new OA\JsonContent(
-                required: ['nome', 'email', 'senha', 'tipo'],
+                required: ['nome', 'email', 'tipo'],
                 properties: [
                     new OA\Property(property: 'nome', type: 'string', example: 'Maria Santos'),
                     new OA\Property(property: 'email', type: 'string', format: 'email'),
-                    new OA\Property(property: 'senha', type: 'string', format: 'password', minLength: 8),
+                    new OA\Property(property: 'senha', type: 'string', format: 'password', minLength: 8, nullable: true, description: 'Opcional — se omitida, um convite de ativação é enviado por e-mail'),
                     new OA\Property(property: 'tipo', type: 'string', enum: ['admin', 'gerente', 'usuario']),
                     new OA\Property(property: 'filial_id', type: 'integer'),
                     new OA\Property(property: 'telefone', type: 'string'),
@@ -106,7 +112,8 @@ class UsuarioController extends Controller
         $validator = Validator::make($request->all(), [
             'nome' => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email',
-            'senha' => 'required|string|min:8',
+            // Opcional de propósito — ver Fluxo 1 (ativação de conta) na descrição do endpoint.
+            'senha' => 'nullable|string|min:8',
             'tipo' => 'required|in:admin,gerente,usuario',
             'filial_id' => 'nullable|integer',
             'telefone' => 'nullable|string|max:20',
@@ -117,7 +124,6 @@ class UsuarioController extends Controller
             'nome.required' => 'O nome é obrigatório.',
             'email.required' => 'O e-mail é obrigatório.',
             'email.unique' => 'Este e-mail já está cadastrado.',
-            'senha.required' => 'A senha é obrigatória.',
             'senha.min' => 'A senha deve ter pelo menos 8 caracteres.',
             'tipo.required' => 'O tipo de usuário é obrigatório.',
             'tipo.in' => 'Tipo inválido.',
@@ -146,15 +152,21 @@ class UsuarioController extends Controller
                 return response()->json(['sucesso' => false, 'mensagem' => 'Tipo de usuário inválido.'], 400);
             }
 
+            // Sem senha informada => Fluxo 1: conta criada inativa, sem senha,
+            // até o próprio usuário concluir a ativação pelo link recebido
+            // por e-mail (ver AtivacaoContaService). Com senha informada,
+            // preserva o comportamento anterior (conta já usável de imediato).
+            $senhaInformada = $request->filled('senha');
+
             $usuario = User::create([
                 'empresa_id' => $empresaId,
                 'filial_id' => $request->filial_id,
                 'nome' => $request->nome,
                 'email' => $request->email,
-                'senha' => Hash::make($request->senha),
+                'senha' => $senhaInformada ? Hash::make($request->senha) : null,
                 'tipo' => $request->tipo,
                 'telefone' => $request->telefone,
-                'status' => $request->status ?? 'ativo',
+                'status' => $senhaInformada ? ($request->status ?? 'ativo') : 'inativo',
                 'primeiro_acesso' => true,
             ]);
 
@@ -162,11 +174,17 @@ class UsuarioController extends Controller
                 $usuario->roles()->sync($request->roles);
             }
 
+            if (! $senhaInformada) {
+                $this->ativacaoContaService->convidar($usuario);
+            }
+
             $usuario->load('roles');
 
             return response()->json([
                 'sucesso' => true,
-                'mensagem' => 'Usuário criado com sucesso.',
+                'mensagem' => $senhaInformada
+                    ? 'Usuário criado com sucesso.'
+                    : 'Usuário criado com sucesso. Um e-mail foi enviado para que ele defina a própria senha.',
                 'dados' => $usuario,
             ], 201);
         } catch (\Exception $e) {

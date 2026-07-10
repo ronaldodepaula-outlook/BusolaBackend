@@ -377,7 +377,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </div>
         </div>
 
-        <div class="mb-4">
+        <div class="mb-2">
           <label for="senha" class="form-label">Senha</label>
           <div class="input-group">
             <span class="input-group-text"><i class="bi bi-lock"></i></span>
@@ -390,6 +390,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
               required
             >
           </div>
+        </div>
+
+        <div class="text-end mb-4">
+          <a href="esqueci-senha.php" style="font-size:.85rem; color:var(--primary); font-weight:600; text-decoration:none;">
+            Esqueci minha senha
+          </a>
         </div>
 
         <button type="submit" class="btn-entrar">

@@ -264,13 +264,15 @@ if (!$isSuperAdmin || $selectedEmpresaId) {
               <input type="email" name="email" class="form-control" required>
             </div>
             <div class="col-md-6">
-              <label class="form-label">Senha <span class="text-danger">*</span></label>
-              <input type="password" name="senha" class="form-control" required minlength="8">
-              <div class="form-text">Minimo de 8 caracteres.</div>
-            </div>
-            <div class="col-md-6">
               <label class="form-label">Telefone</label>
               <input type="text" name="telefone" class="form-control">
+            </div>
+            <div class="col-12">
+              <div class="alert alert-light border small mb-0">
+                <i class="bi bi-envelope-check me-1"></i>
+                Este usuário não terá senha até definir a própria: ao salvar, enviamos um e-mail com um link
+                (válido por 24h) para ele criar a senha e ativar a conta.
+              </div>
             </div>
             <div class="col-md-6">
               <label class="form-label">Tipo <span class="text-danger">*</span></label>
@@ -398,7 +400,7 @@ async function salvarCriar(btn) {
   const res  = await apiFetch('POST', 'usuarios', data, EMPRESA_CTX);
   bslSetLoading(btn, false);
   if (res.sucesso) {
-    bslToast('Usuario criado com sucesso!', 'success');
+    bslToast(res.mensagem || 'Usuario criado com sucesso!', 'success');
     bslCloseModal('modalCriar');
     setTimeout(() => location.reload(), 800);
   } else {
