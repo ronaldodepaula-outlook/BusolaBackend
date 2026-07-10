@@ -33,6 +33,8 @@ $total       = $resp['data']['dados']['total']       ?? 0;
 $lastPage    = $resp['data']['dados']['last_page']   ?? 1;
 $currPage    = $resp['data']['dados']['current_page'] ?? 1;
 
+$padroesFormulario = $api->get('pesquisa-psicossocial/padroes-formulario', ['apenas_ativos' => 1])['data']['dados'] ?? [];
+
 $empresasPorId = [];
 foreach ($empresas as $e) { $empresasPorId[$e['id']] = $e['nome']; }
 
@@ -122,6 +124,7 @@ $podeVersionar = Auth::hasPermission('formulario.versionar');
               <th>Nome</th>
               <th>Código</th>
               <?php if ($isSuperAdmin): ?><th>Empresa</th><?php endif; ?>
+              <th>Padrão</th>
               <th>Status</th>
               <th>Versão</th>
               <th>Categorias</th>
@@ -130,7 +133,7 @@ $podeVersionar = Auth::hasPermission('formulario.versionar');
           </thead>
           <tbody>
             <?php if (empty($formularios)): ?>
-              <tr><td colspan="<?php echo $isSuperAdmin ? 7 : 6; ?>" class="text-center text-muted py-4">Nenhum formulário encontrado.</td></tr>
+              <tr><td colspan="<?php echo $isSuperAdmin ? 8 : 7; ?>" class="text-center text-muted py-4">Nenhum formulário encontrado.</td></tr>
             <?php else: ?>
               <?php foreach ($formularios as $f): ?>
                 <?php
@@ -154,6 +157,7 @@ $podeVersionar = Auth::hasPermission('formulario.versionar');
                   <?php if ($isSuperAdmin): ?>
                     <td><?php echo $f['empresa_id'] ? htmlspecialchars($empresasPorId[$f['empresa_id']] ?? ('#'.$f['empresa_id'])) : '<span class="text-muted">—</span>'; ?></td>
                   <?php endif; ?>
+                  <td class="small"><?php echo $f['padrao_formulario_nome'] ? htmlspecialchars($f['padrao_formulario_nome']) : '<span class="text-muted">—</span>'; ?></td>
                   <td><span class="badge <?php echo $statusBadge; ?>"><?php echo htmlspecialchars($f['status']); ?></span></td>
                   <td>v<?php echo (int)$f['versao']; ?></td>
                   <td><?php echo (int)($f['total_categorias'] ?? 0); ?></td>
@@ -250,7 +254,7 @@ $podeVersionar = Auth::hasPermission('formulario.versionar');
             <?php if ($isSuperAdmin): ?>
             <div class="col-md-6" id="criarEmpresaWrapper">
               <label class="form-label">Empresa <span class="text-danger">*</span></label>
-              <select name="empresa_id" id="criarEmpresaId" class="form-select">
+              <select name="empresa_id" id="criarEmpresaId" class="form-select" onchange="filtrarPadroesSelect(document.getElementById('criarPadraoFormularioId'), this.value)">
                 <option value="">Selecione...</option>
                 <?php foreach ($empresas as $emp): ?>
                   <option value="<?php echo (int)$emp['id']; ?>"><?php echo htmlspecialchars($emp['nome']); ?></option>
@@ -258,6 +262,23 @@ $podeVersionar = Auth::hasPermission('formulario.versionar');
               </select>
             </div>
             <?php endif; ?>
+            <div class="col-12">
+              <label class="form-label">Padrão de Formulário</label>
+              <select name="padrao_formulario_id" id="criarPadraoFormularioId" class="form-select">
+                <option value="">— Nenhum —</option>
+                <?php foreach ($padroesFormulario as $p): ?>
+                  <?php
+                    $rotuloPadrao = $p['nome'];
+                    if ($p['empresa_id'] === null) { $rotuloPadrao .= ' (Global)'; }
+                    elseif ($isSuperAdmin) { $rotuloPadrao .= ' (' . ($empresasPorId[$p['empresa_id']] ?? ('Empresa #' . $p['empresa_id'])) . ')'; }
+                  ?>
+                  <option value="<?php echo (int)$p['id']; ?>" data-empresa="<?php echo $p['empresa_id'] !== null ? (int)$p['empresa_id'] : ''; ?>">
+                    <?php echo htmlspecialchars($rotuloPadrao); ?>
+                  </option>
+                <?php endforeach; ?>
+              </select>
+              <div class="form-text">Norma/metodologia que este formulário segue (ex.: COPSOQ II, NR-1). Gerencie em <a href="?paginas=padroes-formulario" target="_blank">Padrões de Formulário</a>.</div>
+            </div>
           </div>
         </form>
       </div>
@@ -288,6 +309,18 @@ $podeVersionar = Auth::hasPermission('formulario.versionar');
             <label class="form-label">Descrição</label>
             <textarea name="descricao" id="editDescricao" class="form-control" rows="2"></textarea>
           </div>
+          <div class="mb-3">
+            <label class="form-label">Padrão de Formulário</label>
+            <select name="padrao_formulario_id" id="editPadraoFormularioId" class="form-select">
+              <option value="">— Nenhum —</option>
+              <?php foreach ($padroesFormulario as $p): ?>
+                <option value="<?php echo (int)$p['id']; ?>" data-empresa="<?php echo $p['empresa_id'] !== null ? (int)$p['empresa_id'] : ''; ?>">
+                  <?php echo htmlspecialchars($p['nome']); ?><?php echo $p['empresa_id'] === null ? ' (Global)' : ''; ?>
+                </option>
+              <?php endforeach; ?>
+            </select>
+            <div class="form-text">Norma/metodologia que este formulário segue (ex.: COPSOQ II, NR-1). Gerencie em <a href="?paginas=padroes-formulario" target="_blank">Padrões de Formulário</a>.</div>
+          </div>
           <p class="text-muted small mb-0"><i class="bi bi-info-circle me-1"></i>Código, tipo e empresa não podem ser alterados após a criação.</p>
         </form>
       </div>
@@ -315,11 +348,27 @@ $podeVersionar = Auth::hasPermission('formulario.versionar');
 </div>
 
 <script>
+// Mostra só as opções globais + as da empresa informada (ou só as globais, se nenhuma empresa foi passada).
+function filtrarPadroesSelect(selectEl, empresaId) {
+  if (!selectEl) return;
+  Array.from(selectEl.options).forEach(opt => {
+    if (!opt.value) { opt.hidden = false; return; }
+    const empresaOpt = opt.dataset.empresa || '';
+    opt.hidden = !(empresaOpt === '' || String(empresaId || '') === empresaOpt);
+  });
+  if (selectEl.selectedOptions[0]?.hidden) selectEl.value = '';
+}
+
 function toggleEmpresaCriar() {
   const tipo = document.getElementById('criarTipo')?.value;
   const wrapper = document.getElementById('criarEmpresaWrapper');
-  if (!wrapper) return;
-  wrapper.style.display = tipo === 'global' ? 'none' : '';
+  const empresaSel = document.getElementById('criarEmpresaId');
+  if (wrapper) wrapper.style.display = tipo === 'global' ? 'none' : '';
+  // Sem seletor de empresa (usuário comum): a lista de padrões já vem pré-filtrada
+  // pelo backend (globais + da própria empresa) — não há nada a esconder aqui.
+  if (empresaSel) {
+    filtrarPadroesSelect(document.getElementById('criarPadraoFormularioId'), tipo === 'global' ? '' : empresaSel.value);
+  }
 }
 document.addEventListener('DOMContentLoaded', toggleEmpresaCriar);
 
@@ -327,6 +376,9 @@ function editarFormulario(f) {
   document.getElementById('editId').value = f.id ?? '';
   document.getElementById('editNome').value = f.nome ?? '';
   document.getElementById('editDescricao').value = f.descricao ?? '';
+  const padraoSel = document.getElementById('editPadraoFormularioId');
+  filtrarPadroesSelect(padraoSel, f.empresa_id ?? '');
+  if (padraoSel) padraoSel.value = f.padrao_formulario_id ?? '';
   new bootstrap.Modal(document.getElementById('modalEditar')).show();
 }
 

@@ -537,6 +537,32 @@ class PermissionSeeder extends Seeder
                 'descricao' => 'Permite excluir um GHE.',
             ],
 
+            // ── Pesquisa Psicossocial: Padrão de Formulário ──────────────────────
+            [
+                'nome'     => 'Listar Padrões de Formulário',
+                'slug'     => 'padrao_formulario.listar',
+                'modulo'   => 'padrao_formulario',
+                'descricao' => 'Permite listar os padrões/normas de formulário (ex.: COPSOQ II, NR-1) disponíveis, incluindo os específicos da empresa.',
+            ],
+            [
+                'nome'     => 'Criar Padrão de Formulário',
+                'slug'     => 'padrao_formulario.criar',
+                'modulo'   => 'padrao_formulario',
+                'descricao' => 'Permite criar um novo padrão de formulário. Padrões globais (todas as empresas) são reservados ao super administrador.',
+            ],
+            [
+                'nome'     => 'Editar Padrão de Formulário',
+                'slug'     => 'padrao_formulario.editar',
+                'modulo'   => 'padrao_formulario',
+                'descricao' => 'Permite editar nome, descrição e status de um padrão de formulário.',
+            ],
+            [
+                'nome'     => 'Excluir Padrão de Formulário',
+                'slug'     => 'padrao_formulario.excluir',
+                'modulo'   => 'padrao_formulario',
+                'descricao' => 'Permite excluir um padrão de formulário.',
+            ],
+
             // ── Pesquisa Psicossocial: Plano de Ação ─────────────────────────────
             [
                 'nome'     => 'Gerar Plano de Ação',

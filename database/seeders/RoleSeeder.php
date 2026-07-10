@@ -99,6 +99,7 @@ class RoleSeeder extends Seeder
             'ghe.listar',
             'colaborador.listar',
             'relatorio.listar',
+            'padrao_formulario.listar',
         ];
 
         $gerente = Role::updateOrCreate(

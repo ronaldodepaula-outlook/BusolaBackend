@@ -10,7 +10,7 @@ function emGrupo(array $paginas, string $atual): bool {
     return in_array($atual, $paginas, true);
 }
 
-$paginasPesquisa = ['formularios', 'formulario-estrutura', 'conceitos', 'pesquisas', 'pesquisa-wizard', 'setores-ghe', 'colaboradores', 'pesquisa-plano-acao', 'pesquisa-relatorios'];
+$paginasPesquisa = ['formularios', 'formulario-estrutura', 'padroes-formulario', 'conceitos', 'pesquisas', 'pesquisa-wizard', 'setores-ghe', 'colaboradores', 'pesquisa-plano-acao', 'pesquisa-relatorios'];
 $grupoPesquisaAberto = emGrupo($paginasPesquisa, $paginaAtual);
 ?>
 <aside id="sidebar" class="sidebar">
@@ -62,6 +62,13 @@ $grupoPesquisaAberto = emGrupo($paginasPesquisa, $paginaAtual);
         <li>
           <a class="<?php echo in_array($paginaAtual, ['formularios', 'formulario-estrutura'], true) ? 'active' : ''; ?>" href="?paginas=formularios">
             <i class="bi bi-circle"></i><span>Formulários</span>
+          </a>
+        </li>
+        <?php endif; ?>
+        <?php if (Auth::hasPermission('padrao_formulario.listar')): ?>
+        <li>
+          <a class="<?php echo $paginaAtual === 'padroes-formulario' ? 'active' : ''; ?>" href="?paginas=padroes-formulario">
+            <i class="bi bi-circle"></i><span>Padrões de Formulário</span>
           </a>
         </li>
         <?php endif; ?>

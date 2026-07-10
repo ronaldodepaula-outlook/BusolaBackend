@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -9,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Storage;
 use OpenApi\Attributes as OA;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
@@ -21,7 +23,8 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
         new OA\Property(property: 'filial_id', type: 'integer', nullable: true, example: 1),
         new OA\Property(property: 'nome', type: 'string', example: 'João Silva'),
         new OA\Property(property: 'email', type: 'string', format: 'email', example: 'joao@empresa.com'),
-        new OA\Property(property: 'foto', type: 'string', nullable: true),
+        new OA\Property(property: 'foto', type: 'string', nullable: true, description: 'Path relativo no disco público'),
+        new OA\Property(property: 'foto_url', type: 'string', nullable: true, description: 'URL completa e pronta para uso em <img src>'),
         new OA\Property(property: 'telefone', type: 'string', nullable: true),
         new OA\Property(property: 'tipo', type: 'string', enum: ['superadmin', 'admin', 'gerente', 'usuario'], example: 'usuario'),
         new OA\Property(property: 'status', type: 'string', enum: ['ativo', 'inativo', 'bloqueado'], example: 'ativo'),
@@ -58,12 +61,23 @@ class User extends Authenticatable implements JWTSubject
         'token_reset_senha',
     ];
 
+    protected $appends = [
+        'foto_url',
+    ];
+
     protected $casts = [
         'senha'                 => 'hashed',
         'ultimo_login'          => 'datetime',
         'token_reset_expira_em' => 'datetime',
         'primeiro_acesso'       => 'boolean',
     ];
+
+    protected function fotoUrl(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->foto ? Storage::disk('public')->url($this->foto) : null,
+        );
+    }
 
     // JWT Methods
 

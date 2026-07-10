@@ -13,6 +13,8 @@ class FormularioResource extends JsonResource
             'id'                  => $this->id,
             'formulario_raiz_id'  => $this->formulario_raiz_id,
             'empresa_id'          => $this->empresa_id,
+            'padrao_formulario_id'   => $this->padrao_formulario_id,
+            'padrao_formulario_nome' => $this->whenLoaded('padraoFormulario', fn () => $this->padraoFormulario?->nome),
             'nome'                => $this->nome,
             'codigo'              => $this->codigo,
             'descricao'           => $this->descricao,

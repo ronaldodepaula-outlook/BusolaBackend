@@ -22,6 +22,7 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'id', type: 'integer', example: 1),
         new OA\Property(property: 'formulario_raiz_id', type: 'integer', nullable: true, example: null),
         new OA\Property(property: 'empresa_id', type: 'integer', nullable: true, example: null),
+        new OA\Property(property: 'padrao_formulario_id', type: 'integer', nullable: true, example: null, description: 'Padrão/norma que este formulário segue (ex.: COPSOQ II, NR-1, ou um padrão específico da empresa)'),
         new OA\Property(property: 'nome', type: 'string', example: 'Avaliação de Riscos Psicossociais NR-1'),
         new OA\Property(property: 'codigo', type: 'string', example: 'nr1-padrao'),
         new OA\Property(property: 'descricao', type: 'string', nullable: true),
@@ -44,6 +45,7 @@ class Formulario extends Model
     protected $fillable = [
         'formulario_raiz_id',
         'empresa_id',
+        'padrao_formulario_id',
         'nome',
         'codigo',
         'descricao',
@@ -72,6 +74,11 @@ class Formulario extends Model
     public function empresa(): BelongsTo
     {
         return $this->belongsTo(Empresa::class, 'empresa_id');
+    }
+
+    public function padraoFormulario(): BelongsTo
+    {
+        return $this->belongsTo(PadraoFormulario::class, 'padrao_formulario_id');
     }
 
     public function criadoPor(): BelongsTo

@@ -59,6 +59,7 @@ abstract class PesquisaTestCase extends TestCase
             'resultado.consultar',
             'setor.listar', 'setor.criar', 'setor.editar', 'setor.excluir',
             'ghe.listar', 'ghe.criar', 'ghe.editar', 'ghe.excluir',
+            'padrao_formulario.listar', 'padrao_formulario.criar', 'padrao_formulario.editar', 'padrao_formulario.excluir',
             'plano_acao.gerar', 'plano_acao.editar',
             'relatorio.gerar', 'relatorio.listar', 'relatorio.listar_todas',
             'colaborador.listar', 'colaborador.criar', 'colaborador.editar', 'colaborador.excluir',

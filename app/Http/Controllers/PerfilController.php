@@ -195,7 +195,7 @@ class PerfilController extends Controller
             return response()->json([
                 'sucesso' => true,
                 'mensagem' => 'Foto atualizada com sucesso.',
-                'dados' => ['foto' => Storage::url($path)],
+                'dados' => ['foto' => Storage::disk('public')->url($path)],
             ]);
         } catch (\Exception $e) {
             return response()->json(['sucesso' => false, 'mensagem' => 'Erro ao fazer upload da foto.'], 500);

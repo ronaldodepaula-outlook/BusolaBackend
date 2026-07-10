@@ -57,16 +57,17 @@ class FormularioService
         );
 
         return Formulario::create([
-            'nome'       => $dto->nome,
-            'codigo'     => $dto->codigo,
-            'descricao'  => $dto->descricao,
-            'tipo'       => $tipo,
-            'empresa_id' => $empresaId,
-            'status'     => StatusFormulario::RASCUNHO,
-            'versao'     => 1,
-            'ativo'      => true,
-            'created_by' => $user->id,
-            'updated_by' => $user->id,
+            'nome'                 => $dto->nome,
+            'codigo'               => $dto->codigo,
+            'descricao'            => $dto->descricao,
+            'tipo'                 => $tipo,
+            'empresa_id'           => $empresaId,
+            'padrao_formulario_id' => $dto->padraoFormularioId,
+            'status'               => StatusFormulario::RASCUNHO,
+            'versao'               => 1,
+            'ativo'                => true,
+            'created_by'           => $user->id,
+            'updated_by'           => $user->id,
         ]);
     }
 
@@ -84,6 +85,11 @@ class FormularioService
             'nome'      => $dto->nome,
             'descricao' => $dto->descricao,
         ], fn ($v) => $v !== null));
+
+        if ($dto->padraoFormularioIdInformado) {
+            $alvo->padrao_formulario_id = $dto->padraoFormularioId;
+        }
+
         $alvo->updated_by = $user->id;
         $alvo->save();
 

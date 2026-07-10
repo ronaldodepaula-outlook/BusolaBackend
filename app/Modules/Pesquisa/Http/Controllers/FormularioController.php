@@ -34,6 +34,14 @@ class FormularioController extends PesquisaBaseController
     {
         $formularios = $this->service->listar($request->only(['status', 'tipo', 'search', 'empresa_id']), $request->auth_user);
 
+        // A paginação (total/last_page/current_page) precisa continuar vindo do
+        // paginator; só os itens passam pela Resource, para expor campos
+        // computados (ex.: total_categorias, padrao_formulario_nome) que não
+        // existem como coluna crua do model.
+        $formularios->setCollection(
+            $formularios->getCollection()->map(fn ($f) => (new FormularioResource($f))->resolve($request))
+        );
+
         return $this->respostaSucesso($formularios);
     }
 

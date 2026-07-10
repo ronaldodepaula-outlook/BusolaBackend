@@ -7,6 +7,7 @@ use App\Modules\Pesquisa\Http\Controllers\ConceitoItemController;
 use App\Modules\Pesquisa\Http\Controllers\ConviteController;
 use App\Modules\Pesquisa\Http\Controllers\FormularioController;
 use App\Modules\Pesquisa\Http\Controllers\GheController;
+use App\Modules\Pesquisa\Http\Controllers\PadraoFormularioController;
 use App\Modules\Pesquisa\Http\Controllers\PerguntaController;
 use App\Modules\Pesquisa\Http\Controllers\PesquisaController;
 use App\Modules\Pesquisa\Http\Controllers\PlanoAcaoController;
@@ -58,6 +59,23 @@ Route::prefix('v1/pesquisa-psicossocial')->middleware(['auth.jwt', 'tenant', 'lo
             Route::patch('/reordenar', [CategoriaController::class, 'reordenar'])
                 ->middleware('permission:categoria.editar');
         });
+    });
+
+    // -------------------------------------------------------------------------
+    // Padrões de Formulário — norma/metodologia que um formulário segue
+    // (ex.: COPSOQ II, NR-1, ou um padrão específico da empresa)
+    // -------------------------------------------------------------------------
+    Route::prefix('padroes-formulario')->group(function () {
+        Route::get('/', [PadraoFormularioController::class, 'index'])
+            ->middleware('permission:padrao_formulario.listar');
+        Route::post('/', [PadraoFormularioController::class, 'store'])
+            ->middleware('permission:padrao_formulario.criar');
+        Route::get('/{id}', [PadraoFormularioController::class, 'show'])
+            ->middleware('permission:padrao_formulario.listar');
+        Route::put('/{id}', [PadraoFormularioController::class, 'update'])
+            ->middleware('permission:padrao_formulario.editar');
+        Route::delete('/{id}', [PadraoFormularioController::class, 'destroy'])
+            ->middleware('permission:padrao_formulario.excluir');
     });
 
     // -------------------------------------------------------------------------

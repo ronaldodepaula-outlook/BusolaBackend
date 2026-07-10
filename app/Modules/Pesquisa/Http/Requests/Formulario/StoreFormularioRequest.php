@@ -3,6 +3,7 @@
 namespace App\Modules\Pesquisa\Http\Requests\Formulario;
 
 use App\Modules\Pesquisa\Http\Requests\PesquisaFormRequest;
+use App\Modules\Pesquisa\Models\PadraoFormulario;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 
 class StoreFormularioRequest extends PesquisaFormRequest
@@ -15,6 +16,7 @@ class StoreFormularioRequest extends PesquisaFormRequest
             'descricao' => 'nullable|string',
             'tipo'      => 'required|in:global,empresa',
             'empresa_id' => 'nullable|integer|exists:empresas,id',
+            'padrao_formulario_id' => 'nullable|integer|exists:pesq_padroes_formulario,id',
         ];
     }
 
@@ -40,8 +42,10 @@ class StoreFormularioRequest extends PesquisaFormRequest
                 return;
             }
 
+            $empresaIdAlvo = null;
             if ($tipo === 'empresa') {
                 $empresaId = $this->input('empresa_id');
+                $empresaIdAlvo = $user->isSuperAdmin() ? $empresaId : $user->empresa_id;
 
                 if (! $user->isSuperAdmin()) {
                     if ($empresaId && (int) $empresaId !== (int) $user->empresa_id) {
@@ -49,6 +53,16 @@ class StoreFormularioRequest extends PesquisaFormRequest
                     }
                 } elseif (! $empresaId) {
                     $validator->errors()->add('empresa_id', 'Informe a empresa para um formulário do tipo "empresa".');
+                }
+            }
+
+            $padraoFormularioId = $this->input('padrao_formulario_id');
+            if ($padraoFormularioId) {
+                $padrao = PadraoFormulario::find($padraoFormularioId);
+                $visivel = $padrao && $padrao->ativo && ($padrao->empresa_id === null || (int) $padrao->empresa_id === (int) $empresaIdAlvo);
+
+                if (! $visivel) {
+                    $validator->errors()->add('padrao_formulario_id', 'Padrão de formulário inválido para este escopo.');
                 }
             }
         });

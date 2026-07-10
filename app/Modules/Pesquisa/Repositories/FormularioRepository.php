@@ -40,19 +40,19 @@ class FormularioRepository
             $query->vigentes();
         }
 
-        return $query->withCount('categorias')->orderBy('nome')->paginate($porPagina);
+        return $query->withCount('categorias')->with('padraoFormulario:id,nome,empresa_id')->orderBy('nome')->paginate($porPagina);
     }
 
     public function buscarPorId(int $id, User $user): ?Formulario
     {
-        return Formulario::query()->visiveisPara($user)->find($id);
+        return Formulario::query()->visiveisPara($user)->with('padraoFormulario:id,nome,empresa_id')->find($id);
     }
 
     public function buscarComEstrutura(int $id, User $user): ?Formulario
     {
         return Formulario::query()
             ->visiveisPara($user)
-            ->with(['categorias.subcategorias.perguntas.conceito.itens'])
+            ->with(['categorias.subcategorias.perguntas.conceito.itens', 'padraoFormulario:id,nome,empresa_id'])
             ->find($id);
     }
 

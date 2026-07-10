@@ -440,7 +440,7 @@ class EmpresaController extends Controller
             return response()->json([
                 'sucesso' => true,
                 'mensagem' => 'Logo atualizado com sucesso.',
-                'dados' => ['logo' => Storage::url($path)],
+                'dados' => ['logo' => Storage::disk('public')->url($path)],
             ]);
         } catch (\Exception $e) {
             return response()->json(['sucesso' => false, 'mensagem' => 'Erro ao fazer upload do logo.'], 500);

@@ -117,6 +117,11 @@ class Auth
         return self::getUser()['foto'] ?? null;
     }
 
+    public static function getFotoUrl(): ?string
+    {
+        return self::getUser()['foto_url'] ?? null;
+    }
+
     public static function getEmpresaId(): ?int
     {
         $id = self::getUser()['empresa_id'] ?? null;

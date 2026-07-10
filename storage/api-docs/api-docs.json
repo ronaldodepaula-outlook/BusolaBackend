@@ -3969,6 +3969,473 @@
                 ]
             }
         },
+        "/api/v1/pesquisa-psicossocial/colaboradores": {
+            "get": {
+                "tags": [
+                    "Pesquisa Psicossocial - Colaboradores"
+                ],
+                "summary": "Listar colaboradores da empresa",
+                "description": "CPF e data de nascimento nunca são retornados em claro nesta listagem — apenas mascarados (ver `cpf_mascarado`).",
+                "operationId": "9917b65b4446e6a04db8de6cda9875f7",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "setor_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "filial_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "ativo",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "name": "empresa_id",
+                        "in": "query",
+                        "description": "Somente super administrador",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 15
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista paginada de colaboradores"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Pesquisa Psicossocial - Colaboradores"
+                ],
+                "summary": "Cadastrar colaborador manualmente",
+                "operationId": "97b05f01dbbc141ab14d2e21254c8e23",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nome"
+                                ],
+                                "properties": {
+                                    "empresa_id": {
+                                        "description": "Somente super administrador",
+                                        "type": "integer",
+                                        "nullable": true
+                                    },
+                                    "filial_id": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    },
+                                    "setor_id": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    },
+                                    "matricula": {
+                                        "type": "string",
+                                        "nullable": true,
+                                        "maxLength": 40
+                                    },
+                                    "nome": {
+                                        "type": "string",
+                                        "maxLength": 150
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "nullable": true
+                                    },
+                                    "cargo": {
+                                        "type": "string",
+                                        "nullable": true,
+                                        "maxLength": 100
+                                    },
+                                    "ativo": {
+                                        "type": "boolean",
+                                        "default": true
+                                    },
+                                    "cpf": {
+                                        "description": "Com ou sem pontuação — cifrado no banco, nunca retornado em claro nesta rota",
+                                        "type": "string",
+                                        "example": "123.456.789-09",
+                                        "nullable": true
+                                    },
+                                    "data_nascimento": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Colaborador cadastrado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "dados": {
+                                            "$ref": "#/components/schemas/PesquisaColaborador"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validação falhou (inclui CPF duplicado na mesma empresa)"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/colaboradores/{id}": {
+            "get": {
+                "tags": [
+                    "Pesquisa Psicossocial - Colaboradores"
+                ],
+                "summary": "Visualizar colaborador",
+                "description": "CPF e data de nascimento retornam mascarados — use o endpoint dedicado /dados-sensiveis para vê-los em claro.",
+                "operationId": "f5b0c21af213d7d45cbcb03a0c2abbce",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dados do colaborador",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "dados": {
+                                            "$ref": "#/components/schemas/PesquisaColaborador"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Colaborador não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Pesquisa Psicossocial - Colaboradores"
+                ],
+                "summary": "Atualizar colaborador",
+                "operationId": "2569933dcb40390c2cddc26d36dc0ce4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "filial_id": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    },
+                                    "setor_id": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    },
+                                    "matricula": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "nome": {
+                                        "type": "string"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "nullable": true
+                                    },
+                                    "cargo": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "ativo": {
+                                        "type": "boolean"
+                                    },
+                                    "cpf": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "data_nascimento": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Colaborador atualizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Pesquisa Psicossocial - Colaboradores"
+                ],
+                "summary": "Excluir colaborador",
+                "operationId": "7d8048503ac0d9881910559bddacfd04",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Colaborador removido"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/colaboradores/{id}/anonimizar": {
+            "patch": {
+                "tags": [
+                    "Pesquisa Psicossocial - Colaboradores"
+                ],
+                "summary": "Anonimizar dados pessoais do colaborador (LGPD)",
+                "description": "Remove nome, e-mail, matrícula, CPF e data de nascimento sem afetar convites/respostas de campanhas já geradas (essas nunca guardaram dados pessoais).",
+                "operationId": "5880f800d0f073bb628e047d058a4cef",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dados pessoais anonimizados"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/colaboradores/{id}/dados-sensiveis": {
+            "get": {
+                "tags": [
+                    "Pesquisa Psicossocial - Colaboradores"
+                ],
+                "summary": "Revelar CPF e data de nascimento em claro",
+                "description": "Único endpoint que devolve dados sensíveis sem máscara — exige permissão dedicada (`colaborador.visualizar_dados_sensiveis`) e a requisição é registrada pelo log automático do sistema (usuário, IP, timestamp), atendendo ao princípio de responsabilização da LGPD.",
+                "operationId": "b796e9da4ba4f8b25ebf53555aefb360",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dados sensíveis em claro",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "dados": {
+                                            "properties": {
+                                                "cpf": {
+                                                    "type": "string",
+                                                    "example": "12345678909",
+                                                    "nullable": true
+                                                },
+                                                "data_nascimento": {
+                                                    "type": "string",
+                                                    "format": "date",
+                                                    "nullable": true
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Sem permissão para visualizar dados sensíveis"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/colaboradores/importar": {
+            "post": {
+                "tags": [
+                    "Pesquisa Psicossocial - Colaboradores"
+                ],
+                "summary": "Importar colaboradores via CSV",
+                "description": "Colunas reconhecidas: nome, cpf, data_nascimento, email, cargo, matricula, setor, filial. Deduplica por CPF (ou matrícula, se o CPF não vier); cada linha é processada em transação isolada, então uma linha inválida não aborta o lote.",
+                "operationId": "2a2f1ed7b9ef5f1aba58578ff04a5732",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "conteudo_csv"
+                                ],
+                                "properties": {
+                                    "conteudo_csv": {
+                                        "description": "Conteúdo bruto do arquivo CSV (não um upload multipart)",
+                                        "type": "string"
+                                    },
+                                    "empresa_id": {
+                                        "description": "Somente super administrador",
+                                        "type": "integer",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Resultado da importação",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "dados": {
+                                            "properties": {
+                                                "importados": {
+                                                    "type": "integer"
+                                                },
+                                                "atualizados": {
+                                                    "type": "integer"
+                                                },
+                                                "erros": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/pesquisa-psicossocial/conceitos": {
             "get": {
                 "tags": [
@@ -4608,6 +5075,478 @@
                 ]
             }
         },
+        "/api/v1/pesquisa-psicossocial/ghes": {
+            "get": {
+                "tags": [
+                    "Pesquisa Psicossocial - Setores e GHE"
+                ],
+                "summary": "Listar GHEs (Grupos Homogêneos de Exposição) da empresa",
+                "operationId": "5039b810deff520b6d82b7d57fe8265a",
+                "responses": {
+                    "200": {
+                        "description": "Lista de GHEs",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/PesquisaGhe"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Pesquisa Psicossocial - Setores e GHE"
+                ],
+                "summary": "Criar GHE",
+                "operationId": "8ff96a8fdfce2b2a3822b059e12d3acb",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nome"
+                                ],
+                                "properties": {
+                                    "empresa_id": {
+                                        "description": "Somente super administrador",
+                                        "type": "integer",
+                                        "nullable": true
+                                    },
+                                    "nome": {
+                                        "type": "string",
+                                        "example": "GHE 01 – Comercial e Relacionamento",
+                                        "maxLength": 150
+                                    },
+                                    "descricao": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "ativo": {
+                                        "type": "boolean",
+                                        "default": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "GHE criado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "dados": {
+                                            "$ref": "#/components/schemas/PesquisaGhe"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validação falhou"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/ghes/{id}": {
+            "get": {
+                "tags": [
+                    "Pesquisa Psicossocial - Setores e GHE"
+                ],
+                "summary": "Visualizar GHE",
+                "operationId": "371943a20219b7af2a403a11c0761054",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dados do GHE",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "dados": {
+                                            "$ref": "#/components/schemas/PesquisaGhe"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "GHE não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Pesquisa Psicossocial - Setores e GHE"
+                ],
+                "summary": "Atualizar GHE",
+                "operationId": "e9a5e944142ee2a1c79509e41fd72026",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nome": {
+                                        "type": "string",
+                                        "maxLength": 150
+                                    },
+                                    "descricao": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "ativo": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "GHE atualizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Pesquisa Psicossocial - Setores e GHE"
+                ],
+                "summary": "Excluir GHE",
+                "description": "Os setores vinculados a este GHE ficam sem GHE (ghe_id passa a nulo) — não são excluídos.",
+                "operationId": "bd546e6c5efcd1c8470ff3bb4ccc2924",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "GHE removido"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/padroes-formulario": {
+            "get": {
+                "tags": [
+                    "Pesquisa Psicossocial - Padrões de Formulário"
+                ],
+                "summary": "Listar padrões de formulário (ex.: COPSOQ II, NR-1, ou padrões da empresa)",
+                "description": "Padrões globais (empresa_id nulo) aparecem para todas as empresas; padrões de empresa só aparecem para a empresa dona (super administrador vê todos).",
+                "operationId": "a7cc523ed5201ae44e298755c4d0f53d",
+                "parameters": [
+                    {
+                        "name": "empresa_id",
+                        "in": "query",
+                        "description": "Somente super administrador",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "apenas_ativos",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de padrões",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "dados": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/PesquisaPadraoFormulario"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Pesquisa Psicossocial - Padrões de Formulário"
+                ],
+                "summary": "Criar padrão de formulário",
+                "description": "Padrões do tipo \"global\" (disponíveis a todas as empresas) só podem ser criados pelo super administrador.",
+                "operationId": "9e9a66cb7916cb73ba70f056db0e8a3a",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nome",
+                                    "tipo"
+                                ],
+                                "properties": {
+                                    "nome": {
+                                        "type": "string",
+                                        "example": "COPSOQ II",
+                                        "maxLength": 150
+                                    },
+                                    "descricao": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "tipo": {
+                                        "type": "string",
+                                        "enum": [
+                                            "global",
+                                            "empresa"
+                                        ]
+                                    },
+                                    "empresa_id": {
+                                        "description": "Obrigatório quando tipo=empresa e o usuário é super administrador",
+                                        "type": "integer",
+                                        "nullable": true
+                                    },
+                                    "ativo": {
+                                        "type": "boolean",
+                                        "default": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Padrão criado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "dados": {
+                                            "$ref": "#/components/schemas/PesquisaPadraoFormulario"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validação falhou (inclui nome duplicado no escopo, ou tipo=global sem ser super administrador)"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/padroes-formulario/{id}": {
+            "get": {
+                "tags": [
+                    "Pesquisa Psicossocial - Padrões de Formulário"
+                ],
+                "summary": "Visualizar padrão de formulário",
+                "operationId": "c8d61bcb5025efe2b3488a091b0ca3ae",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dados do padrão",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "dados": {
+                                            "$ref": "#/components/schemas/PesquisaPadraoFormulario"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Padrão não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Pesquisa Psicossocial - Padrões de Formulário"
+                ],
+                "summary": "Atualizar padrão de formulário",
+                "description": "Apenas nome, descrição e status são editáveis — tipo e empresa são imutáveis após a criação.",
+                "operationId": "5ba6ad4c139a2812f1fb79b4c9073f96",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "nome": {
+                                        "type": "string",
+                                        "maxLength": 150
+                                    },
+                                    "descricao": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "ativo": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Padrão atualizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Pesquisa Psicossocial - Padrões de Formulário"
+                ],
+                "summary": "Excluir padrão de formulário",
+                "description": "Formulários que usam este padrão ficam sem padrão associado (padrao_formulario_id passa a nulo) — não são excluídos.",
+                "operationId": "13307d2cbd227cf577ce16959e77bd7e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Padrão removido"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/pesquisa-psicossocial/subcategorias/{subcategoria}/perguntas": {
             "get": {
                 "tags": [
@@ -5051,6 +5990,533 @@
                 ]
             }
         },
+        "/api/v1/pesquisa-psicossocial/pesquisas/{id}/definitivo": {
+            "delete": {
+                "tags": [
+                    "Pesquisa Psicossocial - Campanhas"
+                ],
+                "summary": "Excluir campanha definitivamente, em qualquer status (somente super administrador)",
+                "operationId": "7d37e539289c4805811c6f3341cc58b2",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Campanha excluída definitivamente"
+                    },
+                    "403": {
+                        "description": "Apenas o super administrador pode executar esta ação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/pesquisas/{pesquisa}/plano-acao": {
+            "get": {
+                "tags": [
+                    "Pesquisa Psicossocial - Plano de Ação"
+                ],
+                "summary": "Listar o plano de ação de uma campanha",
+                "operationId": "de384603ae111795c5481743a90ef71a",
+                "parameters": [
+                    {
+                        "name": "pesquisa",
+                        "in": "path",
+                        "description": "ID da campanha",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de ações do plano",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "dados": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/PesquisaPlanoAcao"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/pesquisas/{pesquisa}/plano-acao/gerar": {
+            "post": {
+                "tags": [
+                    "Pesquisa Psicossocial - Plano de Ação"
+                ],
+                "summary": "Gerar/atualizar o plano de ação a partir do resultado atual da campanha",
+                "description": "Idempotente: cria uma ação (fase PDCA \"Planejar\") para cada Categoria×GHE×TipoControle cujo nível de risco exija ação, ou atualiza a existente. Pode ser executado novamente após reclassificação de risco.",
+                "operationId": "e96e63d25d1fb40424685149511d7035",
+                "parameters": [
+                    {
+                        "name": "pesquisa",
+                        "in": "path",
+                        "description": "ID da campanha",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Resumo da geração",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "dados": {
+                                            "properties": {
+                                                "geradas": {
+                                                    "type": "integer"
+                                                },
+                                                "atualizadas": {
+                                                    "type": "integer"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/plano-acao/{id}": {
+            "patch": {
+                "tags": [
+                    "Pesquisa Psicossocial - Plano de Ação"
+                ],
+                "summary": "Atualizar responsável, prazo, status ou observações de uma ação",
+                "operationId": "c9973444a2617e6877f3db9cc548be0d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "responsavel": {
+                                        "type": "string",
+                                        "nullable": true,
+                                        "maxLength": 150
+                                    },
+                                    "prazo": {
+                                        "type": "string",
+                                        "nullable": true,
+                                        "maxLength": 30
+                                    },
+                                    "status": {
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "observacoes": {
+                                        "type": "string",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ação atualizada",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "dados": {
+                                            "$ref": "#/components/schemas/PesquisaPlanoAcao"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/plano-acao/{id}/avancar-fase": {
+            "patch": {
+                "tags": [
+                    "Pesquisa Psicossocial - Plano de Ação"
+                ],
+                "summary": "Avançar a ação para a próxima fase do ciclo PDCA",
+                "description": "Sequência estrita Planejar → Executar → Verificar → Agir, sem pular etapas. Exige `evidencia_execucao` ao avançar para \"verificar\" e `parecer_verificacao` ao avançar para \"agir\".",
+                "operationId": "019d02e05b25fa4b097188572c02b6f0",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "fase"
+                                ],
+                                "properties": {
+                                    "fase": {
+                                        "description": "Fase de destino — deve ser exatamente a próxima da fase atual",
+                                        "type": "string",
+                                        "enum": [
+                                            "planejar",
+                                            "executar",
+                                            "verificar",
+                                            "agir"
+                                        ]
+                                    },
+                                    "evidencia_execucao": {
+                                        "description": "Obrigatório quando fase = \"verificar\"",
+                                        "type": "string",
+                                        "nullable": true
+                                    },
+                                    "parecer_verificacao": {
+                                        "description": "Obrigatório quando fase = \"agir\"",
+                                        "type": "string",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ação avançada de fase",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "dados": {
+                                            "$ref": "#/components/schemas/PesquisaPlanoAcao"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Fase fora de sequência ou evidência/parecer faltando"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/plano-acao/{id}/concluir-ciclo": {
+            "patch": {
+                "tags": [
+                    "Pesquisa Psicossocial - Plano de Ação"
+                ],
+                "summary": "Concluir o ciclo PDCA da ação (fase \"Agir\")",
+                "description": "Se `eficacia` não for \"eficaz\", um novo ciclo é aberto automaticamente (fase volta a \"planejar\", `ciclo_pdca` é incrementado e o ciclo anterior é arquivado em `historico_pdca`). Se \"eficaz\", a ação é encerrada.",
+                "operationId": "d2ec0752c30edc02403cc5f7d186bc29",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "eficacia"
+                                ],
+                                "properties": {
+                                    "eficacia": {
+                                        "type": "string",
+                                        "enum": [
+                                            "eficaz",
+                                            "parcialmente_eficaz",
+                                            "ineficaz"
+                                        ]
+                                    },
+                                    "necessita_nova_acao": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Ciclo concluído (encerrado ou reaberto)",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "dados": {
+                                            "$ref": "#/components/schemas/PesquisaPlanoAcao"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/pesquisas/{pesquisa}/relatorios-tecnicos": {
+            "get": {
+                "tags": [
+                    "Pesquisa Psicossocial - Relatórios Técnicos"
+                ],
+                "summary": "Listar relatórios técnicos já gerados de uma campanha (própria empresa)",
+                "operationId": "65eae90e4eb1642a76dc05f55ffd5229",
+                "parameters": [
+                    {
+                        "name": "pesquisa",
+                        "in": "path",
+                        "description": "ID da campanha (não filtra o resultado — mantido por compatibilidade de rota)",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de relatórios da empresa do usuário autenticado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "dados": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/PesquisaRelatorioTecnico"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Pesquisa Psicossocial - Relatórios Técnicos"
+                ],
+                "summary": "Gerar o Relatório Técnico (PDF) de uma campanha",
+                "description": "Consolida resultado tabulado, classificação de risco por categoria/GHE e plano de ação no relatório técnico padrão da metodologia. O PDF é salvo em disco privado (nunca público).",
+                "operationId": "f6d1c7391fa66105dda8771251708474",
+                "parameters": [
+                    {
+                        "name": "pesquisa",
+                        "in": "path",
+                        "description": "ID da campanha",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "responsavel_tecnico_nome": {
+                                        "type": "string",
+                                        "nullable": true,
+                                        "maxLength": 150
+                                    },
+                                    "responsavel_tecnico_registro": {
+                                        "type": "string",
+                                        "example": "CRP 11/15242",
+                                        "nullable": true,
+                                        "maxLength": 60
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Relatório gerado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "dados": {
+                                            "$ref": "#/components/schemas/PesquisaRelatorioTecnico"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/relatorios-tecnicos": {
+            "get": {
+                "tags": [
+                    "Pesquisa Psicossocial - Relatórios Técnicos"
+                ],
+                "summary": "Listar relatórios técnicos de todas as empresas (super administrador)",
+                "operationId": "5300438860c0aa98bf84a13574b827ce",
+                "parameters": [
+                    {
+                        "name": "empresa_id",
+                        "in": "query",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista paginada cross-empresa"
+                    },
+                    "403": {
+                        "description": "Apenas o super administrador pode acessar esta listagem"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/relatorios-tecnicos/{id}/download": {
+            "get": {
+                "tags": [
+                    "Pesquisa Psicossocial - Relatórios Técnicos"
+                ],
+                "summary": "Baixar o PDF de um relatório técnico",
+                "operationId": "3ed95fbf1a2a1577bfcf19b4b1889db8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Arquivo PDF",
+                        "content": {
+                            "application/pdf": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "binary"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Relatório pertence a outra empresa"
+                    },
+                    "404": {
+                        "description": "Relatório ou arquivo não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/v1/pesquisa-psicossocial/publico/{token}": {
             "get": {
                 "tags": [
@@ -5198,6 +6664,279 @@
                 "responses": {
                     "200": {
                         "description": "Taxa de resposta, distribuição por pergunta e média por categoria"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/setores": {
+            "get": {
+                "tags": [
+                    "Pesquisa Psicossocial - Setores e GHE"
+                ],
+                "summary": "Listar setores organizacionais da empresa",
+                "operationId": "8d09ef62aa8e88f666578d9b722e62b0",
+                "responses": {
+                    "200": {
+                        "description": "Lista de setores",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "sucesso": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "dados": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/PesquisaSetor"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Pesquisa Psicossocial - Setores e GHE"
+                ],
+                "summary": "Criar setor",
+                "operationId": "3e9240da9eac6d51e7a46396a42d51a8",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nome"
+                                ],
+                                "properties": {
+                                    "empresa_id": {
+                                        "description": "Somente super administrador",
+                                        "type": "integer",
+                                        "nullable": true
+                                    },
+                                    "ghe_id": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    },
+                                    "nome": {
+                                        "type": "string",
+                                        "example": "Comercial",
+                                        "maxLength": 150
+                                    },
+                                    "ativo": {
+                                        "type": "boolean",
+                                        "default": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Setor criado",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "dados": {
+                                            "$ref": "#/components/schemas/PesquisaSetor"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validação falhou"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/setores/{id}": {
+            "get": {
+                "tags": [
+                    "Pesquisa Psicossocial - Setores e GHE"
+                ],
+                "summary": "Visualizar setor",
+                "operationId": "ef978ab0fafc113da5268ea28495c9d2",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Dados do setor",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "dados": {
+                                            "$ref": "#/components/schemas/PesquisaSetor"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Setor não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Pesquisa Psicossocial - Setores e GHE"
+                ],
+                "summary": "Atualizar setor",
+                "operationId": "1f14b68d21dda8bac77fefa2830b7dc4",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "ghe_id": {
+                                        "type": "integer",
+                                        "nullable": true
+                                    },
+                                    "nome": {
+                                        "type": "string",
+                                        "maxLength": 150
+                                    },
+                                    "ativo": {
+                                        "type": "boolean"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Setor atualizado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Pesquisa Psicossocial - Setores e GHE"
+                ],
+                "summary": "Excluir setor",
+                "operationId": "9e59f01139780bf5770990d9adb839d8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Setor removido"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/v1/pesquisa-psicossocial/setores/{id}/usuario": {
+            "post": {
+                "tags": [
+                    "Pesquisa Psicossocial - Setores e GHE"
+                ],
+                "summary": "Atribuir um usuário (conta de acesso) a um setor",
+                "description": "Fluxo legado, anterior ao cadastro de Colaboradores — o alvo do convite individual de campanhas hoje é Colaborador, não User.",
+                "operationId": "060881d5f09ca99f1f609d069799fe2b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do setor",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user_id"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Setor do usuário atualizado"
+                    },
+                    "422": {
+                        "description": "Validação falhou"
                     }
                 },
                 "security": [
@@ -5771,6 +7510,12 @@
                         "example": "joao@empresa.com"
                     },
                     "foto": {
+                        "description": "Path relativo no disco público",
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "foto_url": {
+                        "description": "URL completa e pronta para uso em <img src>",
                         "type": "string",
                         "nullable": true
                     },
@@ -5807,6 +7552,231 @@
                         "example": false
                     },
                     "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "PesquisaPlanoAcao": {
+                "description": "Ação do Plano de Ação (PDCA) gerada a partir da classificação de risco de uma categoria/GHE",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "categoria": {
+                        "properties": {
+                            "id": {
+                                "type": "integer"
+                            },
+                            "nome": {
+                                "type": "string"
+                            }
+                        },
+                        "type": "object",
+                        "nullable": true
+                    },
+                    "ghe": {
+                        "properties": {
+                            "id": {
+                                "type": "integer"
+                            },
+                            "nome": {
+                                "type": "string"
+                            }
+                        },
+                        "type": "object",
+                        "nullable": true
+                    },
+                    "tipo_controle": {
+                        "properties": {
+                            "value": {
+                                "type": "string"
+                            },
+                            "label": {
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "nivel_risco": {
+                        "properties": {
+                            "value": {
+                                "type": "string"
+                            },
+                            "label": {
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "farol": {
+                        "type": "string"
+                    },
+                    "acao": {
+                        "type": "string"
+                    },
+                    "como_executar": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "evidencia": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "responsavel": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "prazo": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "status": {
+                        "properties": {
+                            "value": {
+                                "type": "string"
+                            },
+                            "label": {
+                                "type": "string"
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "concluido_em": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "observacoes": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "fase_pdca": {
+                        "properties": {
+                            "value": {
+                                "type": "string",
+                                "enum": [
+                                    "planejar",
+                                    "executar",
+                                    "verificar",
+                                    "agir"
+                                ]
+                            },
+                            "label": {
+                                "type": "string"
+                            },
+                            "proxima": {
+                                "type": "string",
+                                "nullable": true
+                            }
+                        },
+                        "type": "object"
+                    },
+                    "ciclo_pdca": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "executado_em": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "evidencia_execucao": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "verificado_em": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "verificado_por": {
+                        "properties": {
+                            "id": {
+                                "type": "integer"
+                            },
+                            "nome": {
+                                "type": "string"
+                            }
+                        },
+                        "type": "object",
+                        "nullable": true
+                    },
+                    "parecer_verificacao": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "agido_em": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "eficacia": {
+                        "properties": {
+                            "value": {
+                                "type": "string",
+                                "enum": [
+                                    "eficaz",
+                                    "parcialmente_eficaz",
+                                    "ineficaz"
+                                ]
+                            },
+                            "label": {
+                                "type": "string"
+                            }
+                        },
+                        "type": "object",
+                        "nullable": true
+                    },
+                    "necessita_nova_acao": {
+                        "type": "boolean",
+                        "nullable": true
+                    },
+                    "historico_pdca": {
+                        "description": "Snapshot de cada ciclo PDCA anterior, arquivado quando a eficácia não é plena e o ciclo é reaberto automaticamente",
+                        "type": "array",
+                        "items": {
+                            "type": "object"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "PesquisaRelatorioTecnico": {
+                "description": "Registro de uma geração do Relatório Técnico (PDF) de uma campanha",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "pesquisa_id": {
+                        "type": "integer"
+                    },
+                    "empresa_id": {
+                        "type": "integer"
+                    },
+                    "gerado_por": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "responsavel_tecnico_nome": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "responsavel_tecnico_registro": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "arquivo_path": {
+                        "description": "Caminho no disco privado — baixe via /relatorios-tecnicos/{id}/download",
+                        "type": "string"
+                    },
+                    "tamanho_bytes": {
+                        "type": "integer"
+                    },
+                    "gerado_em": {
                         "type": "string",
                         "format": "date-time"
                     }
@@ -5986,6 +7956,12 @@
                         "example": null,
                         "nullable": true
                     },
+                    "padrao_formulario_id": {
+                        "description": "Padrão/norma que este formulário segue (ex.: COPSOQ II, NR-1, ou um padrão específico da empresa)",
+                        "type": "integer",
+                        "example": null,
+                        "nullable": true
+                    },
                     "nome": {
                         "type": "string",
                         "example": "Avaliação de Riscos Psicossociais NR-1"
@@ -6056,6 +8032,34 @@
                     "nome": {
                         "type": "string",
                         "example": "GHE 01 – Comercial e Relacionamento"
+                    },
+                    "descricao": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "ativo": {
+                        "type": "boolean",
+                        "example": true
+                    }
+                },
+                "type": "object"
+            },
+            "PesquisaPadraoFormulario": {
+                "description": "Padrão/norma que um formulário segue (ex.: COPSOQ II, NR-1, ISO 45003 ou um padrão específico da empresa)",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "empresa_id": {
+                        "description": "Nulo = padrão global, disponível a todas as empresas",
+                        "type": "integer",
+                        "example": null,
+                        "nullable": true
+                    },
+                    "nome": {
+                        "type": "string",
+                        "example": "COPSOQ II"
                     },
                     "descricao": {
                         "type": "string",
@@ -6316,6 +8320,10 @@
             "description": "Pesquisa Psicossocial - Categorias"
         },
         {
+            "name": "Pesquisa Psicossocial - Colaboradores",
+            "description": "Pesquisa Psicossocial - Colaboradores"
+        },
+        {
             "name": "Pesquisa Psicossocial - Conceitos",
             "description": "Pesquisa Psicossocial - Conceitos"
         },
@@ -6328,8 +8336,24 @@
             "description": "Pesquisa Psicossocial - Formulários"
         },
         {
+            "name": "Pesquisa Psicossocial - Setores e GHE",
+            "description": "Pesquisa Psicossocial - Setores e GHE"
+        },
+        {
+            "name": "Pesquisa Psicossocial - Padrões de Formulário",
+            "description": "Pesquisa Psicossocial - Padrões de Formulário"
+        },
+        {
             "name": "Pesquisa Psicossocial - Perguntas",
             "description": "Pesquisa Psicossocial - Perguntas"
+        },
+        {
+            "name": "Pesquisa Psicossocial - Plano de Ação",
+            "description": "Pesquisa Psicossocial - Plano de Ação"
+        },
+        {
+            "name": "Pesquisa Psicossocial - Relatórios Técnicos",
+            "description": "Pesquisa Psicossocial - Relatórios Técnicos"
         },
         {
             "name": "Pesquisa Psicossocial - Resposta Pública",

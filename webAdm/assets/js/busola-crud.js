@@ -52,6 +52,45 @@ async function apiFetch(method, endpoint, body = null, empresaId = null) {
 }
 
 /**
+ * Fetch wrapper para upload de arquivo (multipart/form-data) com Bearer auth.
+ * Não define 'Content-Type' manualmente — o browser define o boundary
+ * correto automaticamente a partir do FormData.
+ * @param {string} method       HTTP method (normalmente POST)
+ * @param {string} endpoint     Relative endpoint (e.g. 'perfil/foto')
+ * @param {FormData} formData   Deve conter o(s) arquivo(s) via formData.append('campo', file)
+ * @param {number|null} empresaId  X-Empresa-Id header (para escopo multi-empresa do superadmin)
+ * @returns {Promise<object>}
+ */
+async function apiUpload(method, endpoint, formData, empresaId = null) {
+  try {
+    const url = API_BASE + endpoint;
+    const headers = {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer ' + API_TOKEN,
+    };
+    if (empresaId) {
+      headers['X-Empresa-Id'] = String(empresaId);
+    }
+    const res = await fetch(url, { method: method.toUpperCase(), headers, body: formData });
+
+    if (res.status === 401) {
+      bslToast('Sessao expirada. Redirecionando para login...', 'warning');
+      setTimeout(() => { window.location.href = 'logout.php?expired=1'; }, 2000);
+      return { sucesso: false, mensagem: 'Sessao expirada.' };
+    }
+
+    try {
+      return await res.json();
+    } catch (_) {
+      return { sucesso: false, mensagem: 'Resposta invalida do servidor.' };
+    }
+  } catch (err) {
+    console.error('[apiUpload]', err);
+    return { sucesso: false, mensagem: 'Erro de conexao.' };
+  }
+}
+
+/**
  * Fixed top-right Bootstrap-style toast.
  * @param {string} msg
  * @param {'success'|'danger'|'warning'|'info'} type

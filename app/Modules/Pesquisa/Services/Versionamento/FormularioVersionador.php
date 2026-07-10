@@ -68,17 +68,18 @@ class FormularioVersionador
         $snapshotAntigo = $this->snapshot($formulario);
 
         $nova = Formulario::create([
-            'formulario_raiz_id' => $raizId,
-            'empresa_id'         => $formulario->empresa_id,
-            'nome'               => $formulario->nome,
-            'codigo'             => $formulario->codigo,
-            'descricao'          => $formulario->descricao,
-            'status'             => StatusFormulario::RASCUNHO,
-            'tipo'               => $formulario->tipo,
-            'versao'             => $proximaVersao,
-            'ativo'              => true,
-            'created_by'         => $formulario->created_by,
-            'updated_by'         => $user->id,
+            'formulario_raiz_id'   => $raizId,
+            'empresa_id'           => $formulario->empresa_id,
+            'padrao_formulario_id' => $formulario->padrao_formulario_id,
+            'nome'                 => $formulario->nome,
+            'codigo'               => $formulario->codigo,
+            'descricao'            => $formulario->descricao,
+            'status'               => StatusFormulario::RASCUNHO,
+            'tipo'                 => $formulario->tipo,
+            'versao'               => $proximaVersao,
+            'ativo'                => true,
+            'created_by'           => $formulario->created_by,
+            'updated_by'           => $user->id,
         ]);
 
         $this->clonarArvore($formulario, $nova);

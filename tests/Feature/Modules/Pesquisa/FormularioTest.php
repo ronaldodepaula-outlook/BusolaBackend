@@ -5,6 +5,7 @@ namespace Tests\Feature\Modules\Pesquisa;
 use App\Models\Empresa;
 use App\Modules\Pesquisa\Models\Categoria;
 use App\Modules\Pesquisa\Models\Formulario;
+use App\Modules\Pesquisa\Models\PadraoFormulario;
 use App\Modules\Pesquisa\Models\Pergunta;
 use App\Modules\Pesquisa\Models\Pesquisa;
 use App\Modules\Pesquisa\Models\Subcategoria;
@@ -212,6 +213,50 @@ class FormularioTest extends PesquisaTestCase
 
         $formulario->refresh();
         $this->assertFalse($formulario->ativo);
+    }
+
+    public function test_listagem_reporta_total_categorias_e_padrao_formulario_corretos(): void
+    {
+        $empresa = Empresa::factory()->create();
+        $usuario = $this->criarUsuarioComPermissoes($empresa, $this->todasPermissoesDoModulo());
+        $padrao = PadraoFormulario::factory()->create(['empresa_id' => $empresa->id, 'nome' => 'COPSOQ II']);
+
+        $formulario = Formulario::factory()->daEmpresa($empresa->id)->create(['padrao_formulario_id' => $padrao->id]);
+        Categoria::factory()->count(3)->create(['formulario_id' => $formulario->id]);
+
+        $lista = $this->getJson('/api/v1/pesquisa-psicossocial/formularios', $this->headersParaUsuario($usuario))
+            ->assertStatus(200)
+            ->json('dados.data');
+
+        $encontrado = collect($lista)->firstWhere('id', $formulario->id);
+        $this->assertNotNull($encontrado);
+        $this->assertSame(3, $encontrado['total_categorias']);
+        $this->assertSame('COPSOQ II', $encontrado['padrao_formulario_nome']);
+    }
+
+    public function test_associa_padrao_de_formulario_na_criacao_e_troca_na_edicao(): void
+    {
+        $empresa = Empresa::factory()->create();
+        $usuario = $this->criarUsuarioComPermissoes($empresa, $this->todasPermissoesDoModulo());
+        $headers = $this->headersParaUsuario($usuario);
+        $padraoA = PadraoFormulario::factory()->create(['empresa_id' => $empresa->id, 'nome' => 'Padrão A']);
+        $padraoB = PadraoFormulario::factory()->create(['empresa_id' => $empresa->id, 'nome' => 'Padrão B']);
+
+        $criar = $this->postJson('/api/v1/pesquisa-psicossocial/formularios', [
+            'nome'                 => 'Formulário com Padrão',
+            'codigo'               => 'form-com-padrao',
+            'tipo'                 => 'empresa',
+            'padrao_formulario_id' => $padraoA->id,
+        ], $headers)->assertStatus(201);
+
+        $id = $criar->json('dados.id');
+        $this->assertSame($padraoA->id, $criar->json('dados.padrao_formulario_id'));
+
+        $this->putJson("/api/v1/pesquisa-psicossocial/formularios/{$id}", [
+            'padrao_formulario_id' => $padraoB->id,
+        ], $headers)
+            ->assertStatus(200)
+            ->assertJsonPath('dados.formulario.padrao_formulario_id', $padraoB->id);
     }
 
     public function test_nao_permite_editar_versao_arquivada(): void
