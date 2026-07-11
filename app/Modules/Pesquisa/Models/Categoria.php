@@ -2,8 +2,8 @@
 
 namespace App\Modules\Pesquisa\Models;
 
+use App\Modules\Pesquisa\Casts\ReferenciaFatorRiscoCast;
 use App\Modules\Pesquisa\Database\Factories\CategoriaFactory;
-use App\Modules\Pesquisa\Enums\CategoriaReferencia;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -45,7 +45,7 @@ class Categoria extends Model
     ];
 
     protected $casts = [
-        'categoria_referencia' => CategoriaReferencia::class,
+        'categoria_referencia' => ReferenciaFatorRiscoCast::class,
         'ordem'                => 'integer',
         'severidade'           => 'integer',
         'ativo'                => 'boolean',

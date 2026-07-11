@@ -3,6 +3,7 @@
 namespace App\Modules\Pesquisa\Services;
 
 use App\Models\User;
+use App\Modules\Pesquisa\Contracts\MotorCalculoRiscoInterface;
 use App\Modules\Pesquisa\Enums\TipoPergunta;
 use App\Modules\Pesquisa\Models\Formulario;
 use App\Modules\Pesquisa\Models\Ghe;
@@ -30,7 +31,7 @@ class ResultadoService
 
     public function __construct(
         private readonly PesquisaRepository $pesquisaRepository,
-        private readonly RiscoCalculator $riscoCalculator,
+        private readonly MotorCalculoRiscoResolver $motorResolver,
     ) {
     }
 
@@ -42,8 +43,10 @@ class ResultadoService
         $totalConvites    = PesquisaConvite::where('pesquisa_id', $pesquisaId)->count();
         $totalRespondidos = PesquisaConvite::where('pesquisa_id', $pesquisaId)->whereNotNull('respondido_em')->count();
 
-        $formulario = Formulario::with(['categorias.subcategorias.perguntas.conceito.itens'])
+        $formulario = Formulario::with(['categorias.subcategorias.perguntas.conceito.itens', 'padraoFormulario'])
             ->findOrFail($pesquisa->formulario_id);
+
+        $motor = $this->motorResolver->resolver($formulario->padraoFormulario);
 
         $minimo = $pesquisa->minimo_respondentes ?? 5;
         $grupos = $this->resolverGruposDeGhe($pesquisaId, $minimo);
@@ -71,7 +74,7 @@ class ResultadoService
 
             $media = $countEscalas > 0 ? round($somaMedias / $countEscalas, 2) : null;
             $severidade = $categoria->severidadeEfetiva();
-            $risco = $this->classificarRisco($media, $severidade);
+            $risco = $this->classificarRisco($media, $severidade, $motor);
 
             if ($risco !== null) {
                 $resumoRisco[$risco['nivel']->value] = ($resumoRisco[$risco['nivel']->value] ?? 0) + 1;
@@ -85,7 +88,7 @@ class ResultadoService
                 'severidade'           => $severidade,
                 'risco'                => $risco,
                 'grupos_ghe'           => $severidade
-                    ? $this->riscoPorGrupoGhe($categoria->id, $severidade, $grupos)
+                    ? $this->riscoPorGrupoGhe($categoria->id, $severidade, $grupos, $motor)
                     : [],
                 'perguntas'            => $perguntasResultado,
             ];
@@ -113,6 +116,67 @@ class ResultadoService
             'grupos_ghe'  => $grupos->map(fn ($g) => ['nome' => $g['nome'], 'total_respostas' => $g['total_respostas']])->values(),
             'resumo_risco' => $resumoRisco,
             'categorias'  => $categoriasResultado,
+            'matriz_risco' => $this->matrizRisco($categoriasResultado, $motor),
+        ];
+    }
+
+    /**
+     * Grade completa Probabilidade(1-5) × Severidade(1-5) para visualização
+     * em matriz no dashboard: cada célula já traz o nível/farol que o motor
+     * de cálculo desta campanha atribuiria (mesmo que nenhuma avaliação real
+     * tenha caído nela, para o heatmap poder desenhar as 25 células), mais a
+     * contagem de avaliações de risco (por Categoria×GHE, ou a agregada da
+     * empresa quando não há grupos de GHE) que caíram em cada uma.
+     *
+     * @param  array<int, array>  $categoriasResultado
+     * @return array{celulas: array<int, array>, nao_significativo: int}
+     */
+    private function matrizRisco(array $categoriasResultado, MotorCalculoRiscoInterface $motor): array
+    {
+        $celulas = [];
+        for ($p = 1; $p <= 5; $p++) {
+            for ($s = 1; $s <= 5; $s++) {
+                $nivel = $motor->classificar($p, $s);
+                $celulas["{$p}-{$s}"] = [
+                    'probabilidade' => $p,
+                    'severidade'    => $s,
+                    'nivel'         => $nivel->value,
+                    'nivel_label'   => $nivel->label(),
+                    'farol_cor'     => $nivel->farolCor(),
+                    'farol_emoji'   => $nivel->farolEmoji(),
+                    'quantidade'    => 0,
+                ];
+            }
+        }
+
+        $naoSignificativo = 0;
+
+        foreach ($categoriasResultado as $categoria) {
+            $avaliacoes = ! empty($categoria['grupos_ghe'])
+                ? array_column($categoria['grupos_ghe'], 'risco')
+                : array_filter([$categoria['risco']]);
+
+            foreach ($avaliacoes as $risco) {
+                if ($risco === null) {
+                    continue;
+                }
+
+                if ($risco['probabilidade'] === null) {
+                    $naoSignificativo++;
+
+                    continue;
+                }
+
+                $chave = "{$risco['probabilidade']}-{$risco['severidade']}";
+                if (isset($celulas[$chave])) {
+                    $celulas[$chave]['quantidade']++;
+                }
+            }
+        }
+
+        return [
+            'celulas'           => array_values($celulas),
+            'nao_significativo' => $naoSignificativo,
         ];
     }
 
@@ -163,13 +227,13 @@ class ResultadoService
      * fixa, ou null quando a categoria não está vinculada a um fator de risco
      * oficial (sem severidade definida) ou não há respostas suficientes.
      */
-    private function classificarRisco(?float $media, ?int $severidade): ?array
+    private function classificarRisco(?float $media, ?int $severidade, MotorCalculoRiscoInterface $motor): ?array
     {
         if ($media === null || $severidade === null) {
             return null;
         }
 
-        $avaliacao = $this->riscoCalculator->avaliar($media, $severidade);
+        $avaliacao = $motor->avaliar($media, $severidade);
 
         return [
             'probabilidade' => $avaliacao['probabilidade'],
@@ -243,7 +307,7 @@ class ResultadoService
     /**
      * Calcula a média/risco de uma categoria isolada por grupo de GHE.
      */
-    private function riscoPorGrupoGhe(int $categoriaId, int $severidade, Collection $grupos): array
+    private function riscoPorGrupoGhe(int $categoriaId, int $severidade, Collection $grupos, MotorCalculoRiscoInterface $motor): array
     {
         $resultado = [];
 
@@ -255,7 +319,7 @@ class ResultadoService
                 'nome'            => $grupo['nome'],
                 'total_respostas' => $grupo['total_respostas'],
                 'media'           => $media,
-                'risco'           => $this->classificarRisco($media, $severidade),
+                'risco'           => $this->classificarRisco($media, $severidade, $motor),
             ];
         }
 

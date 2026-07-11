@@ -201,7 +201,7 @@
 <table>
     <thead><tr><th style="width:16%">Categoria</th><th style="width:5%">S</th><th style="width:14%">Classificação Técnica</th><th>Justificativa</th></tr></thead>
     <tbody>
-    @foreach(\App\Modules\Pesquisa\Enums\CategoriaReferencia::cases() as $fator)
+    @foreach($categoriasReferenciaTodas as $fator)
         <tr>
             <td>{{ $fator->label() }}</td>
             <td class="num">{{ $fator->severidadePadrao() }}</td>
@@ -216,7 +216,7 @@
 <table>
     <thead><tr><th style="width:8%">Farol</th><th style="width:16%">Classificação</th><th>Diretrizes de Gerenciamento</th></tr></thead>
     <tbody>
-    @foreach(\App\Modules\Pesquisa\Enums\NivelRisco::cases() as $nivel)
+    @foreach($niveisRiscoTodos as $nivel)
         <tr>
             <td class="farol"><span class="dot" style="background:{{ $nivel->farolCor() }}"></span></td>
             <td>{{ $nivel->label() }}</td>

@@ -5,6 +5,7 @@ namespace App\Modules\Pesquisa\Models;
 use App\Models\Empresa;
 use App\Models\User;
 use App\Modules\Pesquisa\Database\Factories\PadraoFormularioFactory;
+use App\Modules\Pesquisa\Enums\ModeloCalculoRisco;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -22,6 +23,7 @@ use OpenApi\Attributes as OA;
         new OA\Property(property: 'nome', type: 'string', example: 'COPSOQ II'),
         new OA\Property(property: 'descricao', type: 'string', nullable: true),
         new OA\Property(property: 'ativo', type: 'boolean', example: true),
+        new OA\Property(property: 'modelo_calculo', type: 'string', enum: ['nr1_completo', 'copsoq_simplificado'], example: 'nr1_completo', description: 'Motor de cálculo de risco usado pelas campanhas deste padrão'),
     ]
 )]
 class PadraoFormulario extends Model
@@ -36,10 +38,12 @@ class PadraoFormulario extends Model
         'descricao',
         'ativo',
         'created_by',
+        'modelo_calculo',
     ];
 
     protected $casts = [
-        'ativo' => 'boolean',
+        'ativo'          => 'boolean',
+        'modelo_calculo' => ModeloCalculoRisco::class,
     ];
 
     protected static function newFactory(): PadraoFormularioFactory

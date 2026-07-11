@@ -2,8 +2,8 @@
 
 namespace App\Modules\Pesquisa\Http\Requests\Categoria;
 
-use App\Modules\Pesquisa\Enums\CategoriaReferencia;
 use App\Modules\Pesquisa\Http\Requests\PesquisaFormRequest;
+use App\Modules\Pesquisa\Support\FatorRiscoReferenciaResolver;
 use Illuminate\Validation\Rule;
 
 class StoreCategoriaRequest extends PesquisaFormRequest
@@ -13,7 +13,9 @@ class StoreCategoriaRequest extends PesquisaFormRequest
         return [
             'nome'                 => 'required|string|max:150',
             'descricao'            => 'nullable|string',
-            'categoria_referencia' => ['nullable', Rule::in(array_map(fn ($c) => $c->value, CategoriaReferencia::cases()))],
+            // Aceita os valores de qualquer um dos padrões de cálculo (NR-1 completo ou COPSOQ resumido) —
+            // qual deles é válido para este formulário depende do Padrão de Formulário selecionado.
+            'categoria_referencia' => ['nullable', Rule::in(FatorRiscoReferenciaResolver::todosOsValores())],
             'severidade'           => 'nullable|integer|min:1|max:5',
             'ordem'                => 'nullable|integer|min:0',
         ];

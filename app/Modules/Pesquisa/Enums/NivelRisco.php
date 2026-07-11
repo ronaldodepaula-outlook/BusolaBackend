@@ -2,12 +2,16 @@
 
 namespace App\Modules\Pesquisa\Enums;
 
+use App\Modules\Pesquisa\Contracts\NivelRiscoInterface;
+
 /**
  * Classificação final de risco (Seção 3.8 do relatório técnico modelo),
  * resultado do cruzamento Probabilidade × Severidade na matriz de risco
- * corporativa (RiscoCalculator::classificar()).
+ * corporativa (RiscoCalculator::classificar()). Este é o padrão "NR-1
+ * completo" — ver também {@see NivelRiscoCopsoqSimplificado} para o padrão
+ * COPSOQ II resumido.
  */
-enum NivelRisco: string
+enum NivelRisco: string implements NivelRiscoInterface
 {
     case NAO_SIGNIFICATIVO = 'nao_significativo';
     case TRIVIAL = 'trivial';

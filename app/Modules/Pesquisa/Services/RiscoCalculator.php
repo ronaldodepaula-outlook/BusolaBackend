@@ -2,17 +2,24 @@
 
 namespace App\Modules\Pesquisa\Services;
 
+use App\Modules\Pesquisa\Contracts\MotorCalculoRiscoInterface;
+use App\Modules\Pesquisa\Contracts\NivelRiscoInterface;
 use App\Modules\Pesquisa\Enums\NivelRisco;
 
 /**
- * Motor de cálculo de risco psicossocial: converte a média COPSOQ II (1 a 5)
- * em Probabilidade por faixa fixa, e cruza Probabilidade × Severidade na
- * matriz de risco corporativa — reproduzindo exatamente as Seções 3.5 a 3.8
- * do relatório técnico modelo e as abas PROBABILIDADE/MATRIZ da planilha de
- * referência. O resultado NÃO é o produto matemático das duas variáveis: é
- * uma tabela de consulta, como o próprio documento de referência ressalta.
+ * Motor de cálculo de risco psicossocial do padrão NR-1/COPSOQ II completo
+ * (`ModeloCalculoRisco::NR1_COMPLETO`, o padrão original do sistema):
+ * converte a média COPSOQ II (1 a 5) em Probabilidade por faixa fixa, e cruza
+ * Probabilidade × Severidade na matriz de risco corporativa — reproduzindo
+ * exatamente as Seções 3.5 a 3.8 do relatório técnico modelo e as abas
+ * PROBABILIDADE/MATRIZ da planilha "dados para cálculo.xlsx". O resultado NÃO
+ * é o produto matemático das duas variáveis: é uma tabela de consulta, como o
+ * próprio documento de referência ressalta.
+ *
+ * Ver também {@see RiscoCalculatorCopsoqSimplificado} para o padrão
+ * alternativo COPSOQ II resumido.
  */
-class RiscoCalculator
+class RiscoCalculator implements MotorCalculoRiscoInterface
 {
     /** Abaixo desta média, a categoria é considerada sem exposição significativa e fica fora da matriz. */
     private const LIMITE_MATERIALIDADE = 1.30;
@@ -54,7 +61,7 @@ class RiscoCalculator
      * Severidade fixa da categoria. Probabilidade null (< limite de
      * materialidade) sempre resulta em NAO_SIGNIFICATIVO, independente da severidade.
      */
-    public function classificar(?int $probabilidade, int $severidade): NivelRisco
+    public function classificar(?int $probabilidade, int $severidade): NivelRiscoInterface
     {
         if ($probabilidade === null) {
             return NivelRisco::NAO_SIGNIFICATIVO;

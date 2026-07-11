@@ -2,11 +2,15 @@
 
 namespace App\Modules\Pesquisa\Enums;
 
+use App\Modules\Pesquisa\Contracts\FatorRiscoReferenciaInterface;
+
 /**
  * Os 11 fatores de risco psicossociais oficiais do COPSOQ II / Portaria GM/MS
  * nº 5.674/2024, usados como referência opcional de uma Categoria de
  * formulário para acionar o RiscoCalculator (severidade fixa) e o catálogo de
- * templates de Plano de Ação.
+ * templates de Plano de Ação. Este é o padrão "NR-1 completo" — ver também
+ * {@see CategoriaReferenciaCopsoqSimplificado} para o padrão COPSOQ II
+ * resumido (7 dimensões), selecionável via Padrão de Formulário.
  *
  * O valor de cada case é a chave usada tanto na tabela `pesq_categorias`
  * quanto em `pesq_plano_acao_templates.categoria_referencia` — mantém-se
@@ -15,7 +19,7 @@ namespace App\Modules\Pesquisa\Enums;
  * relatórios (Seção 3.7 do relatório técnico modelo), que difere ligeiramente
  * em alguns casos.
  */
-enum CategoriaReferencia: string
+enum CategoriaReferencia: string implements FatorRiscoReferenciaInterface
 {
     case GESTAO_ORGANIZACIONAL = 'Gestão Organizacional';
     case CONTEXTO_ORGANIZACAO = 'Contexto da Organização do Trabalho';

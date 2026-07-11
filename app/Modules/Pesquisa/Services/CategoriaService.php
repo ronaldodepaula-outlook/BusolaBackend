@@ -4,12 +4,12 @@ namespace App\Modules\Pesquisa\Services;
 
 use App\Models\User;
 use App\Modules\Pesquisa\DTOs\CategoriaData;
-use App\Modules\Pesquisa\Enums\CategoriaReferencia;
 use App\Modules\Pesquisa\Models\Categoria;
 use App\Modules\Pesquisa\Models\Formulario;
 use App\Modules\Pesquisa\Repositories\CategoriaRepository;
 use App\Modules\Pesquisa\Repositories\FormularioRepository;
 use App\Modules\Pesquisa\Services\Versionamento\FormularioVersionador;
+use App\Modules\Pesquisa\Support\FatorRiscoReferenciaResolver;
 use Illuminate\Database\Eloquent\Collection;
 
 class CategoriaService
@@ -154,7 +154,7 @@ class CategoriaService
     /** Severidade fixa oficial quando a categoria é vinculada a um fator de risco de referência. */
     private function severidadePadrao(?string $categoriaReferencia): ?int
     {
-        return $categoriaReferencia ? CategoriaReferencia::from($categoriaReferencia)->severidadePadrao() : null;
+        return $categoriaReferencia ? FatorRiscoReferenciaResolver::resolver($categoriaReferencia)->severidadePadrao() : null;
     }
 
     private function buscarFormularioVisivel(int $formularioId, User $user): Formulario

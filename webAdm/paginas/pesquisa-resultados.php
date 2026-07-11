@@ -23,7 +23,15 @@ $taxa = $dados['taxa_resposta'];
 $acessosGlobais = $dados['acessos_globais'] ?? ['total_sessoes' => 0, 'respondidas' => 0];
 $categorias = $dados['categorias'];
 $resumoRisco = $dados['resumo_risco'] ?? [];
+$matrizRisco = $dados['matriz_risco'] ?? null;
 $minimoRespondentes = $dados['pesquisa']['minimo_respondentes'] ?? 5;
+
+$celulasMatrizPorChave = [];
+if ($matrizRisco) {
+    foreach ($matrizRisco['celulas'] as $celula) {
+        $celulasMatrizPorChave["{$celula['probabilidade']}-{$celula['severidade']}"] = $celula;
+    }
+}
 
 $tipoLabels = [
     'escala' => 'Escala', 'texto' => 'Texto', 'numero' => 'Número', 'data' => 'Data',
@@ -70,6 +78,49 @@ $tipoLabels = [
           <?php endforeach; ?>
         </div>
         <p class="text-muted small mt-3 mb-0"><i class="bi bi-shield-lock me-1"></i>Grupos com menos de <?php echo (int)$minimoRespondentes; ?> respondente(s) são combinados em um "Grupo agregado" para preservar o anonimato.</p>
+      </div>
+    </div>
+  <?php endif; ?>
+
+  <?php if ($matrizRisco && !empty($matrizRisco['celulas'])): ?>
+    <div class="card mb-4">
+      <div class="card-header">
+        <h6 class="mb-0"><i class="bi bi-grid-3x3-gap-fill me-1"></i>Matriz de Risco (Probabilidade × Severidade)</h6>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-bordered text-center mb-2" style="max-width:640px;">
+            <thead class="table-light">
+              <tr>
+                <th style="width:90px;">P \ S</th>
+                <?php for ($s = 1; $s <= 5; $s++): ?>
+                  <th>S<?php echo $s; ?></th>
+                <?php endfor; ?>
+              </tr>
+            </thead>
+            <tbody>
+              <?php for ($p = 5; $p >= 1; $p--): ?>
+                <tr>
+                  <th class="table-light">P<?php echo $p; ?></th>
+                  <?php for ($s = 1; $s <= 5; $s++): ?>
+                    <?php $celula = $celulasMatrizPorChave["{$p}-{$s}"] ?? null; ?>
+                    <td style="background-color: <?php echo htmlspecialchars($celula['farol_cor'] ?? '#eee'); ?>; color:#fff; font-weight:600;"
+                        title="<?php echo htmlspecialchars($celula['nivel_label'] ?? ''); ?> (P<?php echo $p; ?> × S<?php echo $s; ?>)">
+                      <?php echo ($celula && $celula['quantidade'] > 0) ? (int)$celula['quantidade'] : '·'; ?>
+                    </td>
+                  <?php endfor; ?>
+                </tr>
+              <?php endfor; ?>
+            </tbody>
+          </table>
+        </div>
+        <p class="text-muted small mb-0">
+          Cada célula mostra quantas avaliações de risco (Categoria × GHE) caíram naquela combinação de Probabilidade × Severidade —
+          a cor é a classificação que o motor de cálculo desta campanha atribui à célula.
+          <?php if (($matrizRisco['nao_significativo'] ?? 0) > 0): ?>
+            <?php echo (int)$matrizRisco['nao_significativo']; ?> avaliação(ões) ficaram abaixo do limite de materialidade (sem exposição significativa) e não aparecem na grade.
+          <?php endif; ?>
+        </p>
       </div>
     </div>
   <?php endif; ?>

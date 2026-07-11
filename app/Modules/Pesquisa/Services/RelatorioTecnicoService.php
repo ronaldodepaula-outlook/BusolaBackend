@@ -3,11 +3,11 @@
 namespace App\Modules\Pesquisa\Services;
 
 use App\Models\User;
-use App\Modules\Pesquisa\Enums\CategoriaReferencia;
 use App\Modules\Pesquisa\Models\Formulario;
 use App\Modules\Pesquisa\Models\Ghe;
 use App\Modules\Pesquisa\Models\Pesquisa;
 use App\Modules\Pesquisa\Models\RelatorioTecnico;
+use App\Modules\Pesquisa\Support\FatorRiscoReferenciaResolver;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -30,6 +30,7 @@ class RelatorioTecnicoService
     public function __construct(
         private readonly ResultadoService $resultadoService,
         private readonly PlanoAcaoService $planoAcaoService,
+        private readonly MotorCalculoRiscoResolver $motorResolver,
     ) {
     }
 
@@ -38,26 +39,29 @@ class RelatorioTecnicoService
         $resultado = $this->resultadoService->resultados($pesquisaId, $user);
         $planoAcao = $this->planoAcaoService->listar($pesquisaId, $user);
 
-        $pesquisa = Pesquisa::with('empresa')->findOrFail($pesquisaId);
+        $pesquisa = Pesquisa::with(['empresa', 'formulario.padraoFormulario'])->findOrFail($pesquisaId);
         $empresa = $pesquisa->empresa;
+        $padrao = $pesquisa->formulario?->padraoFormulario;
 
         $composicaoGhe = $this->composicaoGhe($empresa->id);
 
         $categoriasReferenciadas = collect($resultado['categorias'])
             ->filter(fn ($c) => ! empty($c['categoria_referencia']))
-            ->map(fn ($c) => CategoriaReferencia::from($c['categoria_referencia']))
+            ->map(fn ($c) => FatorRiscoReferenciaResolver::resolver($c['categoria_referencia']))
             ->unique('value');
 
         $pdf = Pdf::loadView('pesquisa::relatorios.tecnico', [
-            'empresa'          => $empresa,
-            'pesquisa'         => $pesquisa,
-            'resultado'        => $resultado,
-            'composicaoGhe'    => $composicaoGhe,
-            'planoAcao'        => $planoAcao->groupBy('categoria.nome'),
-            'anexoI'           => $categoriasReferenciadas,
-            'anexoII'          => $this->anexoII($pesquisa->formulario_id, $categoriasReferenciadas),
-            'responsavel'      => $responsavelTecnico,
-            'geradoEm'         => now(),
+            'empresa'                 => $empresa,
+            'pesquisa'                => $pesquisa,
+            'resultado'               => $resultado,
+            'composicaoGhe'           => $composicaoGhe,
+            'planoAcao'               => $planoAcao->groupBy('categoria.nome'),
+            'anexoI'                  => $categoriasReferenciadas,
+            'anexoII'                 => $this->anexoII($pesquisa->formulario_id, $categoriasReferenciadas),
+            'categoriasReferenciaTodas' => $this->motorResolver->todasCategorias($padrao),
+            'niveisRiscoTodos'        => $this->motorResolver->todosNiveis($padrao),
+            'responsavel'             => $responsavelTecnico,
+            'geradoEm'                => now(),
         ])->setPaper('a4');
 
         $conteudo = $pdf->output();
