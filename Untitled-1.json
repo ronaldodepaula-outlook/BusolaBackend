@@ -1,0 +1,32 @@
+{
+    "capaSangria": {
+        "sequencial": 144239,
+        "caixa": "024",
+        "data": {
+            "@class": "sql-date",
+            "$": "2026-07-06"
+        },
+        "loja": 14,
+        "tipo": "SANGRIA",
+        "detalhesSangriaRms": [
+            {
+                "detalheSangria": {
+                    "finalizadora": 235,
+                    "operador": 41350,
+                    "dataMovimento": {
+                        "@class": "sql-date",
+                        "@reference": "..\/..\/..\/data"
+                    },
+                    "idFinalizacao": 174887570,
+                    "numeroEquipamento": "024",
+                    "sequencial": "001",
+                    "valor": 4.09,
+                    "turnoOperador": 1
+                }
+            }
+        ],
+        "tipoSangriaPDV": " ",
+        "ehUmReforco": false,
+        "ehUmaSangria": true
+    }
+}

@@ -8246,6 +8246,15 @@
                     "ativo": {
                         "type": "boolean",
                         "example": true
+                    },
+                    "modelo_calculo": {
+                        "description": "Motor de cálculo de risco usado pelas campanhas deste padrão",
+                        "type": "string",
+                        "example": "nr1_completo",
+                        "enum": [
+                            "nr1_completo",
+                            "copsoq_simplificado"
+                        ]
                     }
                 },
                 "type": "object"

@@ -62,9 +62,8 @@ if ($token === '') {
     html,body{height:100%;margin:0;font-family:'Nunito',sans-serif;background:var(--bg)}
     .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem 1rem}
     .card-auth{width:100%;max-width:420px;background:#fff;border-radius:14px;box-shadow:0 10px 40px rgba(9,70,176,.08);padding:2.2rem 2rem}
-    .brand{display:flex;align-items:center;gap:10px;margin-bottom:1.6rem}
-    .brand svg{width:38px;height:38px;flex-shrink:0}
-    .brand .name{font-size:1.3rem;font-weight:800;color:var(--primary);letter-spacing:-0.02em}
+    .brand{display:flex;align-items:center;margin-bottom:1.6rem}
+    .brand .brand-logo{height:64px;width:auto}
     h1{font-size:1.25rem;font-weight:800;color:#212a3e;margin-bottom:.3rem}
     .subtitle{color:#7a8aac;font-size:.88rem;margin-bottom:1.4rem}
     .form-label{font-weight:600;color:#374060;font-size:.85rem}
@@ -81,15 +80,7 @@ if ($token === '') {
 <div class="wrap">
   <div class="card-auth">
     <div class="brand">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36">
-        <defs><linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#11bbce"/><stop offset="100%" stop-color="#0946b0"/></linearGradient></defs>
-        <circle cx="18" cy="18" r="17" fill="url(#g1)"/>
-        <circle cx="18" cy="18" r="13" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="1"/>
-        <path d="M18 7 L21.5 18 L18 15.5 L14.5 18 Z" fill="white"/>
-        <path d="M18 29 L14.5 18 L18 20.5 L21.5 18 Z" fill="rgba(255,255,255,.35)"/>
-        <circle cx="18" cy="18" r="2.2" fill="white"/>
-      </svg>
-      <span class="name">busola</span>
+      <img src="assets/img/logo-header.png" alt="busola" class="brand-logo">
     </div>
 
     <?php if ($concluido): ?>

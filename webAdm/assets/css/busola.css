@@ -42,31 +42,8 @@ a:hover { color: var(--busola-cyan); }
 }
 
 .header .logo .logo-icon {
-  width: 36px;
-  height: 36px;
-  margin-right: 8px;
-}
-
-.header .logo .logo-text {
-  display: flex;
-  flex-direction: column;
-  line-height: 1;
-}
-
-.header .logo .logo-text .brand-name {
-  font-size: 1.3rem;
-  font-weight: 800;
-  color: var(--busola-primary);
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-}
-
-.header .logo .logo-text .brand-tagline {
-  font-size: 0.5rem;
-  font-weight: 700;
-  color: var(--busola-cyan);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  height: 48px;
+  width: auto;
 }
 
 /* ── Sidebar ─────────────────────────────────────────────── */

@@ -101,32 +101,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     .brand-logo-wrap {
       display: flex;
       align-items: center;
-      gap: 14px;
       margin-bottom: 2.5rem;
       position: relative;
       z-index: 1;
     }
 
-    .brand-logo-wrap svg {
-      width: 52px;
-      height: 52px;
-      flex-shrink: 0;
-    }
-
-    .brand-name-block .name {
-      font-size: 2.2rem;
-      font-weight: 800;
-      color: #fff;
-      line-height: 1;
-      letter-spacing: -0.03em;
-    }
-
-    .brand-name-block .tagline {
-      font-size: 0.6rem;
-      font-weight: 700;
-      color: var(--cyan);
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
+    .brand-logo-wrap .brand-logo {
+      height: 150px;
+      width: auto;
+      border-radius: 14px;
     }
 
     .brand-claim {
@@ -292,23 +275,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   <!-- ── Painel esquerdo: brand ─────────────────────── -->
   <div class="login-brand">
     <div class="brand-logo-wrap">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-        <defs>
-          <linearGradient id="lg1" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#73ddb3"/>
-            <stop offset="100%" stop-color="#11bbce"/>
-          </linearGradient>
-        </defs>
-        <circle cx="26" cy="26" r="25" fill="rgba(255,255,255,.12)"/>
-        <circle cx="26" cy="26" r="19" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="1.5"/>
-        <path d="M26 10 L30.5 26 L26 22.5 L21.5 26 Z" fill="url(#lg1)"/>
-        <path d="M26 42 L21.5 26 L26 29.5 L30.5 26 Z" fill="rgba(255,255,255,.3)"/>
-        <circle cx="26" cy="26" r="3" fill="white"/>
-      </svg>
-      <div class="brand-name-block">
-        <div class="name">busola</div>
-        <div class="tagline">Gestão Inteligente de Riscos</div>
-      </div>
+      <img src="assets/img/logo-login.png" alt="busola" class="brand-logo">
     </div>
 
     <p class="brand-claim">

@@ -233,12 +233,13 @@ $podeVersionar = Auth::hasPermission('formulario.versionar');
           <div class="row g-3">
             <div class="col-md-8">
               <label class="form-label">Nome <span class="text-danger">*</span></label>
-              <input type="text" name="nome" class="form-control" required>
+              <input type="text" name="nome" id="criarNome" class="form-control" required>
             </div>
             <div class="col-md-4">
               <label class="form-label">Código <span class="text-danger">*</span></label>
-              <input type="text" name="codigo" class="form-control" placeholder="ex: nr1-padrao" pattern="[a-z0-9]+(-[a-z0-9]+)*" required>
-              <div class="form-text">letras minúsculas, números e hífens</div>
+              <input type="text" name="codigo" id="criarCodigo" class="form-control" placeholder="ex: nr1-padrao" pattern="[a-z0-9]+(-[a-z0-9]+)*" required>
+              <div class="form-text">letras minúsculas, números e hífens — gerado automaticamente a partir do nome, mas pode ser ajustado</div>
+              <div class="invalid-feedback"></div>
             </div>
             <div class="col-12">
               <label class="form-label">Descrição</label>
@@ -359,6 +360,61 @@ function filtrarPadroesSelect(selectEl, empresaId) {
   if (selectEl.selectedOptions[0]?.hidden) selectEl.value = '';
 }
 
+// Deriva um código válido (slug) a partir de um texto livre, ex.: "COPSOQ II — Médio" -> "copsoq-ii-medio".
+function bslSlugify(texto) {
+  // NFD separa a letra da marca de acento (ex.: "é" -> "e" + acento combinante);
+  // os acentos caem nas faixas Unicode 0x0300-0x036f, então basta descartar os
+  // code points nessa faixa para obter a letra "pura" (evita depender de regex
+  // com literais Unicode diretamente no código-fonte).
+  const codePoints = Array.from((texto || '').normalize('NFD'));
+  const semAcentos = codePoints.filter(ch => {
+    const code = ch.codePointAt(0);
+    return code < 0x0300 || code > 0x036f;
+  }).join('');
+
+  return semAcentos
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+
+// Marca um campo como inválido (Bootstrap) exibindo a mensagem de erro vinda da API.
+function bslMarcarInvalido(input, mensagem) {
+  if (!input) return;
+  input.classList.add('is-invalid');
+  const feedback = input.parentElement.querySelector('.invalid-feedback');
+  if (feedback) feedback.textContent = mensagem;
+}
+
+function bslLimparInvalidos(form) {
+  form.querySelectorAll('.is-invalid').forEach(el => el.classList.remove('is-invalid'));
+}
+
+(function () {
+  const nomeInput   = document.getElementById('criarNome');
+  const codigoInput = document.getElementById('criarCodigo');
+  if (!nomeInput || !codigoInput) return;
+
+  let codigoEditadoManualmente = false;
+  codigoInput.addEventListener('input', () => {
+    codigoEditadoManualmente = true;
+    codigoInput.classList.remove('is-invalid');
+  });
+  nomeInput.addEventListener('input', () => {
+    if (!codigoEditadoManualmente) codigoInput.value = bslSlugify(nomeInput.value);
+  });
+
+  // Toda vez que o modal de criação abre, começa do zero (nome/código limpos e
+  // o código volta a ser auto-gerado a partir do nome até o usuário editá-lo).
+  document.getElementById('modalCriar')?.addEventListener('show.bs.modal', () => {
+    const form = document.getElementById('formCriar');
+    form.reset();
+    bslLimparInvalidos(form);
+    codigoEditadoManualmente = false;
+  });
+})();
+
 function toggleEmpresaCriar() {
   const tipo = document.getElementById('criarTipo')?.value;
   const wrapper = document.getElementById('criarEmpresaWrapper');
@@ -383,6 +439,14 @@ function editarFormulario(f) {
 }
 
 async function salvarCriarFormulario(btn) {
+  const form = document.getElementById('formCriar');
+  bslLimparInvalidos(form);
+
+  // O botão "Salvar" é type="button" (não dispara submit), então as validações
+  // nativas do HTML (required/pattern) nunca rodariam sozinhas — reportValidity()
+  // as aciona manualmente antes de chamar a API.
+  if (!form.reportValidity()) return;
+
   bslSetLoading(btn, true);
   const data = bslFormData('formCriar');
   const res = await apiFetch('POST', 'pesquisa-psicossocial/formularios', data);
@@ -392,7 +456,11 @@ async function salvarCriarFormulario(btn) {
     bslCloseModal('modalCriar');
     setTimeout(() => location.reload(), 800);
   } else {
-    bslToast(res.mensagem || 'Erro ao criar formulário.', 'danger');
+    const mensagem = res.mensagem || 'Erro ao criar formulário.';
+    bslToast(mensagem, 'danger');
+    if (mensagem.toLowerCase().includes('código')) {
+      bslMarcarInvalido(document.getElementById('criarCodigo'), mensagem);
+    }
   }
 }
 

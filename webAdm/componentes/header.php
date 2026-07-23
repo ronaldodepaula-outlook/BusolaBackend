@@ -6,26 +6,8 @@
   <div class="d-flex align-items-center justify-content-between">
     <a href="?paginas=home" class="logo d-flex align-items-center w-auto text-decoration-none">
 
-      <!-- Ícone SVG da Busola -->
-      <svg class="logo-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36">
-        <defs>
-          <linearGradient id="bsl-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stop-color="#11bbce"/>
-            <stop offset="100%" stop-color="#0946b0"/>
-          </linearGradient>
-        </defs>
-        <circle cx="18" cy="18" r="17" fill="url(#bsl-grad)"/>
-        <circle cx="18" cy="18" r="13" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="1"/>
-        <path d="M18 7 L21.5 18 L18 15.5 L14.5 18 Z" fill="white"/>
-        <path d="M18 29 L14.5 18 L18 20.5 L21.5 18 Z" fill="rgba(255,255,255,.35)"/>
-        <circle cx="18" cy="18" r="2.2" fill="white"/>
-      </svg>
-
-      <!-- Nome e tagline -->
-      <span class="d-none d-lg-flex logo-text flex-column">
-        <span class="brand-name">busola</span>
-        <span class="brand-tagline">Gestão Inteligente de Riscos</span>
-      </span>
+      <!-- Logo oficial da Busola (ícone + nome + tagline já compostos na imagem) -->
+      <img src="assets/img/logo-header.png" alt="busola" class="logo-icon">
     </a>
     <i class="bi bi-list toggle-sidebar-btn"></i>
   </div>
